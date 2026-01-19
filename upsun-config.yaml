@@ -10,8 +10,3 @@ applications:
       "outputs":
         source: local
         source_path: outputs
-
-routes:
-  "https://{default}/":
-    type: upstream
-    upstream: "engine:http"
