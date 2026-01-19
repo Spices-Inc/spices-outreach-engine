@@ -1,0 +1,12 @@
+applications:
+  engine:
+    source:
+      root: "/"
+    type: "python:3.11"
+    web:
+      commands:
+        start: "streamlit run main.py --server.port $PORT"
+    mounts:
+      "outputs":
+        source: local
+        source_path: outputs
