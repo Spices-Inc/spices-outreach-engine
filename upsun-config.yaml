@@ -1,3 +1,8 @@
+routes:
+  "https://{default}/":
+    type: upstream
+    upstream: "engine:http"
+
 applications:
   engine:
     source:
