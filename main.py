@@ -1,30 +1,50 @@
 import streamlit as st
+import os
 
-# --- SIDEBAR: THE AGENT SWITCHER ---
+# --- TRANSIT TIME MAP (SCF PREFIXES) ---
+# This allows you to scale from local to nationwide
+SHIPPING_ZONES = {
+    "1-2 Days (Immediate Area)": {
+        "MA/NH/RI/CT": ["010", "011", "012", "013", "014", "015", "016", "017", "018", "019", "021", "022", "024", "028", "029", "030", "031", "038", "039"]
+    },
+    "3 Days (Mid-Atlantic/Midwest)": {
+        "NY/NJ/PA": ["070", "080", "100", "110", "190"],
+        "OH/MI/IN": ["430", "440", "480", "460"]
+    },
+    "4-6 Days (Nationwide Scale)": {
+        "TX/FL/GA": ["750", "331", "303"],
+        "CA/OR/WA": ["900", "941", "981"]
+    }
+}
+
 st.sidebar.title("🤖 Agent Selection")
-agent_type = st.sidebar.selectbox(
-    "Which ICP are we running?",
-    ["Spices Outreach", "Meal Prep Partnerships"]
-)
+icp_choice = st.sidebar.selectbox("Select Your Outreach Target:", [
+    "ICP 1: Meal Prep Companies",
+    "ICP 2: Hot Sauce Manufacturers",
+    "ICP 3: BBQ Sauce Manufacturers",
+    "ICP 4: BBQ Restaurants",
+    "ICP 5: Butchers & Processors"
+])
 
-# --- CONFIGURATION BASED ON SELECTION ---
-if agent_type == "Spices Outreach":
-    st.title("🌶️ Spices Outreach Engine")
-    instruction = "Enter ZIP Code to find local restaurants & specialty grocers:"
-    placeholder = "e.g. 01960"
-    search_query = "restaurants and specialty grocery stores in "
-    
-elif agent_type == "Meal Prep Partnerships":
-    st.title("🥗 Meal Prep B2B Engine")
-    instruction = "Enter ZIP Code to find Gyms, CrossFit Boxes, and Wellness Centers:"
-    placeholder = "e.g. 01960"
-    search_query = "CrossFit gyms and personal training studios in "
+st.title("🌎 Scalable Discovery Engine")
+st.write("---")
 
-# --- THE SEARCH BOX ---
-zip_code = st.text_input(instruction, placeholder=placeholder)
+# --- DYNAMIC ZONE SELECTOR ---
+transit_tier = st.radio("Select Shipping Window:", list(SHIPPING_ZONES.keys()))
 
-if zip_code:
-    st.write(f"### 🔎 Running {agent_type} for {zip_code}...")
-    # This is where the AI 'Brain' uses the search_query + zip_code
-    st.success(f"Success! I am now searching for: {search_query}{zip_code}")
-    st.info("I will return the business name, owner contact, and partnership potential score.")
+# Get the sub-regions for the selected tier
+sub_regions = SHIPPING_ZONES[transit_tier]
+selected_region = st.selectbox("Select Specific Region:", list(sub_regions.keys()))
+prefixes = sub_regions[selected_region]
+
+st.info(f"🚀 **Scaling Strategy:** You are currently searching the **{transit_tier}** window. This covers {len(prefixes)} SCF regions.")
+
+# --- THE "RUN DISCOVERY" BUTTON ---
+if st.button(f"Scour {selected_region} for {icp_choice}"):
+    if not os.getenv("OPENAI_API_KEY"):
+        st.error("⚠️ OpenAI Key not found in Upsun Settings!")
+    else:
+        st.success(f"🧠 Brain Active. Searching {selected_region} for {icp_choice}...")
+        # Hour 3 will inject the real search here
+        st.write(f"🔍 Digging through SCFs: {', '.join(prefixes)}")
+        st.progress(100)
