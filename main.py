@@ -1,4 +1,5 @@
 import os
+import streamlit as st
 import requests
 import google.generativeai as genai
 
@@ -19,12 +20,19 @@ def get_shipping_speed(zip_code):
         return "Fast 2-Day Shipping"
     return "Reliable Nationwide Shipping"
 
-def run_outreach():
-    print("🚀 Spices Inc Engine: Starting Daily Batch...")
-    # Test logic check
-    test_zip = "11232" 
-    speed = get_shipping_speed(test_zip)
-    print(f"✅ Logistics Check: Zip {test_zip} identified as {speed}")
+# Streamlit UI
+st.set_page_config(page_title="Spices Outreach Engine", page_icon="🌶️")
+st.title("🌶️ Spices Outreach Engine")
 
-if __name__ == "__main__":
-    run_outreach()
+st.header("Shipping Speed Lookup")
+zip_code = st.text_input("Enter ZIP Code", value="11232")
+
+if st.button("Check Shipping Speed"):
+    if zip_code:
+        speed = get_shipping_speed(zip_code)
+        st.success(f"**{zip_code}**: {speed}")
+    else:
+        st.warning("Please enter a ZIP code")
+
+st.divider()
+st.caption("Spices Inc - Outreach Engine")
