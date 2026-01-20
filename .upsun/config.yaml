@@ -3,6 +3,9 @@ applications:
     source:
       root: "/"
     type: "python:3.11"
+    hooks:
+      build: |
+        pip install -r requirements.txt
     web:
       commands:
         start: "streamlit run main.py --server.port $PORT --server.address 0.0.0.0 --server.headless true"
