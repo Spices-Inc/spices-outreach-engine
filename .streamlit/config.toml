@@ -1,6 +1,9 @@
 [server]
 enableCORS = false
 enableXsrfProtection = false
+enableWebsocketCompression = false
 
 [browser]
 gatherUsageStats = false
+serverAddress = "main-bvxea6i-kmdjednwxlp34.us-2.platformsh.site"
+serverPort = 443

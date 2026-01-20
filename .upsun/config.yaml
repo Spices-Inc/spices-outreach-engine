@@ -18,3 +18,5 @@ routes:
   "https://{default}/":
     type: upstream
     upstream: "engine:http"
+    cache:
+      enabled: false
