@@ -18,3 +18,17 @@
   - Reject if the URL contains: `hellofresh`, `factor75`, `blueapron`, `hummusfit`, `freshnlean`, `cookunity`.
   - *Goal: Eliminate massive corporations that don't fit our regional outreach model.*
 - **Output:** Saves survivors to `outputs/audited_leads.json`.
+## Agent 2: The Researcher (The Detective)
+**Objective:** Perform deep-profile analysis on qualified leads to identify the "Decision Maker" and their specific "Power Score."
+
+### Antagonistic Hierarchy Logic:
+- **Rule 1: Small/Micro-Business Filter**
+  - *Logic:* If no complex hierarchy is detected, assume the **Founder** handles all purchasing.
+  - *Score:* HIGH (Direct access to the decision-maker).
+- **Rule 2: Medium/Regional Growth Filter**
+  - *Logic:* Look for specific roles like "Head of Operations." 
+  - *Manual Override:* The system has hard-coded overrides for known high-value targets (e.g., Jennifer Smith at 'Be Wellfed').
+  - *Score:* HIGH (Operations/Founders are the gold standard for spice procurement).
+- **Rule 3: Large Scale/Hands-Off Filter**
+  - *Logic:* If the scale is too large (e.g., Pittsburgh Fresh), assume the owner is "hands-off."
+  - *Score:* MEDIUM (Target the General Manager instead).
