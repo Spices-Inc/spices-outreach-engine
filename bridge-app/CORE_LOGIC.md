@@ -36,3 +36,17 @@
   - *Logic:* If the scale is too large (e.g., Pittsburgh Fresh), assume the owner is "hands-off."
   - *Score:* MEDIUM (Target the General Manager instead).
 - **Output:** Saves enriched profiles to `outputs/agent2_final_leads.json`.
+
+## Agent 4: The Strategist (The Campaign Architect)
+**Objective:** Segment leads into specific "Campaign Tracks" based on company size and operational complexity.
+
+### Strategic Segmentation Logic:
+- **Track A: Centralized Reliability**
+  - *Trigger:* Company has fewer than 100 employees (Single Hub).
+  - *Core Message:* "99.1% Uptime for your primary production hub."
+  - *Tone:* Peer-to-Peer (Executive).
+- **Track B: Network Uniformity**
+  - *Trigger:* Company has 100+ employees (Regional Nodes/Multiple Locations).
+  - *Core Message:* "Consistency across your growing regional footprint."
+  - *Tone:* Peer-to-Peer (Executive).
+- **Output:** Saves to `outputs/agent4_campaign_map.json`.
