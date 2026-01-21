@@ -18,8 +18,6 @@
   - Reject if the URL contains: `hellofresh`, `factor75`, `blueapron`, `hummusfit`, `freshnlean`, `cookunity`.
   - *Goal: Eliminate massive corporations that don't fit our regional outreach model.*
 - **Output:** Saves survivors to `outputs/audited_leads.json`.
-## Agent 2: The Researcher (The Detective)
-**Objective:** Perform deep-profile analysis on qualified leads to identify the "Decision Maker" and their specific "Power Score."
 
 ## Agent 2: The Researcher (The Detective)
 **Objective:** Perform deep-profile analysis on qualified leads to identify the "Decision Maker" and their specific "Power Score."
