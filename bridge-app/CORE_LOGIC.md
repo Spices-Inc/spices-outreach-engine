@@ -37,6 +37,21 @@
   - *Score:* MEDIUM (Target the General Manager instead).
 - **Output:** Saves enriched profiles to `outputs/agent2_final_leads.json`.
 
+## Agent 3: The Miner / Antagonist Auditor
+**Objective:** Clean raw contact data and assign a "Confidence Score" to ensure outreach only goes to high-probability matches.
+
+### Verification Scoring Logic:
+- **Rule 1: The "Adam Persona" Check (+40 Points)**
+  - *Logic:* Does the contact hold a dual role like "Founder & Director of Ops"? These are our primary targets because they care about the "plumbing" of the kitchen.
+- **Rule 2: Email Match Verification (+30 Points)**
+  - *Logic:* Does the "Best Guess" email actually contain the first name of the found person?
+- **Rule 3: Centralized Hub Verification (+30 Points)**
+  - *Logic:* Is the company confirmed as a "Centralized" production hub?
+- **The Verdict:**
+  - **Score >= 90:** HIGH Confidence (Proceed to automated outreach).
+  - **Score < 90:** MEDIUM/LOW (Flag for manual review).
+- **Output:** Saves to `outputs/agent3_final_audit.json`.
+- 
 ## Agent 4: The Strategist (The Campaign Architect)
 **Objective:** Segment leads into specific "Campaign Tracks" based on company size and operational complexity.
 
