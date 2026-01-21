@@ -21,6 +21,9 @@
 ## Agent 2: The Researcher (The Detective)
 **Objective:** Perform deep-profile analysis on qualified leads to identify the "Decision Maker" and their specific "Power Score."
 
+## Agent 2: The Researcher (The Detective)
+**Objective:** Perform deep-profile analysis on qualified leads to identify the "Decision Maker" and their specific "Power Score."
+
 ### Antagonistic Hierarchy Logic:
 - **Rule 1: Small/Micro-Business Filter**
   - *Logic:* If no complex hierarchy is detected, assume the **Founder** handles all purchasing.
@@ -32,3 +35,4 @@
 - **Rule 3: Large Scale/Hands-Off Filter**
   - *Logic:* If the scale is too large (e.g., Pittsburgh Fresh), assume the owner is "hands-off."
   - *Score:* MEDIUM (Target the General Manager instead).
+- **Output:** Saves enriched profiles to `outputs/agent2_final_leads.json`.
