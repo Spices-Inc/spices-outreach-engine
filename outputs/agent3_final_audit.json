@@ -1,0 +1,24 @@
+[
+  {
+    "company": "Eat Clean Bro",
+    "found_person": "Jamie Giovinazzo",
+    "found_title": "Founder & Director of Ops",
+    "is_adam_persona": true,
+    "best_guess_email": "jamie@eatcleanbro.com",
+    "domain": "eatcleanbro.com",
+    "confidence_score": 100,
+    "confidence_level": "HIGH",
+    "audit_note": "Verified: Jamie Giovinazzo matches Founder & Director of Ops at Central Hub."
+  },
+  {
+    "company": "Vegetable and Butcher",
+    "found_person": "Turner Wyatt",
+    "found_title": "Co-Founder & Ops",
+    "is_adam_persona": true,
+    "best_guess_email": "turner@vegetableandbutcher.com",
+    "domain": "vegetableandbutcher.com",
+    "confidence_score": 100,
+    "confidence_level": "HIGH",
+    "audit_note": "Verified: Turner Wyatt matches Co-Founder & Ops at Central Hub."
+  }
+]

@@ -1,0 +1,41 @@
+[
+  {
+    "company": "Eat Clean Bro",
+    "found_person": "Jamie Giovinazzo",
+    "found_title": "CEO",
+    "email_options": [
+      "jamie@eatcleanbro.com",
+      "jamiegiovinazzo@eatcleanbro.com",
+      "jamie.giovinazzo@eatcleanbro.com",
+      "jgiovinazzo@eatcleanbro.com"
+    ],
+    "is_adam_persona": false,
+    "best_guess_email": "jamie@eatcleanbro.com"
+  },
+  {
+    "company": "Vegetable and Butcher",
+    "found_person": "Turner Wyatt",
+    "found_title": "Co-Founder & Ops",
+    "email_options": [
+      "turner@vegetableandbutcher.com",
+      "turnerwyatt@vegetableandbutcher.com",
+      "turner.wyatt@vegetableandbutcher.com",
+      "twyatt@vegetableandbutcher.com"
+    ],
+    "is_adam_persona": true,
+    "best_guess_email": "turner@vegetableandbutcher.com"
+  },
+  {
+    "company": "Freshly Roasted / Clean Eatz Regional",
+    "found_person": "Jamie Giovinazzo",
+    "found_title": "CEO",
+    "email_options": [
+      "jamie@eatcleanbro.com",
+      "jamiegiovinazzo@eatcleanbro.com",
+      "jamie.giovinazzo@eatcleanbro.com",
+      "jgiovinazzo@eatcleanbro.com"
+    ],
+    "is_adam_persona": false,
+    "best_guess_email": "jamie@eatcleanbro.com"
+  }
+]

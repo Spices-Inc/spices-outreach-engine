@@ -1,0 +1,80 @@
+[
+  {
+    "company_name": "Prepped Portions: Your Local Food Prep & Delivery Service",
+    "website_url": "https://preppedportions.com/",
+    "source": "Google Search",
+    "discovered_at": "2026-01-06T19:22:13.755Z",
+    "investigation_status": "Ready",
+    "missing_info": "None",
+    "action_item": "Proceed to Copywriter",
+    "primary_contact": "Owner/Founder",
+    "role": "Founder",
+    "decision_score": "HIGH",
+    "reasoning": "Micro-business; Founder handles all purchasing and tech decisions."
+  },
+  {
+    "company_name": "IEatClean Meal Prep Services - Food delivery - Pittsburgh ...",
+    "website_url": "https://www.ieatcleanmealprep-order.com/",
+    "source": "Google Search",
+    "discovered_at": "2026-01-06T19:22:13.755Z",
+    "investigation_status": "Ready",
+    "missing_info": "None",
+    "action_item": "Proceed to Copywriter",
+    "primary_contact": "Owner/Founder",
+    "role": "Founder",
+    "decision_score": "HIGH",
+    "reasoning": "Micro-business; Founder handles all purchasing and tech decisions."
+  },
+  {
+    "company_name": "Fresh Meal Prep & Delivery Services Philadelphia - Home ...",
+    "website_url": "https://www.homeappetitphilly.com/",
+    "source": "Google Search",
+    "discovered_at": "2026-01-06T19:22:13.755Z",
+    "investigation_status": "Ready",
+    "missing_info": "None",
+    "action_item": "Proceed to Copywriter",
+    "primary_contact": "Unknown (General Manager)",
+    "role": "Operations Manager",
+    "decision_score": "MEDIUM",
+    "reasoning": "Larger scale detected; Owner is likely hands-off on day-to-day tech implementation."
+  },
+  {
+    "company_name": "HOW IT WORKS - Pittsburgh Fresh",
+    "website_url": "https://www.pghfresh.com/",
+    "source": "Google Search",
+    "discovered_at": "2026-01-06T19:22:13.755Z",
+    "investigation_status": "Ready",
+    "missing_info": "None",
+    "action_item": "Proceed to Copywriter",
+    "primary_contact": "Unknown (General Manager)",
+    "role": "Operations Manager",
+    "decision_score": "MEDIUM",
+    "reasoning": "Larger scale detected; Owner is likely hands-off on day-to-day tech implementation."
+  },
+  {
+    "company_name": "Meals Direct",
+    "website_url": "https://mealsdirectllc.net/",
+    "source": "Google Search",
+    "discovered_at": "2026-01-06T19:22:13.755Z",
+    "investigation_status": "Ready",
+    "missing_info": "None",
+    "action_item": "Proceed to Copywriter",
+    "primary_contact": "Owner/Founder",
+    "role": "Founder",
+    "decision_score": "HIGH",
+    "reasoning": "Micro-business; Founder handles all purchasing and tech decisions."
+  },
+  {
+    "company_name": "Be Wellfed - Healthy Meal Prep Delivery Service",
+    "website_url": "https://bewellfed.net/",
+    "source": "Google Search",
+    "discovered_at": "2026-01-06T19:22:13.755Z",
+    "investigation_status": "RECOVERED",
+    "missing_info": "Last Names of Founders",
+    "action_item": "Trigger LinkedIn Search",
+    "primary_contact": "Jennifer Smith",
+    "role": "Head of Operations & Co-Founder",
+    "decision_score": "HIGH",
+    "reasoning": "Jennifer manages the kitchen and delivery logistics; Sarah handles branding."
+  }
+]

@@ -1,0 +1,31 @@
+[
+  {
+    "name": "Performance Meal Prep",
+    "states_served": [
+      "PA",
+      "NJ",
+      "DE",
+      "MD",
+      "NY"
+    ],
+    "pro_signal": "5 States (Logistics Heavy)",
+    "protein_focus": "Sourced Grass-Fed",
+    "url": "https://eatpmp.com"
+  },
+  {
+    "name": "Healthy Fresh Meals",
+    "states_served": [
+      "MD",
+      "VA",
+      "DC",
+      "PA",
+      "WV",
+      "NJ",
+      "NY",
+      "DE"
+    ],
+    "pro_signal": "8 States (High Volume)",
+    "protein_focus": "Chef-Sourced",
+    "url": "https://healthyfreshmeals.com"
+  }
+]

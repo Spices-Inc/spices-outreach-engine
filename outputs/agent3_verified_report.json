@@ -1,0 +1,53 @@
+[
+  {
+    "name": "Eat Clean Bro",
+    "location": "Freehold, NJ",
+    "states_served": [
+      "NJ",
+      "NY",
+      "PA",
+      "DE",
+      "CT"
+    ],
+    "signal": "Massive Regional Logistics",
+    "adam_persona": "Director of Purchasing",
+    "contact_name": "Jamie Giovinazzo",
+    "contact_email": "ops@eatcleanbro.com",
+    "contact_title": "Founder/Ops Lead",
+    "lead_grade": "B",
+    "antagonist_audit": "CAUTION: Role-based email. Good for 'Adam' persona, but not a direct personal line."
+  },
+  {
+    "name": "Vegetable and Butcher",
+    "location": "Washington DC / VA",
+    "states_served": [
+      "VA",
+      "MD",
+      "DC"
+    ],
+    "signal": "High-End Protein Sourcing",
+    "adam_persona": "Head of Operations",
+    "contact_name": "Turner Wyatt",
+    "contact_email": "turner@vegetableandbutcher.com",
+    "contact_title": "Co-Founder",
+    "lead_grade": "A",
+    "antagonist_audit": "Verified Direct Contact."
+  },
+  {
+    "name": "Freshly Roasted / Clean Eatz Regional",
+    "location": "Ohio / Multi-State",
+    "states_served": [
+      "OH",
+      "PA",
+      "KY",
+      "IN"
+    ],
+    "signal": "Centralized Prep / Rapid Expansion",
+    "adam_persona": "Regional Manager",
+    "contact_name": "Regional Manager",
+    "contact_email": "info@cleaneatz.com",
+    "contact_title": "Unknown",
+    "lead_grade": "C",
+    "antagonist_audit": "REJECTED: Generic inbox found. High probability of Gatekeeper friction."
+  }
+]

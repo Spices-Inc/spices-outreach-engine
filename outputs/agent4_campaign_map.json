@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Turner Wyatt",
+    "title": "CEO",
+    "email": "turner@vegetableandbutcher.com",
+    "email_conf": 95,
+    "company": "Vegetable and Butcher",
+    "employees": 45,
+    "campaign": "TRACK_A: CENTRALIZED_RELIABILITY",
+    "value_prop": "99.1% Uptime for your primary production hub.",
+    "tone": "Peer-to-Peer (Executive)"
+  },
+  {
+    "name": "Jamie Giovinazzo",
+    "title": "Founder",
+    "email": "jamie@eatcleanbro.com",
+    "email_conf": 98,
+    "company": "Eat Clean Bro",
+    "employees": 120,
+    "campaign": "TRACK_B: NETWORK_UNIFORMITY",
+    "value_prop": "Consistency across your growing regional footprint.",
+    "tone": "Peer-to-Peer (Executive)"
+  }
+]

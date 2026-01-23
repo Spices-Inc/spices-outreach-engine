@@ -1,0 +1,5 @@
+module.exports = {
+    APOLLO_API_KEY: "PASTE_YOUR_APOLLO_KEY_HERE",
+    HUNTER_API_KEY: "PASTE_YOUR_HUNTER_KEY_HERE",
+    GOLDEN_ZONE_STATES: ["VA", "MD", "DC", "PA", "NJ", "NY", "DE", "WV"]
+};

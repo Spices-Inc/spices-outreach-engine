@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Turner Wyatt",
+    "company": "Vegetable and Butcher",
+    "zip": "20018",
+    "scraped_keywords": "Nationwide Shipping, FedEx, UPS",
+    "transit_speed": 1,
+    "delivery_model": "SHIPPER",
+    "status": "VERIFIED"
+  },
+  {
+    "name": "Jamie Giovinazzo",
+    "company": "Eat Clean Bro",
+    "zip": "07701",
+    "scraped_keywords": "Home Delivery, Van Routes, local drops",
+    "transit_speed": 1,
+    "delivery_model": "ROUTER",
+    "status": "VERIFIED"
+  }
+]
