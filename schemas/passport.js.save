@@ -1,0 +1,73 @@
+
+const createPassport = (leadData = {}) => {
+  return {
+    company_name: leadData.company_name || null,
+    website_url: leadData.website_url || null,
+    snippet: leadData.snippet || "",
+    zip: leadData.zip || null,
+    city: leadData.city || null,
+    state: leadData.state || null,
+    transit_days: leadData.transit_days || null,
+    transit_days_text: leadData.transit_days_text || null,
+    rotation_day: leadData.rotation_day || null,
+    menu_url: leadData.menu_url || null,
+    spice_keywords_found: leadData.spice_keywords_found || [],
+    custom_blend_signals: leadData.custom_blend_signals || [],
+    spice_forward: leadData.spice_forward || false,
+    contact_name: leadData.contact_name || null,
+    contact_title: leadData.contact_title || null,
+    linkedin_url: leadData.linkedin_url || null,
+    qualification_score: leadData.qualification_score || 0,
+    qualified: leadData.qualified || false,
+    disqualification_reason: leadData.disqualification_reason || null,
+    tier: leadData.tier || null,
+    custom_blend_opportunity: leadData.custom_blend_opportunity || false,
+    scoring_breakdown: leadData.scoring_breakdown || {
+      geography_points: 0,
+      product_match_points: 0,
+      menu_sophistication_points: 0,
+      contact_verified_points: 0
+    },
+    emails: leadData.emails || {
+      email_1: null,
+      email_2: null,
+      email_3: null,
+      email_4: null,
+      email_5: null
+    },
+    created_at: leadData.created_at || new Date().toISOString(),
+    last_updated: new Date().toISOString(),
+    agent_status: leadData.agent_status || {
+      scout: false,
+      geographer: false,
+      menu_miner: false,
+      investigator: false,
+      qualifier: false,
+      writer_pro: false
+    }
+  };
+};
+
+const validatePassport = (passport) => {
+  const errors = [];
+  if (!passport.company_name) errors.push("Missing company_name");
+  if (!passport.website_url) errors.push("Missing website_url");
+  if (!passport.zip) errors.push("Missing zip");
+  if (!passport.contact_name) errors.push("Missing contact_name");
+  return {
+    valid: errors.length === 0,
+    errors: errors
+  };
+};
+
+module.exports = { createPassport, validatePassport };
+
+After pasting:
+
+Press Ctrl+O (that's the letter O, not zero) - this saves the file
+Press Enter to confirm
+Press Ctrl+X to exit nano
+
+You should be back at the normal terminal prompt.
+Tell me if the paste worked or if you need a different approach. 🚀
+
