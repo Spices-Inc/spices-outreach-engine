@@ -33,7 +33,6 @@ function looksLikePersonName(text) {
 async function searchLinkedIn(companyName) {
   console.log(`    🔍 Searching LinkedIn for contacts...`);
   
-  // Clean company name (remove "Meal Prep", "Delivery Service", etc.)
   const cleanName = companyName
     .split(':')[0]
     .replace(/meal prep/gi, '')
@@ -58,7 +57,6 @@ async function searchLinkedIn(companyName) {
       for (const result of (res.data.organic_results || [])) {
         const title = result.title || '';
         
-        // LinkedIn titles are usually "Name - Title - Company | LinkedIn"
         const namePart = title.split(' - ')[0].trim();
         
         if (looksLikePersonName(namePart)) {
@@ -72,7 +70,6 @@ async function searchLinkedIn(companyName) {
         }
       }
       
-      // Small delay between searches
       await new Promise(resolve => setTimeout(resolve, 300));
       
     } catch (e) {
@@ -84,7 +81,7 @@ async function searchLinkedIn(companyName) {
 }
 
 async function run() {
-  const filePath = './data/audited_leads.json';
+  const filePath = './leads_master.json';
   if (!fs.existsSync(filePath)) return console.error("❌ File not found");
   
   const leads = JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -93,45 +90,40 @@ async function run() {
   for (let lead of leads) {
     console.log(`  📋 ${lead.company_name}`);
     
-    // STAGE 1: Try website scraping first
     const teamMembers = await scrapeTeamPages(lead.website_url);
     
     if (teamMembers.length > 0) {
       const topPerson = teamMembers[0];
-      lead.contactName = topPerson.name;
-      lead.contactTitle = topPerson.title;
-      lead.contactSource = 'website';
-      lead.contactConfidence = 'HIGH';
+      lead.contact_name = topPerson.name;
+      lead.contact_title = topPerson.title;
+      lead.contact_source = 'website';
+      lead.contact_confidence = 'HIGH';
       
       console.log(`     ✅ FOUND (website): ${topPerson.name} (${topPerson.title})\n`);
     } else {
-      // STAGE 2: Fall back to LinkedIn search
       const linkedInResult = await searchLinkedIn(lead.company_name);
       
       if (linkedInResult) {
-        lead.contactName = linkedInResult.name;
-        lead.contactTitle = linkedInResult.title;
-        lead.contactSource = linkedInResult.source;
-        lead.contactConfidence = linkedInResult.confidence;
+        lead.contact_name = linkedInResult.name;
+        lead.contact_title = linkedInResult.title;
+        lead.contact_source = linkedInResult.source;
+        lead.contact_confidence = linkedInResult.confidence;
         
         console.log(`     ✅ FOUND (LinkedIn): ${linkedInResult.name} (${linkedInResult.title})\n`);
       } else {
-        lead.contactName = "Owner/Founder";
-        lead.contactTitle = null;
-        lead.contactSource = 'none';
-        lead.contactConfidence = 'NONE';
+        lead.contact_name = "Owner/Founder";
+        lead.contact_title = null;
+        lead.contact_source = 'none';
+        lead.contact_confidence = 'NONE';
         
         console.log(`     ⚠️  No contact found\n`);
       }
     }
     
-    lead.painScore = 85;
-    
-    // Delay between companies
     await new Promise(resolve => setTimeout(resolve, 500));
   }
   
-  fs.writeFileSync('agent2_results.json', JSON.stringify(leads, null, 2));
+  fs.writeFileSync('leads_master.json', JSON.stringify(leads, null, 2));
   console.log("✅ Investigation complete!\n");
 }
 

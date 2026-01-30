@@ -1,14 +1,14 @@
 const fs = require('fs');
 
-const SPICE_CATALOG = ['shawarma', 'zatar', 'harissa', 'tikka', 'cajun', 'jerk', 'taco', 'chipotle', 'curry', 'garam masala', 'bbq', 'dry rub'];
-
 function qualifyLead(lead) {
   let score = 0;
   
-  // Geography (40 points)
+  // Geography (40 points) - NO address = 0 points
   if (lead.transit_days === 1) score += 40;
   else if (lead.transit_days === 2) score += 30;
-  else score += 20;
+  else if (lead.transit_days === 3) score += 20;
+  else if (lead.transit_days === 4) score += 10;
+  // null or undefined = 0 points
   
   // Product match (25 points)
   const spiceMatches = (lead.spice_keywords_found || []).length;
@@ -41,6 +41,11 @@ function qualifyLead(lead) {
   // Hard disqualifier: No verified contact name
   if (!lead.contact_name || isCompanyName) {
     return { qualified: false, score, reason: "No verified contact name" };
+  }
+  
+  // Hard disqualifier: No address found
+  if (!lead.transit_days) {
+    return { qualified: false, score, reason: "No address found" };
   }
   
   // Hard disqualifier: Score too low

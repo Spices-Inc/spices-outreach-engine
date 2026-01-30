@@ -1,49 +1,61 @@
-const fs = require('fs');
 const axios = require('axios');
-const cheerio = require('cheerio');
+const fs = require('fs');
 
 const SPICE_KEYWORDS = [
-  'shawarma', 'za\'atar', 'zatar', 'harissa', 'tahini',
-  'tikka masala', 'tikka', 'curry', 'garam masala', 'tandoori',
-  'cajun', 'creole', 'blackened', 'jerk', 'caribbean',
-  'taco', 'fajita', 'burrito', 'chipotle', 'adobo', 'barbacoa',
-  'teriyaki', 'ginger', 'sesame', 'soy',
-  'bbq', 'barbecue', 'smoked', 'dry rub', 'spice rub',
-  'spicy', 'hot sauce', 'sriracha', 'buffalo'
+  'taco', 'za\'atar', 'zatar', 'cajun', 'creole', 'citrus',
+  'chili', 'harissa', 'tikka masala', 'tikka', 'shawarma',
+  'chorizo', 'barbacoa', 'trinidad curry', 'curry',
+  'turkish kofte', 'kofte', 'korean beef', 'korean',
+  'vietnamese pork', 'vietnamese', 'roasted vegetable',
+  'everything bagel', 'elote', 'birria',
+  'jerk', 'teriyaki', 'mediterranean', 'moroccan', 'thai',
+  'buffalo', 'bbq', 'barbecue', 'chipotle', 'adobo', 'fajita'
+];
+
+const MENU_PAGES = [
+  '',
+  '/menu',
+  '/meals',
+  '/weekly-menu',
+  '/our-menu',
+  '/this-weeks-menu',
+  '/order',
+  '/shop'
 ];
 
 const ROTATION_DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
 const CUSTOM_BLEND_SIGNALS = ['signature', 'house-made', 'proprietary', 'secret', 'special recipe', 'our blend', 'custom'];
 
-async function scrapeWebsite(url) {
-  try {
-    console.log(`    🌐 Fetching ${url}...`);
-    const response = await axios.get(url, { 
-      timeout: 5000,
-      headers: { 'User-Agent': 'Mozilla/5.0' }
-    });
-    return response.data;
-  } catch (error) {
-    console.log(`    ⚠️  Failed to fetch ${url}: ${error.message}`);
-    return null;
+async function scrapeWebsite(baseUrl) {
+  let allHtml = '';
+  
+  for (const page of MENU_PAGES) {
+    try {
+      const url = baseUrl.replace(/\/$/, '') + page;
+      const response = await axios.get(url, { 
+        timeout: 5000,
+        headers: { 'User-Agent': 'Mozilla/5.0' }
+      });
+      allHtml += ' ' + response.data;
+      if (page) console.log(`       ✓ Found ${page}`);
+    } catch (error) {
+      // Page doesn't exist, skip silently
+    }
   }
+  
+  return allHtml;
 }
 
 function analyzeContent(html, snippet) {
-  const text = (html + ' ' + snippet).toLowerCase();
+  const text = (html + ' ' + (snippet || '')).toLowerCase();
   
-  // Find spice keywords
   const foundSpices = SPICE_KEYWORDS.filter(spice => text.includes(spice));
-  
-  // Find rotation day
   const foundDay = ROTATION_DAYS.find(day => text.includes(day));
-  
-  // Find custom blend signals
   const foundSignals = CUSTOM_BLEND_SIGNALS.filter(signal => text.includes(signal));
   
   return {
-    spice_keywords_found: [...new Set(foundSpices)], // remove duplicates
+    spice_keywords_found: [...new Set(foundSpices)],
     rotation_day: foundDay || null,
     custom_blend_signals: foundSignals,
     spice_forward: foundSpices.length > 0
@@ -58,14 +70,11 @@ async function run() {
   for (let i = 0; i < leads.length; i++) {
     const lead = leads[i];
     console.log(`\n  [${i+1}/${leads.length}] ${lead.company_name}`);
+    console.log(`    🌐 Fetching ${lead.website_url}...`);
     
-    // Try to scrape the website
     const html = await scrapeWebsite(lead.website_url);
+    const analysis = analyzeContent(html, lead.snippet);
     
-    // Analyze content (use snippet as fallback if scraping fails)
-    const analysis = analyzeContent(html || '', lead.snippet);
-    
-    // Update lead
     lead.spice_keywords_found = analysis.spice_keywords_found;
     lead.rotation_day = analysis.rotation_day;
     lead.custom_blend_signals = analysis.custom_blend_signals;
@@ -77,7 +86,7 @@ async function run() {
   }
   
   fs.writeFileSync('leads_master.json', JSON.stringify(leads, null, 2));
-  console.log('\n✅ Menu mining complete!\n');
+  console.log("\n✅ Menu mining complete!");
 }
 
 run();
