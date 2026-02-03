@@ -1,0 +1,40 @@
+{
+  "success": [
+    {
+      "company": "Fresh Meal Prep & Delivery Services Philadelphia",
+      "contact": "Loraine Velez",
+      "apollo_id": "69825bb2b6b8c90011610a37"
+    },
+    {
+      "company": "Clean Eatz",
+      "contact": "Meghan Ragland",
+      "apollo_id": "69825bb3129ffb001d556edd"
+    },
+    {
+      "company": "Feast & Fettle",
+      "contact": "Leigh Fitzgerald",
+      "apollo_id": "69825bb421d816001dc70e4e"
+    },
+    {
+      "company": "Be Wellfed",
+      "contact": "Rachel Crabtree",
+      "apollo_id": "69825bb53ae3be000d219ce5"
+    },
+    {
+      "company": "Mom's Meals",
+      "contact": "Blair Underwood",
+      "apollo_id": "69825bb5129ffb001d556eeb"
+    },
+    {
+      "company": "Fit Food Prep",
+      "contact": "Cory Marquez",
+      "apollo_id": "69825bb6fad56c001101933f"
+    },
+    {
+      "company": "Valley Prep",
+      "contact": "Angel Ceballo",
+      "apollo_id": "69825bb721d816001dc70e5a"
+    }
+  ],
+  "failed": []
+}

@@ -30,7 +30,7 @@ const BLOCKED_PATTERNS = [
 ];
 
 // National players - suppress (price-focused, not our ICP)
-const SUPPRESSED_COMPANIES = [
+const SUPPRESSED_NATIONALS = [
   'hellofresh',
   'factor75',
   'factor.',
@@ -47,6 +47,22 @@ const SUPPRESSED_COMPANIES = [
   'trifecta'
 ];
 
+// Existing customers - already buying from us
+const EXISTING_CUSTOMERS = [
+  'nutre',
+  'nutre meal',
+  'fit food nj',
+  'fitfoodnj',
+  'performance meal prep',
+  'eatpmp',
+  'farerx',
+  'fare rx',
+  'fit meals direct',
+  'fitmealsdirect',
+  'global village cuisine',
+  'globalvillagecuisine'
+];
+
 function isBlocked(url, title) {
   const urlLower = url.toLowerCase();
   const titleLower = title.toLowerCase();
@@ -58,7 +74,10 @@ function isBlocked(url, title) {
   if (/^\d+\s+(best|top|healthy|local|great)/i.test(titleLower)) return true;
   
   // Block national players
-  if (SUPPRESSED_COMPANIES.some(c => urlLower.includes(c) || titleLower.includes(c))) return true;
+  if (SUPPRESSED_NATIONALS.some(c => urlLower.includes(c) || titleLower.includes(c))) return true;
+  
+  // Block existing customers
+  if (EXISTING_CUSTOMERS.some(c => urlLower.includes(c) || titleLower.includes(c))) return true;
   
   return false;
 }
