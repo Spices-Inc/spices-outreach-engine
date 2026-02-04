@@ -18,7 +18,7 @@ async function readApprovedLeads() {
         // Read the sheet
         const response = await sheets.spreadsheets.values.get({
             spreadsheetId: SHEET_ID,
-            range: 'Sheet1!A:M'
+            range: 'Sheet1!A:P'
         });
 
         const rows = response.data.values;
@@ -31,23 +31,28 @@ async function readApprovedLeads() {
         // Skip header row
         const dataRows = rows.slice(1);
 
-        // Load the full lead data
+        // Load the full lead data with emails
         const allLeads = JSON.parse(fs.readFileSync('final_leads_for_pipedrive.json', 'utf8'));
 
         const approved = [];
         const nixed = [];
 
+        // Column indexes (0-based):
+        // B = Company (1), P = Status (15)
         dataRows.forEach((row, index) => {
-            const leadNum = parseInt(row[0]) - 1; // Lead # is 1-indexed
-            const company = row[1];
-            const status = (row[12] || '').toLowerCase().trim(); // Status column (M)
+            const company = row[1] || '';
+            const status = (row[15] || '').toLowerCase().trim();
+
+            // Find matching lead by company name
+            const matchingLead = allLeads.find(lead => {
+                const leadCompany = lead.company_name.split(' - ')[0].split(':')[0].trim().toLowerCase();
+                return leadCompany === company.toLowerCase();
+            });
 
             if (status === 'nix') {
-                nixed.push({ index: leadNum, company });
-            } else {
-                if (allLeads[leadNum]) {
-                    approved.push(allLeads[leadNum]);
-                }
+                nixed.push({ company });
+            } else if (matchingLead) {
+                approved.push(matchingLead);
             }
         });
 
