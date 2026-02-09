@@ -1,0 +1,7181 @@
+{
+  "version": "2.0",
+  "created_at": "2026-02-09T20:46:36.760Z",
+  "icp": "meal_prep",
+  "waterfall_order": [
+    "gold_1day",
+    "gold_2day",
+    "silver_3day"
+  ],
+  "keyword_tiers": {
+    "tier1_category": [
+      "Meal Prep Delivery",
+      "Prepared Meals",
+      "Ready to Eat Meals",
+      "Healthy Meal Service"
+    ],
+    "tier2_operational": [
+      "Weekly Menu Delivery",
+      "Subscription Meal Plan",
+      "Direct to Consumer Food",
+      "Freshly Prepared Food Delivery"
+    ],
+    "tier3_specialized": [
+      "Performance Nutrition Meals",
+      "Dietary Meal Delivery",
+      "Macro-Counted Meals",
+      "Gourmet Prepared Food"
+    ]
+  },
+  "all_keywords": [
+    "Meal Prep Delivery",
+    "Prepared Meals",
+    "Ready to Eat Meals",
+    "Healthy Meal Service",
+    "Weekly Menu Delivery",
+    "Subscription Meal Plan",
+    "Direct to Consumer Food",
+    "Freshly Prepared Food Delivery",
+    "Performance Nutrition Meals",
+    "Dietary Meal Delivery",
+    "Macro-Counted Meals",
+    "Gourmet Prepared Food"
+  ],
+  "summary": {
+    "total_regions": 242,
+    "total_scfs": 349,
+    "gold_1day_regions": 126,
+    "gold_2day_regions": 59,
+    "silver_3day_regions": 57,
+    "total_search_combinations": 2904,
+    "active_regions": 242,
+    "depleted_regions": 0
+  },
+  "regions": [
+    {
+      "city": "Pittsburgh",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "150",
+        "151",
+        "152"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Washington",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "153"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Uniontown",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "154"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Johnstown",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "155",
+        "159"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Greensburg",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "156"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Indiana",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "157"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "DuBois",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "158"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Butler",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "160"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "New Castle",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "161"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Kittanning",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "162"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Oil City",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "163"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Erie",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "164",
+        "165"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Altoona",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "166"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Bradford",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "167"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "State College",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "168"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Wellsboro",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "169"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Harrisburg",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "170",
+        "171"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Chambersburg",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "172"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "York",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "173",
+        "174"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Lancaster",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "175",
+        "176"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Williamsport",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "177"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Sunbury",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "178"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Pottsville",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "179"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Allentown",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "180"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Bethlehem",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "181"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Hazleton",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "182"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Stroudsburg",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "183"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Scranton",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "184",
+        "185"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Wilkes-Barre",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "186",
+        "187"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Montrose",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "188"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Doylestown",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "189"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Philadelphia",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "190",
+        "191"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Southeastern PA",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "193"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Norristown",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "194"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Reading",
+      "state": "PA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "195",
+        "196"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Newark",
+      "state": "NJ",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "070"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Jersey City",
+      "state": "NJ",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "071",
+        "073"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Elizabeth",
+      "state": "NJ",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "072"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Paterson",
+      "state": "NJ",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "074",
+        "075"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Hackensack",
+      "state": "NJ",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "076"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Red Bank",
+      "state": "NJ",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "077"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Dover",
+      "state": "NJ",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "078"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Summit",
+      "state": "NJ",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "079"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "South Jersey",
+      "state": "NJ",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "080"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Camden",
+      "state": "NJ",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "081"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Turnersville",
+      "state": "NJ",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "082"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Vineland",
+      "state": "NJ",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "083"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Atlantic City",
+      "state": "NJ",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "084"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Trenton",
+      "state": "NJ",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "085",
+        "086"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Lakewood",
+      "state": "NJ",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "087"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "New Brunswick",
+      "state": "NJ",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "088",
+        "089"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "New York City",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "100"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Manhattan",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "101",
+        "102"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Staten Island",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "103"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Bronx",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "104"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Westchester",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "105"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "White Plains",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "106"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Yonkers",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "107"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "New Rochelle",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "108"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Suffern",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "109"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Queens",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "110"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Long Island City",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "111"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Brooklyn",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "112"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Flushing",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "113"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Jamaica",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "114"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Western Nassau",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "115"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Long Island",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "116"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Hicksville",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "117"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Huntington",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "118"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Riverhead",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "119"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Albany",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "120",
+        "121",
+        "122"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Schenectady",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "123"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Kingston",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "124"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Poughkeepsie",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "125",
+        "126"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Middletown",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "127"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Glens Falls",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "128"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Plattsburgh",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "129"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Syracuse",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "130",
+        "131",
+        "132"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Utica",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "133",
+        "134",
+        "135"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Watertown",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "136"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Binghamton",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "137",
+        "138",
+        "139"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Buffalo",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "140",
+        "141",
+        "142"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Niagara Falls",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "143"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Rochester",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "144",
+        "145",
+        "146"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Jamestown",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "147"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Elmira",
+      "state": "NY",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "148",
+        "149"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Hartford",
+      "state": "CT",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "060",
+        "061"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Willimantic",
+      "state": "CT",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "062"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "New London",
+      "state": "CT",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "063"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "New Haven",
+      "state": "CT",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "064",
+        "065"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Bridgeport",
+      "state": "CT",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "066"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Waterbury",
+      "state": "CT",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "067"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Stamford",
+      "state": "CT",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "068"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Danbury",
+      "state": "CT",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "069"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Wilmington",
+      "state": "DE",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "197",
+        "198"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Dover",
+      "state": "DE",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "199"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Southern Maryland",
+      "state": "MD",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "206"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "College Park",
+      "state": "MD",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "207"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Laurel",
+      "state": "MD",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "208"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Silver Spring",
+      "state": "MD",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "209"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Baltimore",
+      "state": "MD",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "210",
+        "211",
+        "212",
+        "213"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Annapolis",
+      "state": "MD",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "214"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Cumberland",
+      "state": "MD",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "215"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Easton",
+      "state": "MD",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "216"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Frederick",
+      "state": "MD",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "217"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Salisbury",
+      "state": "MD",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "218"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Hagerstown",
+      "state": "MD",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "219"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Springfield",
+      "state": "MA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "010",
+        "011"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Pittsfield",
+      "state": "MA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "012"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Greenfield",
+      "state": "MA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "013"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Fitchburg",
+      "state": "MA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "014"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Worcester",
+      "state": "MA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "015",
+        "016"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Framingham",
+      "state": "MA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "017"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Woburn",
+      "state": "MA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "018"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Lynn",
+      "state": "MA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "019"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Boston",
+      "state": "MA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "020",
+        "021",
+        "022"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Brockton",
+      "state": "MA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "023",
+        "024"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Cape Cod",
+      "state": "MA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "025",
+        "026"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "New Bedford",
+      "state": "MA",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "027"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Providence",
+      "state": "RI",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "028",
+        "029"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Manchester",
+      "state": "NH",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "030",
+        "031"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Concord",
+      "state": "NH",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "032",
+        "033"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Keene",
+      "state": "NH",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "034"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "White River Junction",
+      "state": "VT",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "035",
+        "036"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Claremont",
+      "state": "NH",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "037"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Portsmouth",
+      "state": "NH",
+      "tier": "gold_1day",
+      "priority": 1,
+      "scfs": [
+        "038"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Portsmouth",
+      "state": "NH",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "039"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Portland",
+      "state": "ME",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "040",
+        "041"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Auburn",
+      "state": "ME",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "042"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Augusta",
+      "state": "ME",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "043"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Bangor",
+      "state": "ME",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "044"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Bath",
+      "state": "ME",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "045"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Machias",
+      "state": "ME",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "046"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Houlton",
+      "state": "ME",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "047"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Rockland",
+      "state": "ME",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "048"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Waterville",
+      "state": "ME",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "049"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "White River Junction",
+      "state": "VT",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "050"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Bellows Falls",
+      "state": "VT",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "051"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Bennington",
+      "state": "VT",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "052"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Brattleboro",
+      "state": "VT",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "053"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Burlington",
+      "state": "VT",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "054"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Middlebury",
+      "state": "VT",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "055"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Montpelier",
+      "state": "VT",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "056"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Rutland",
+      "state": "VT",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "057"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "St Johnsbury",
+      "state": "VT",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "058"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "St Albans",
+      "state": "VT",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "059"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Washington",
+      "state": "DC",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "200",
+        "202",
+        "203",
+        "204",
+        "205"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Dulles",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "201"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Northern Virginia",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "220"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Fairfax",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "221"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Arlington",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "222"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Alexandria",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "223"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Fredericksburg",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "224",
+        "225"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Winchester",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "226"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Culpeper",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "227"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Harrisonburg",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "228"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Charlottesville",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "229"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Richmond",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "230",
+        "231",
+        "232"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Norfolk",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "233",
+        "235"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Virginia Beach",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "234"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Newport News",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "236"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Portsmouth",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "237"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Petersburg",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "238"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Farmville",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "239"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Roanoke",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "240",
+        "241"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Bristol",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "242"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Pulaski",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "243"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Staunton",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "244"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Lynchburg",
+      "state": "VA",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "245"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Bluefield",
+      "state": "WV",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "246"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Columbus",
+      "state": "OH",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "430",
+        "431",
+        "432",
+        "433"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Toledo",
+      "state": "OH",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "434",
+        "435",
+        "436"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Zanesville",
+      "state": "OH",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "437",
+        "438"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Steubenville",
+      "state": "OH",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "439"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Cleveland",
+      "state": "OH",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "440",
+        "441"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Akron",
+      "state": "OH",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "442",
+        "443"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Youngstown",
+      "state": "OH",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "444",
+        "445"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Canton",
+      "state": "OH",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "446",
+        "447"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Mansfield",
+      "state": "OH",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "448",
+        "449"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Cincinnati",
+      "state": "OH",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "450",
+        "451",
+        "452",
+        "459"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Dayton",
+      "state": "OH",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "453",
+        "454"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Springfield",
+      "state": "OH",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "455"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Chillicothe",
+      "state": "OH",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "456"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Athens",
+      "state": "OH",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "457"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Lima",
+      "state": "OH",
+      "tier": "gold_2day",
+      "priority": 2,
+      "scfs": [
+        "458"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Bluefield",
+      "state": "WV",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "247",
+        "248"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Lewisburg",
+      "state": "WV",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "249"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Charleston",
+      "state": "WV",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "250",
+        "251",
+        "252",
+        "253"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Martinsburg",
+      "state": "WV",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "254"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Huntington",
+      "state": "WV",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "255",
+        "256",
+        "257"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Beckley",
+      "state": "WV",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "258",
+        "259"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Wheeling",
+      "state": "WV",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "260"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Parkersburg",
+      "state": "WV",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "261"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Buckhannon",
+      "state": "WV",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "262"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Clarksburg",
+      "state": "WV",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "263",
+        "264"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Morgantown",
+      "state": "WV",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "265"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Gassaway",
+      "state": "WV",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "266",
+        "267"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Petersburg",
+      "state": "WV",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "268",
+        "269"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Greensboro",
+      "state": "NC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "270",
+        "272",
+        "273",
+        "274"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Winston-Salem",
+      "state": "NC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "271"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Raleigh",
+      "state": "NC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "275",
+        "276"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Durham",
+      "state": "NC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "277"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Rocky Mount",
+      "state": "NC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "278",
+        "279"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Charlotte",
+      "state": "NC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "280",
+        "281",
+        "282"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Fayetteville",
+      "state": "NC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "283"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Wilmington",
+      "state": "NC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "284"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Kinston",
+      "state": "NC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "285"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Hickory",
+      "state": "NC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "286"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Asheville",
+      "state": "NC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "287",
+        "288",
+        "289"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Columbia",
+      "state": "SC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "290",
+        "291",
+        "292"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Greenville",
+      "state": "SC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "293",
+        "296"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Charleston",
+      "state": "SC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "294"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Florence",
+      "state": "SC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "295"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Rock Hill",
+      "state": "SC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "297"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Hilton Head",
+      "state": "SC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "298"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Myrtle Beach",
+      "state": "SC",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "299"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Atlanta",
+      "state": "GA",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "300",
+        "301",
+        "302",
+        "303",
+        "305",
+        "311"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Statesboro",
+      "state": "GA",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "304"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Athens",
+      "state": "GA",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "306"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Dalton",
+      "state": "GA",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "307"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Augusta",
+      "state": "GA",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "308",
+        "309"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Macon",
+      "state": "GA",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "310",
+        "312"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Savannah",
+      "state": "GA",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "313",
+        "314"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Waycross",
+      "state": "GA",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "315"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Valdosta",
+      "state": "GA",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "316"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Albany",
+      "state": "GA",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "317"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Columbus",
+      "state": "GA",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "318",
+        "319"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Jacksonville",
+      "state": "FL",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "320",
+        "322"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Daytona Beach",
+      "state": "FL",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "321"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Tallahassee",
+      "state": "FL",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "323"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Panama City",
+      "state": "FL",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "324"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Pensacola",
+      "state": "FL",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "325"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Gainesville",
+      "state": "FL",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "326"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Orlando",
+      "state": "FL",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "327",
+        "328"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Melbourne",
+      "state": "FL",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "329"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Miami",
+      "state": "FL",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "330",
+        "331",
+        "332"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Fort Lauderdale",
+      "state": "FL",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "333"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "West Palm Beach",
+      "state": "FL",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "334"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Tampa",
+      "state": "FL",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "335",
+        "336"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "St Petersburg",
+      "state": "FL",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "337"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Lakeland",
+      "state": "FL",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "338"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    },
+    {
+      "city": "Fort Myers",
+      "state": "FL",
+      "tier": "silver_3day",
+      "priority": 3,
+      "scfs": [
+        "339"
+      ],
+      "keywords_searched": [],
+      "keywords_remaining": [
+        "Meal Prep Delivery",
+        "Prepared Meals",
+        "Ready to Eat Meals",
+        "Healthy Meal Service",
+        "Weekly Menu Delivery",
+        "Subscription Meal Plan",
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
+        "Performance Nutrition Meals",
+        "Dietary Meal Delivery",
+        "Macro-Counted Meals",
+        "Gourmet Prepared Food"
+      ],
+      "total_companies_found": 0,
+      "new_companies_last_run": 0,
+      "consecutive_zero_runs": 0,
+      "status": "active",
+      "last_searched": null
+    }
+  ]
+}
