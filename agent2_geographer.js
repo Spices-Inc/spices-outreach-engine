@@ -41,46 +41,6 @@ function getTransitText(days) {
   return `within ${days} days`;
 }
 
-function cleanCompanyName(name) {
-  let clean = name
-    .split(':')[0]
-    .split('|')[0]
-    .split(' - ')[0]
-    .split(' – ')[0]
-    .replace(/\.\.\./g, '')
-    .trim();
-  
-  clean = clean
-    .replace(/Philadelphia$/i, '')
-    .replace(/Pennsylvania$/i, '')
-    .replace(/PA$/i, '')
-    .trim();
-  
-  return clean;
-}
-
-function extractNameFromUrl(url) {
-  try {
-    const hostname = new URL(url).hostname;
-    let name = hostname
-      .replace('www.', '')
-      .replace('.com', '')
-      .replace('.net', '')
-      .replace('.org', '')
-      .replace(/philly$/i, '')
-      .replace(/pgh$/i, '')
-      .replace(/pa$/i, '');
-    
-    // Add spaces before capital letters or between words
-    name = name.replace(/([a-z])([A-Z])/g, '$1 $2');
-    name = name.replace(/-/g, ' ');
-    
-    return name;
-  } catch (e) {
-    return null;
-  }
-}
-
 async function searchGooglePlaces(searchTerm) {
   const searchUrl = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json`;
   const searchRes = await axios.get(searchUrl, {
@@ -139,24 +99,55 @@ async function searchGooglePlaces(searchTerm) {
   return { city, state, zip, formatted_address: result.formatted_address };
 }
 
+function extractDomain(url) {
+  try {
+    const hostname = new URL(url).hostname.replace('www.', '');
+    return hostname.split('.')[0];
+  } catch (e) {
+    return null;
+  }
+}
+
 async function findPlaceAddress(companyName, websiteUrl) {
   try {
-    // First try: cleaned company name
-    const cleanName = cleanCompanyName(companyName);
-    console.log(`     📡 Searching: "${cleanName}"`);
+    // Search 1: Company name as-is
+    console.log(`     📡 Search 1: "${companyName}"`);
+    let result = await searchGooglePlaces(companyName);
+    if (result && result.zip) return result;
     
-    let result = await searchGooglePlaces(cleanName);
+    // Search 2: Company name + "meal prep"
+    const mealPrepSearch = `${companyName} meal prep`;
+    console.log(`     📡 Search 2: "${mealPrepSearch}"`);
+    result = await searchGooglePlaces(mealPrepSearch);
+    if (result && result.zip) return result;
     
-    // Second try: extract name from URL
-    if (!result && websiteUrl) {
-      const urlName = extractNameFromUrl(websiteUrl);
-      if (urlName && urlName !== cleanName.toLowerCase()) {
-        console.log(`     📡 Retry with URL name: "${urlName}"`);
-        result = await searchGooglePlaces(urlName);
+    // Search 3: Domain name raw
+    if (websiteUrl) {
+      const domain = extractDomain(websiteUrl);
+      if (domain) {
+        console.log(`     📡 Search 3: "${domain}" (from URL)`);
+        result = await searchGooglePlaces(domain);
+        if (result && result.zip) return result;
       }
     }
     
-    return result;
+    // Search 4: Full website hostname
+    if (websiteUrl) {
+      try {
+        const hostname = new URL(websiteUrl).hostname;
+        console.log(`     📡 Search 4: "${hostname}"`);
+        result = await searchGooglePlaces(hostname);
+        if (result && result.zip) return result;
+      } catch (e) {}
+    }
+    
+    // Search 5: Company name + state keywords
+    const stateSearch = `${companyName} Philadelphia Pennsylvania`;
+    console.log(`     📡 Search 5: "${stateSearch}"`);
+    result = await searchGooglePlaces(stateSearch);
+    if (result && result.zip) return result;
+    
+    return null;
     
   } catch (e) {
     console.log(`     ⚠️  API error: ${e.message}`);
@@ -173,9 +164,18 @@ async function run() {
   }
   
   const leads = JSON.parse(fs.readFileSync('leads_master.json', 'utf8'));
+  let found = 0;
+  let notFound = 0;
   
   for (const lead of leads) {
-    console.log(`  🔍 ${lead.company_name.substring(0, 50)}...`);
+    console.log(`  🔍 ${lead.company_name.substring(0, 60)}...`);
+    
+    // Skip if already has address
+    if (lead.zip && lead.city) {
+      console.log(`     ✅ Already has address: ${lead.city}, ${lead.state} ${lead.zip}\n`);
+      found++;
+      continue;
+    }
     
     const addr = await findPlaceAddress(lead.company_name, lead.website_url);
     
@@ -188,6 +188,7 @@ async function run() {
       lead.transit_days_text = getTransitText(lead.transit_days);
       
       console.log(`     ✅ ${addr.city}, ${addr.state} ${addr.zip} (${lead.transit_days_text})\n`);
+      found++;
     } else {
       lead.city = null;
       lead.state = null;
@@ -196,14 +197,15 @@ async function run() {
       lead.transit_days = null;
       lead.transit_days_text = null;
       
-      console.log(`     ❌ No address found\n`);
+      console.log(`     ❌ No address found after all attempts\n`);
+      notFound++;
     }
     
     await new Promise(r => setTimeout(r, 300));
   }
   
   fs.writeFileSync('leads_master.json', JSON.stringify(leads, null, 2));
-  console.log(`\n✅ Geographer complete!\n`);
+  console.log(`\n✅ Geographer complete! Found: ${found} | Not found: ${notFound}\n`);
 }
 
 run();

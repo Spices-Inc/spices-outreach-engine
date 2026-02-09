@@ -2,7 +2,6 @@ const fs = require('fs');
 const { google } = require('googleapis');
 require('dotenv').config();
 
-// Load credentials
 const auth = new google.auth.GoogleAuth({
     keyFile: './google-credentials.json',
     scopes: ['https://www.googleapis.com/auth/spreadsheets']
@@ -15,35 +14,27 @@ async function readApprovedLeads() {
     console.log('\n📋 Agent 9: Reading approved leads from Google Sheet...\n');
 
     try {
-        // Read the sheet
         const response = await sheets.spreadsheets.values.get({
             spreadsheetId: SHEET_ID,
-            range: 'Sheet1!A:P'
+            range: 'Sheet1!A:U'
         });
 
         const rows = response.data.values;
-
         if (!rows || rows.length <= 1) {
             console.log('⚠️  No leads found in sheet.');
             return;
         }
 
-        // Skip header row
         const dataRows = rows.slice(1);
-
-        // Load the full lead data with emails
-        const allLeads = JSON.parse(fs.readFileSync('final_leads_for_pipedrive.json', 'utf8'));
+        const allLeads = JSON.parse(fs.readFileSync('qualified_leads.json', 'utf8'));
 
         const approved = [];
         const nixed = [];
 
-        // Column indexes (0-based):
-        // B = Company (1), P = Status (15)
-        dataRows.forEach((row, index) => {
+        dataRows.forEach((row) => {
             const company = row[1] || '';
-            const status = (row[15] || '').toLowerCase().trim();
+            const status = (row[20] || '').toLowerCase().trim();  // Column U (index 20)
 
-            // Find matching lead by company name
             const matchingLead = allLeads.find(lead => {
                 const leadCompany = lead.company_name.split(' - ')[0].split(':')[0].trim().toLowerCase();
                 return leadCompany === company.toLowerCase();
@@ -56,20 +47,18 @@ async function readApprovedLeads() {
             }
         });
 
-        // Save approved leads
         fs.writeFileSync('approved_leads_for_apollo.json', JSON.stringify(approved, null, 2));
 
         console.log(`✅ Approved: ${approved.length} leads`);
         approved.forEach(lead => {
             const company = lead.company_name.split(' - ')[0].split(':')[0].trim();
-            console.log(`   ✅ ${company} (${lead.city})`);
+            const track = lead.sequence_track === 'B' ? 'Track B (Alias)' : 'Track A (Direct)';
+            console.log(`   ✅ ${company} (${lead.city}) — ${track} — ${lead.contact_email}`);
         });
 
         if (nixed.length > 0) {
             console.log(`\n❌ Nixed: ${nixed.length} leads`);
-            nixed.forEach(n => {
-                console.log(`   ❌ ${n.company}`);
-            });
+            nixed.forEach(n => console.log(`   ❌ ${n.company}`));
         }
 
         console.log(`\n📁 Saved to: approved_leads_for_apollo.json\n`);

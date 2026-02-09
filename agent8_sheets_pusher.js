@@ -52,6 +52,26 @@ function cleanCompanyName(name) {
     return name.split(' - ')[0].split(':')[0].trim();
 }
 
+// Helper: Sequence track label for Rob
+function getTrackLabel(lead) {
+    if (lead.sequence_track === 'B') return 'B — Alias 2-Step';
+    if (lead.sequence_track === 'A') return 'A — Standard 5-Email';
+    return '';
+}
+
+// Helper: Discovery source label for Rob
+function getDiscoveryLabel(source) {
+    const labels = {
+        'website_scrape': 'Website',
+        'website+linkedin': 'Website + LinkedIn',
+        'linkedin_direct': 'LinkedIn',
+        'parent_company_match': 'Parent Company',
+        'alias_fallback': 'Alias Fallback',
+        'none': 'None'
+    };
+    return labels[source] || source || '';
+}
+
 async function pushLeadsToSheet() {
     console.log('\n📊 Agent 8: Pushing leads to Google Sheet...\n');
 
@@ -69,7 +89,7 @@ async function pushLeadsToSheet() {
     try {
         const response = await sheets.spreadsheets.values.get({
             spreadsheetId: SHEET_ID,
-            range: 'Sheet1!A:P'
+            range: 'Sheet1!A:U'
         });
         
         if (response.data.values && response.data.values.length > 1) {
@@ -80,24 +100,29 @@ async function pushLeadsToSheet() {
         console.log('  Creating new sheet structure...');
     }
 
-    // Headers
+    // Headers — 21 columns (A:U)
     const headers = [
-        'Date Added',
-        'Company',
-        'City',
-        'State',
-        'Days to Delivery',
-        'Transit Text',
-        'Rotation Day',
-        'Rotation Line',
-        'Blend Hook',
-        'Spice Keywords',
-        'Tier',
-        'Score',
-        'Contact',
-        'Title',
-        'Apollo Status',
-        'Status'
+        'Date Added',       // A
+        'Company',          // B
+        'City',             // C
+        'State',            // D
+        'Days to Delivery', // E
+        'Transit Text',     // F
+        'Rotation Day',     // G
+        'Rotation Line',    // H
+        'Blend Hook',       // I
+        'Spice Keywords',   // J
+        'Tier',             // K
+        'Score',            // L
+        'Contact',          // M
+        'Title',            // N
+        'Email',            // O
+        'Email Status',     // P
+        'Strike',           // Q
+        'Sequence Track',   // R
+        'Discovery Source', // S  ← NEW
+        'Apollo Status',    // T
+        'Status'            // U  (Rob writes "Nix" here to reject)
     ];
 
     // Filter out duplicates
@@ -115,22 +140,27 @@ async function pushLeadsToSheet() {
 
     // Build data rows for new leads
     const newRows = newLeads.map(lead => [
-        getToday(),
-        cleanCompanyName(lead.company_name),
-        lead.city || '',
-        lead.state || '',
-        lead.transit_days || '',
-        getTransitText(lead.transit_days),
-        lead.rotation_day || '',
-        getRotationLine(lead.rotation_day),
-        getBlendHook(lead.custom_blend_signals),
-        (lead.spice_keywords_found || []).join(', '),
-        lead.tier ? lead.tier.toUpperCase() : '',
-        lead.qualification_score || '',
-        lead.contact_name || '',
-        lead.contact_title || '',
-        '',
-        ''
+        getToday(),                                          // A - Date
+        cleanCompanyName(lead.company_name),                 // B - Company
+        lead.city || '',                                     // C - City
+        lead.state || '',                                    // D - State
+        lead.transit_days || '',                              // E - Days to Delivery
+        getTransitText(lead.transit_days),                   // F - Transit Text
+        lead.rotation_day || '',                              // G - Rotation Day
+        getRotationLine(lead.rotation_day),                  // H - Rotation Line
+        getBlendHook(lead.custom_blend_signals),             // I - Blend Hook
+        (lead.spice_keywords_found || []).join(', '),        // J - Spice Keywords
+        lead.tier ? lead.tier.toUpperCase() : '',            // K - Tier
+        lead.qualification_score || '',                       // L - Score
+        lead.contact_name || '',                              // M - Contact
+        lead.contact_title || '',                             // N - Title
+        lead.contact_email || '',                             // O - Email
+        lead.email_status || '',                              // P - Email Status
+        lead.strike_level || '',                              // Q - Strike
+        getTrackLabel(lead),                                 // R - Sequence Track
+        getDiscoveryLabel(lead.discovery_source),            // S - Discovery Source
+        '',                                                  // T - Apollo Status
+        ''                                                   // U - Status (Nix to reject)
     ]);
 
     try {
@@ -144,7 +174,7 @@ async function pushLeadsToSheet() {
         } else {
             await sheets.spreadsheets.values.append({
                 spreadsheetId: SHEET_ID,
-                range: 'Sheet1!A:P',
+                range: 'Sheet1!A:U',
                 valueInputOption: 'RAW',
                 insertDataOption: 'INSERT_ROWS',
                 resource: { values: newRows }
@@ -156,11 +186,11 @@ async function pushLeadsToSheet() {
 
         newLeads.forEach((lead, i) => {
             const company = cleanCompanyName(lead.company_name);
-            const blendHook = getBlendHook(lead.custom_blend_signals);
-            console.log(`  ${i + 1}. ${company} (${lead.city}) - ${lead.transit_days} day(s) - ${lead.tier.toUpperCase()}${blendHook ? ' [' + blendHook + ']' : ''}`);
+            const track = lead.sequence_track === 'B' ? 'Track B (Alias)' : 'Track A (Direct)';
+            console.log(`  ${i + 1}. ${company} (${lead.city}) — ${lead.tier.toUpperCase()} ${lead.qualification_score}pts — ${track} — ${lead.contact_email || 'NO EMAIL'} [${getDiscoveryLabel(lead.discovery_source)}]`);
         });
 
-        console.log('\n👉 Review the sheet. Type "Nix" in Status column to remove leads.');
+        console.log('\n👉 Review the sheet. Leave blank to approve, type "Nix" in Status column (U) to reject.');
         console.log('');
 
     } catch (error) {

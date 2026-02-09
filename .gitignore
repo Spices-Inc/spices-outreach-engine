@@ -25,3 +25,16 @@ Thumbs.db
 # Logs
 logs/
 *.log
+# Google service account (sensitive)
+google-credentials.json
+
+# Agent output files (regenerated each run)
+apollo_push_results.json
+approved_leads_for_apollo.json
+final_leads_for_pipedrive.json
+pipedrive_pushed.json
+scf_master.json
+
+# Backup files
+*.bak
+*.save

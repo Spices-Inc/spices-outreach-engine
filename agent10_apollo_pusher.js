@@ -2,10 +2,15 @@ const fs = require('fs');
 require('dotenv').config();
 
 const APOLLO_API_KEY = process.env.APOLLO_API_KEY;
-const SEQUENCE_ID = '6983a4ceaca4e3000d7f1d19';
+
+// Track A = 5-email direct sequence (Strike 1 or 2 — we have a real name)
+const TRACK_A_SEQUENCE_ID = '6983a4ceaca4e3000d7f1d19';
+
+// Track B = 2-email gatekeeper bypass (Strike 3 — alias only, no real name)
+const TRACK_B_SEQUENCE_ID = '6989f0f40299d800158811b0';
 
 // Apollo custom field IDs
-const FIELD_IDS = {
+const APOLLO_FIELDS = {
     Transit_Time: '698399755c125b0019e50236',
     Rotation_Day: '6983999f161bc30011444068',
     Blend_Hook: '698399ad33ac14001141c722',
@@ -39,6 +44,41 @@ function cleanCompanyName(name) {
     return name.split(' - ')[0].split(':')[0].trim();
 }
 
+// Decides which sequence to use based on how we found the contact
+function pickSequence(lead) {
+    if (lead.discovery_source === 'alias_fallback') {
+        return { id: TRACK_B_SEQUENCE_ID, name: 'Track B (Alias 2-Step)' };
+    }
+    return { id: TRACK_A_SEQUENCE_ID, name: 'Track A (Direct 5-Email)' };
+}
+
+// Fetches Rob's email account ID from Apollo so sequences can send from his address
+async function getEmailAccountId() {
+    try {
+        const res = await fetch('https://api.apollo.io/v1/email_accounts', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Api-Key': APOLLO_API_KEY
+            }
+        });
+
+        const data = await res.json();
+
+        if (data.email_accounts && data.email_accounts.length > 0) {
+            const account = data.email_accounts[0];
+            console.log(`📧 Sending from: ${account.email} (ID: ${account.id})`);
+            return account.id;
+        }
+
+        console.log('⚠️  No email accounts found in Apollo. Sequences may not send.');
+        return null;
+    } catch (error) {
+        console.log(`⚠️  Could not fetch email accounts: ${error.message}`);
+        return null;
+    }
+}
+
 async function pushToApollo() {
     console.log('\n🚀 Agent 10: Pushing approved leads to Apollo + Sequence...\n');
 
@@ -56,6 +96,9 @@ async function pushToApollo() {
 
     console.log(`📋 Found ${leads.length} approved leads\n`);
 
+    // Get Rob's email account ID once (used for all sequence enrollments)
+    const emailAccountId = await getEmailAccountId();
+
     const results = { success: [], failed: [] };
 
     for (const lead of leads) {
@@ -68,8 +111,11 @@ async function pushToApollo() {
         const blendHook = getBlendHook(lead.custom_blend_signals);
         const spiceKeywords = (lead.spice_keywords_found || []).join(', ');
 
+        // Decide Track A or Track B based on discovery source
+        const sequence = pickSequence(lead);
+
         try {
-            // Step 1: Create contact
+            // Step 1: Create contact WITH EMAIL
             const createRes = await fetch('https://api.apollo.io/v1/contacts', {
                 method: 'POST',
                 headers: {
@@ -79,6 +125,7 @@ async function pushToApollo() {
                 body: JSON.stringify({
                     first_name: firstName,
                     last_name: lastName,
+                    email: lead.email,
                     organization_name: company,
                     title: lead.contact_title || '',
                     city: lead.city || '',
@@ -107,32 +154,35 @@ async function pushToApollo() {
                 },
                 body: JSON.stringify({
                     typed_custom_fields: {
-                        [FIELD_IDS.Transit_Time]: transitTime,
-                        [FIELD_IDS.Rotation_Day]: rotationDay,
-                        [FIELD_IDS.Blend_Hook]: blendHook,
-                        [FIELD_IDS.Spice_Keywords]: spiceKeywords
+                        [APOLLO_FIELDS.Transit_Time]: transitTime,
+                        [APOLLO_FIELDS.Rotation_Day]: rotationDay,
+                        [APOLLO_FIELDS.Blend_Hook]: blendHook,
+                        [APOLLO_FIELDS.Spice_Keywords]: spiceKeywords
                     }
                 })
             });
 
-            // Step 3: Add to sequence
-            const seqRes = await fetch('https://api.apollo.io/v1/emailer_campaigns/' + SEQUENCE_ID + '/add_contact_ids', {
+            // Step 3: Add to the correct sequence (Track A or Track B)
+            const seqBody = { contact_ids: [contactId] };
+            if (emailAccountId) {
+                seqBody.send_email_from_email_account_id = emailAccountId;
+            }
+
+            const seqRes = await fetch('https://api.apollo.io/v1/emailer_campaigns/' + sequence.id + '/add_contact_ids', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Api-Key': APOLLO_API_KEY
                 },
-                body: JSON.stringify({
-                    contact_ids: [contactId]
-                })
+                body: JSON.stringify(seqBody)
             });
 
             const seqData = await seqRes.json();
 
             if (seqRes.ok) {
-                console.log(`   ✅ ${firstName} ${lastName} (${company}) → Added to sequence`);
-                console.log(`      Transit: ${transitTime} | Rotation: ${rotationDay} | Blend: ${blendHook || 'none'}`);
-                results.success.push({ company, contact: `${firstName} ${lastName}`, apollo_id: contactId });
+                console.log(`   ✅ ${firstName} ${lastName} (${company}) → ${sequence.name}`);
+                console.log(`      Email: ${lead.email} | Transit: ${transitTime} | Rotation: ${rotationDay} | Blend: ${blendHook || 'none'}`);
+                results.success.push({ company, contact: `${firstName} ${lastName}`, email: lead.email, apollo_id: contactId, sequence: sequence.name });
             } else {
                 console.log(`   ⚠️ ${firstName} ${lastName} created but sequence add failed: ${seqData.message || ''}`);
                 results.success.push({ company, contact: `${firstName} ${lastName}`, apollo_id: contactId, sequence_error: true });

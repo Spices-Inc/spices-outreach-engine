@@ -9,31 +9,31 @@ const TEAM_PAGE_PATHS = [
   '/our-story',
   '/meet-the-team',
   '/contact',
+  '/contact-us',
   '/leadership'
 ];
 
 const BUYER_ROLES = {
-  high_priority: ['operations', 'purchasing', 'procurement', 'supply chain', 'kitchen manager', 'culinary director', 'head of operations'],
+  high_priority: ['operations', 'purchasing', 'procurement', 'supply chain', 'kitchen manager', 'culinary director', 'head of operations', 'director of operations'],
   medium_priority: ['chef', 'head chef', 'executive chef', 'culinary'],
   low_priority: ['founder', 'owner', 'ceo', 'president', 'co-founder']
 };
 
+const GENERIC_EMAIL_PROVIDERS = [
+  'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com',
+  'aol.com', 'icloud.com', 'mail.com', 'protonmail.com',
+  'live.com', 'msn.com', 'comcast.net', 'verizon.net'
+];
+
 function looksLikePersonName(text) {
   if (!text || text.length < 3 || text.length > 40) return false;
-  
-  // Must have 2-4 words
   const words = text.trim().split(/\s+/);
   if (words.length < 2 || words.length > 4) return false;
-  
-  // Each word should start with capital letter
   const allCapitalized = words.every(word => /^[A-Z][a-z]+$/.test(word));
   if (!allCapitalized) return false;
-  
-  // Reject common non-name words
   const badWords = ['the', 'and', 'our', 'about', 'contact', 'team', 'menu', 'home', 'new', 'york', 'questions', 'frequently'];
   const hasNoNameWord = words.some(word => badWords.includes(word.toLowerCase()));
   if (hasNoNameWord) return false;
-  
   return true;
 }
 
@@ -55,7 +55,6 @@ function extractTeamMembers(html) {
   const $ = cheerio.load(html);
   const teamMembers = [];
   
-  // Strategy 1: Look for common team patterns in class names
   const teamSelectors = [
     '.team-member',
     '.staff-member', 
@@ -73,14 +72,12 @@ function extractTeamMembers(html) {
       const nameText = $(elem).text().trim();
       
       if (looksLikePersonName(nameText)) {
-        // Look for title in nearby elements
         const parent = $(elem).parent();
         const siblings = parent.find('p, span, div').text().toLowerCase();
         
         let title = null;
         let priority = 'low';
         
-        // Check for role keywords
         Object.entries(BUYER_ROLES).forEach(([level, roles]) => {
           roles.forEach(role => {
             if (siblings.includes(role)) {
@@ -97,10 +94,9 @@ function extractTeamMembers(html) {
     });
   });
   
-  // Strategy 2: Look for "Name, Title" or "Name - Title" patterns
   const bodyText = $('body').text();
   const patterns = [
-    /([A-Z][a-z]+ [A-Z][a-z]+)\s*[,\-–]\s*((?:head of )?operations|operations manager|kitchen manager|executive chef|head chef|chef|founder|owner|ceo|president)/gi
+    /([A-Z][a-z]+ [A-Z][a-z]+)\s*[,\-–]\s*((?:director of |head of )?operations|operations manager|kitchen manager|executive chef|head chef|chef|founder|owner|ceo|president)/gi
   ];
   
   patterns.forEach(pattern => {
@@ -122,44 +118,85 @@ function extractTeamMembers(html) {
   return teamMembers;
 }
 
-async function scrapeTeamPages(websiteUrl) {
-  console.log(`    🌐 Scraping ${websiteUrl} for team info...`);
+function extractEmailsFromHtml(html) {
+  const $ = cheerio.load(html);
+  const emails = new Set();
+  
+  // Strategy 1: mailto: links
+  $('a[href^="mailto:"]').each((i, elem) => {
+    const href = $(elem).attr('href') || '';
+    const email = href.replace('mailto:', '').split('?')[0].trim().toLowerCase();
+    if (email && email.includes('@') && email.includes('.')) {
+      emails.add(email);
+    }
+  });
+  
+  // Strategy 2: Email pattern in visible text
+  const bodyText = $('body').text();
+  const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+  let match;
+  while ((match = emailPattern.exec(bodyText)) !== null) {
+    const email = match[0].toLowerCase();
+    if (!email.endsWith('.png') && !email.endsWith('.jpg') && !email.endsWith('.gif') && !email.endsWith('.svg')) {
+      emails.add(email);
+    }
+  }
+  
+  // Strategy 3: Email in href attributes, data attributes, meta tags
+  $('a[href*="@"], input[value*="@"], meta[content*="@"]').each((i, elem) => {
+    const content = $(elem).attr('href') || $(elem).attr('value') || $(elem).attr('content') || '';
+    const metaMatch = content.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+    if (metaMatch) {
+      emails.add(metaMatch[0].toLowerCase());
+    }
+  });
+  
+  return Array.from(emails);
+}
+
+async function scrapeWebsite(websiteUrl) {
+  console.log(`    🌐 Scraping ${websiteUrl} for team + emails...`);
   
   let baseUrl;
+  let websiteDomain;
   try {
-    baseUrl = new URL(websiteUrl).origin;
+    const parsed = new URL(websiteUrl);
+    baseUrl = parsed.origin;
+    websiteDomain = parsed.hostname.replace('www.', '');
   } catch (e) {
     console.log(`       ⚠️  Invalid URL`);
-    return [];
+    return { teamMembers: [], emails: [], altDomains: [] };
   }
   
   const allTeamMembers = [];
+  const allEmails = [];
   
+  // Scrape homepage
   const homepage = await fetchPage(websiteUrl);
   if (homepage) {
-    const members = extractTeamMembers(homepage);
-    allTeamMembers.push(...members);
+    allTeamMembers.push(...extractTeamMembers(homepage));
+    allEmails.push(...extractEmailsFromHtml(homepage));
   }
   
+  // Scrape all subpages — one pass for both team members and emails
   for (const path of TEAM_PAGE_PATHS) {
     const url = `${baseUrl}${path}`;
     const html = await fetchPage(url);
     
     if (html) {
       console.log(`       ✓ Found page: ${path}`);
-      const members = extractTeamMembers(html);
-      allTeamMembers.push(...members);
+      allTeamMembers.push(...extractTeamMembers(html));
+      allEmails.push(...extractEmailsFromHtml(html));
     }
     
     await new Promise(resolve => setTimeout(resolve, 200));
   }
   
-  // Remove duplicates
+  // Deduplicate team members
   const uniqueMembers = allTeamMembers.filter((member, index, self) =>
     index === self.findIndex(m => m.name === member.name)
   );
   
-  // Sort by priority
   const priorityOrder = { high: 3, medium: 2, low: 1 };
   uniqueMembers.sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]);
   
@@ -172,7 +209,28 @@ async function scrapeTeamPages(websiteUrl) {
     console.log(`       ⚠️  No team members found on website`);
   }
   
-  return uniqueMembers;
+  // Deduplicate emails
+  const uniqueEmails = [...new Set(allEmails)];
+  
+  // Find alternate email domains
+  const altDomains = [];
+  for (const email of uniqueEmails) {
+    const domain = email.split('@')[1];
+    if (domain && domain !== websiteDomain && domain !== `www.${websiteDomain}`) {
+      if (!GENERIC_EMAIL_PROVIDERS.includes(domain) && !altDomains.includes(domain)) {
+        altDomains.push(domain);
+      }
+    }
+  }
+  
+  if (uniqueEmails.length > 0) {
+    console.log(`       📧 Emails found on site: ${uniqueEmails.join(', ')}`);
+  }
+  if (altDomains.length > 0) {
+    console.log(`       🔀 Alternate email domain: ${altDomains.join(', ')}`);
+  }
+  
+  return { teamMembers: uniqueMembers, emails: uniqueEmails, altDomains };
 }
 
-module.exports = { scrapeTeamPages };
+module.exports = { scrapeWebsite };

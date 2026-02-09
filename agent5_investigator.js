@@ -1,82 +1,370 @@
 const fs = require('fs');
 const axios = require('axios');
-const { scrapeTeamPages } = require('./utils/website_scraper');
+const { scrapeWebsite } = require('./utils/website_scraper');
 require('dotenv').config();
 
-const ROLE_SEARCHES = [
-  'operations manager',
-  'head of operations', 
-  'kitchen manager',
-  'executive chef',
-  'head chef',
-  'founder',
-  'owner',
-  'CEO'
+const DEPARTMENTS = ['Operations', 'Production', 'Purchasing', 'Supply Chain', 'Procurement', 'Culinary', 'Kitchen'];
+const SENIORITIES = ['Director', 'Head', 'VP', 'Manager', 'Lead'];
+
+const FUNCTIONAL_ALIASES = [
+  'ops',
+  'production',
+  'purchasing',
+  'operations',
+  'orders',
+  'info',
+  'contact',
+  'hello'
+];
+
+const ALIAS_LOCAL_PARTS = [
+  'info', 'contact', 'hello', 'support', 'ops', 'orders',
+  'production', 'purchasing', 'operations', 'sales', 'admin',
+  'team', 'general', 'office', 'help'
+];
+
+const GENERIC_EMAIL_PROVIDERS = [
+  'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com',
+  'aol.com', 'icloud.com', 'mail.com', 'protonmail.com',
+  'live.com', 'msn.com', 'comcast.net', 'verizon.net'
 ];
 
 function looksLikePersonName(text) {
   if (!text || text.length < 5 || text.length > 40) return false;
-  
   const words = text.trim().split(/\s+/);
   if (words.length < 2 || words.length > 4) return false;
-  
   const allCapitalized = words.every(word => /^[A-Z][a-z]+$/.test(word));
   if (!allCapitalized) return false;
-  
-  const badWords = ['the', 'and', 'our', 'about', 'contact', 'team', 'menu', 'home', 'new', 'york', 'meal', 'prep', 'delivery', 'service', 'food', 'kitchen', 'chef', 'llc', 'inc'];
+  const badWords = ['the', 'and', 'our', 'about', 'contact', 'team', 'menu', 'home', 'new', 'york', 'meal', 'prep', 'delivery', 'service', 'food', 'kitchen', 'chef', 'llc', 'inc', 'copyright', 'reserved', 'rights', 'all'];
   const hasNoNameWord = words.some(word => badWords.includes(word.toLowerCase()));
   if (hasNoNameWord) return false;
-  
   return true;
 }
 
-async function searchLinkedIn(companyName) {
-  console.log(`    🔍 Searching LinkedIn for contacts...`);
+function extractDomain(url) {
+  try {
+    const hostname = new URL(url).hostname;
+    return hostname.replace('www.', '');
+  } catch (e) {
+    return null;
+  }
+}
+
+function generateEmailCandidates(name, domain) {
+  const parts = name.trim().split(/\s+/);
+  const firstName = parts[0].toLowerCase();
+  const lastName = parts.length > 1 ? parts[parts.length - 1].toLowerCase() : '';
+  const firstInitial = firstName.charAt(0);
+  const lastInitial = lastName ? lastName.charAt(0) : '';
   
+  const candidates = [];
+  candidates.push(`${firstName}@${domain}`);
+  if (lastName) {
+    candidates.push(`${firstName}.${lastName}@${domain}`);
+    candidates.push(`${firstName}${lastName}@${domain}`);
+    candidates.push(`${firstInitial}${lastName}@${domain}`);
+    candidates.push(`${firstInitial}.${lastName}@${domain}`);
+    candidates.push(`${firstName}${lastInitial}@${domain}`);
+    candidates.push(`${lastName}@${domain}`);
+  }
+  return candidates;
+}
+
+async function verifyEmail(email) {
+  try {
+    const res = await axios.get('https://api.millionverifier.com/api/v3/', {
+      params: {
+        api: process.env.MILLIONVERIFIER_API_KEY,
+        email: email
+      }
+    });
+    
+    const data = res.data;
+    let status, scoreImpact;
+    
+    if (data.result === 'ok') {
+      status = 'deliverable';
+      scoreImpact = 0;
+    } else if (data.result === 'catch_all') {
+      status = 'catch_all';
+      scoreImpact = -20;
+    } else if (data.result === 'unknown') {
+      status = 'unknown';
+      scoreImpact = -20;
+    } else {
+      status = 'invalid';
+      scoreImpact = -100;
+    }
+    
+    return {
+      email: email,
+      status: status,
+      score_impact: scoreImpact,
+      result: data.result,
+      subresult: data.subresult
+    };
+  } catch (e) {
+    return { email: email, status: 'error', score_impact: -20, error: e.message };
+  }
+}
+
+async function findValidEmailForPerson(name, domain) {
+  const candidates = generateEmailCandidates(name, domain);
+  
+  let hitDnsError = false;
+  
+  for (const email of candidates) {
+    process.stdout.write(`         ${email}... `);
+    const result = await verifyEmail(email);
+    
+    if (result.status === 'deliverable') {
+      console.log('✅ DELIVERABLE');
+      return result;
+    } else if (result.status === 'catch_all') {
+      console.log('⚠️ CATCH_ALL');
+      return result;
+    } else if (result.status === 'unknown') {
+      console.log('⚠️ UNKNOWN');
+      return result;
+    } else {
+      if (result.subresult === 'dns_error') hitDnsError = true;
+      console.log(`❌ ${result.subresult || result.status}`);
+      // If first attempt is dns_error, skip remaining patterns for this domain
+      if (hitDnsError) {
+        console.log(`         ⏩ Skipping remaining patterns (domain has no email)`);
+        return { status: 'dns_error' };
+      }
+    }
+    await new Promise(resolve => setTimeout(resolve, 200));
+  }
+  return null;
+}
+
+async function searchLinkedIn(companyName, excludeNames = []) {
   const cleanName = companyName
     .split(':')[0]
     .replace(/meal prep/gi, '')
+    .replace(/meal plans/gi, '')
     .replace(/delivery/gi, '')
     .replace(/service/gi, '')
     .replace(/food/gi, '')
     .trim();
   
-  for (const role of ROLE_SEARCHES) {
-    try {
-      const query = `"${cleanName}" "${role}" site:linkedin.com/in`;
+  const excludeClause = excludeNames.length > 0 
+    ? excludeNames.map(n => `-"${n}"`).join(' ')
+    : '';
+  
+  const deptString = DEPARTMENTS.map(d => `"${d}"`).join(' OR ');
+  const seniorString = SENIORITIES.map(s => `"${s}"`).join(' OR ');
+  
+  try {
+    const query = `"${cleanName}" (${seniorString}) (${deptString}) site:linkedin.com/in ${excludeClause}`;
+    
+    const res = await axios.get('https://serpapi.com/search.json', {
+      params: { 
+        q: query, 
+        api_key: process.env.SERP_API_KEY, 
+        engine: "google",
+        num: 10
+      }
+    });
+    
+    for (const result of (res.data.organic_results || [])) {
+      const title = result.title || '';
+      const namePart = title.split(' - ')[0].trim();
+      const snippet = (result.snippet || '').toLowerCase();
       
-      const res = await axios.get('https://serpapi.com/search.json', {
-        params: { 
-          q: query, 
-          api_key: process.env.SERP_API_KEY, 
-          engine: "google",
-          num: 5
-        }
-      });
-      
-      for (const result of (res.data.organic_results || [])) {
-        const title = result.title || '';
-        
-        const namePart = title.split(' - ')[0].trim();
-        
-        if (looksLikePersonName(namePart)) {
-          console.log(`       ✓ Found via LinkedIn: ${namePart} (${role})`);
-          return {
-            name: namePart,
-            title: role,
-            source: 'linkedin',
-            confidence: 'MEDIUM'
-          };
+      let foundRole = 'operations';
+      for (const dept of DEPARTMENTS) {
+        if (snippet.includes(dept.toLowerCase())) {
+          for (const sen of SENIORITIES) {
+            if (snippet.includes(sen.toLowerCase())) {
+              foundRole = `${sen} of ${dept}`;
+              break;
+            }
+          }
+          break;
         }
       }
       
-      await new Promise(resolve => setTimeout(resolve, 300));
+      if (looksLikePersonName(namePart) && !excludeNames.includes(namePart)) {
+        return { name: namePart, title: foundRole, source: 'linkedin' };
+      }
+    }
+  } catch (e) {}
+  
+  await new Promise(resolve => setTimeout(resolve, 300));
+  return null;
+}
+
+async function searchParentCompany(parentName, excludeNames = []) {
+  console.log(`       🏢 Searching parent company: "${parentName}"...`);
+  
+  const excludeClause = excludeNames.length > 0 
+    ? excludeNames.map(n => `-"${n}"`).join(' ')
+    : '';
+  
+  const deptString = DEPARTMENTS.map(d => `"${d}"`).join(' OR ');
+  const seniorString = SENIORITIES.map(s => `"${s}"`).join(' OR ');
+  
+  try {
+    const query = `"${parentName}" (${seniorString}) (${deptString}) site:linkedin.com/in ${excludeClause}`;
+    
+    const res = await axios.get('https://serpapi.com/search.json', {
+      params: { 
+        q: query, 
+        api_key: process.env.SERP_API_KEY, 
+        engine: "google",
+        num: 10
+      }
+    });
+    
+    for (const result of (res.data.organic_results || [])) {
+      const title = result.title || '';
+      const namePart = title.split(' - ')[0].trim();
       
-    } catch (e) {
-      console.log(`       ⚠️  Search error: ${e.message}`);
+      if (looksLikePersonName(namePart) && !excludeNames.includes(namePart)) {
+        return { name: namePart, title: 'operations (parent company)', source: 'parent_company' };
+      }
+    }
+  } catch (e) {}
+  
+  return null;
+}
+
+function detectParentCompany(html) {
+  if (!html) return null;
+  
+  const cheerio = require('cheerio');
+  const $ = cheerio.load(html);
+  const footerText = $('footer').text() || '';
+  const bodyText = $('body').text();
+  const allText = footerText + ' ' + bodyText;
+  
+  const patterns = [
+    /(?:a|an)\s+([A-Z][A-Za-z\s&]+)\s+(?:brand|company|venture)/i,
+    /(?:managed|operated|owned)\s+by\s+([A-Z][A-Za-z\s&]+)/i,
+    /(?:part\s+of|division\s+of|subsidiary\s+of)\s+([A-Z][A-Za-z\s&]+)/i,
+    /©\s*\d{4}\s+([A-Z][A-Za-z\s&]+?)(?:\s+All|\s+LLC|\s+Inc|\.|\s*$)/i
+  ];
+  
+  for (const pattern of patterns) {
+    const match = allText.match(pattern);
+    if (match && match[1]) {
+      const parentName = match[1].trim();
+      if (parentName.length > 3 && parentName.length < 50 && parentName.split(/\s+/).length <= 5) {
+        return parentName;
+      }
     }
   }
   
+  return null;
+}
+
+async function findFunctionalAlias(domain) {
+  console.log(`       🏢 Trying functional aliases on ${domain}...`);
+  
+  for (const alias of FUNCTIONAL_ALIASES) {
+    const email = `${alias}@${domain}`;
+    process.stdout.write(`         ${email}... `);
+    const result = await verifyEmail(email);
+    
+    if (result.status === 'deliverable' || result.status === 'catch_all') {
+      console.log(`✅ ${result.status.toUpperCase()}`);
+      return { ...result, is_alias: true, alias_type: alias };
+    } else {
+      console.log(`❌ ${result.subresult || result.status}`);
+      // If dns_error, skip remaining aliases for this domain
+      if (result.subresult === 'dns_error') {
+        console.log(`         ⏩ Skipping remaining aliases (domain has no email)`);
+        return null;
+      }
+    }
+    await new Promise(resolve => setTimeout(resolve, 200));
+  }
+  return null;
+}
+
+async function tryPersonOnDomains(name, domains) {
+  for (const domain of domains) {
+    console.log(`       📧 Testing ${name} @ ${domain}...`);
+    const result = await findValidEmailForPerson(name, domain);
+    
+    if (result && result.status !== 'invalid' && result.status !== 'error' && result.status !== 'dns_error') {
+      return result;
+    }
+    
+    if (result && result.status === 'dns_error' && domains.length > 1) {
+      console.log(`       🔀 DNS error on ${domain}, trying next domain...`);
+      continue;
+    }
+  }
+  return null;
+}
+
+// Check if a name is first-name-only (e.g., "Ashley" from ashley@domain.com)
+function isFirstNameOnly(name) {
+  if (!name) return false;
+  const words = name.trim().split(/\s+/);
+  return words.length === 1;
+}
+
+// Try to enrich a first-name-only contact via LinkedIn
+// Looks for someone at the company whose first name matches
+async function enrichFirstNameViaLinkedIn(firstName, companyName) {
+  console.log(`       🔍 Enriching "${firstName}" via LinkedIn...`);
+  
+  const cleanName = companyName
+    .split(':')[0]
+    .replace(/meal prep/gi, '')
+    .replace(/meal plans/gi, '')
+    .replace(/delivery/gi, '')
+    .replace(/service/gi, '')
+    .replace(/food/gi, '')
+    .trim();
+  
+  try {
+    // Search LinkedIn for anyone at this company with this first name
+    const query = `"${cleanName}" "${firstName}" site:linkedin.com/in`;
+    
+    const res = await axios.get('https://serpapi.com/search.json', {
+      params: { 
+        q: query, 
+        api_key: process.env.SERP_API_KEY, 
+        engine: "google",
+        num: 5
+      }
+    });
+    
+    for (const result of (res.data.organic_results || [])) {
+      const title = result.title || '';
+      const namePart = title.split(' - ')[0].trim();
+      const snippet = (result.snippet || '').toLowerCase();
+      
+      // Check if this person's first name matches
+      const resultFirstName = namePart.split(/\s+/)[0];
+      if (resultFirstName && resultFirstName.toLowerCase() === firstName.toLowerCase() && looksLikePersonName(namePart)) {
+        // Try to extract a title
+        let foundRole = 'website contact';
+        for (const dept of DEPARTMENTS) {
+          if (snippet.includes(dept.toLowerCase())) {
+            for (const sen of SENIORITIES) {
+              if (snippet.includes(sen.toLowerCase())) {
+                foundRole = `${sen} of ${dept}`;
+                break;
+              }
+            }
+            break;
+          }
+        }
+        
+        console.log(`       ✓ Enriched: "${firstName}" → "${namePart}" (${foundRole})`);
+        return { name: namePart, title: foundRole, source: 'website+linkedin' };
+      }
+    }
+  } catch (e) {}
+  
+  console.log(`       ⚠️ Could not enrich "${firstName}" — keeping first name only`);
   return null;
 }
 
@@ -85,46 +373,293 @@ async function run() {
   if (!fs.existsSync(filePath)) return console.error("❌ File not found");
   
   const leads = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-  console.log(`\n🔍 Agent 5: Investigating contacts (SMART MODE)...\n`);
+  console.log(`\n🔍 Agent 5 (INVESTIGATOR): Footprint-First Discovery...\n`);
   
   for (let lead of leads) {
     console.log(`  📋 ${lead.company_name}`);
     
-    const teamMembers = await scrapeTeamPages(lead.website_url);
+    const websiteDomain = extractDomain(lead.website_url);
+    if (!websiteDomain) {
+      console.log(`     ❌ No domain found\n`);
+      lead.contact_email = null;
+      lead.email_status = 'no_domain';
+      lead.email_score_impact = -100;
+      lead.discovery_source = 'none';
+      continue;
+    }
     
-    if (teamMembers.length > 0) {
-      const topPerson = teamMembers[0];
-      lead.contact_name = topPerson.name;
-      lead.contact_title = topPerson.title;
-      lead.contact_source = 'website';
-      lead.contact_confidence = 'HIGH';
-      
-      console.log(`     ✅ FOUND (website): ${topPerson.name} (${topPerson.title})\n`);
-    } else {
-      const linkedInResult = await searchLinkedIn(lead.company_name);
-      
-      if (linkedInResult) {
-        lead.contact_name = linkedInResult.name;
-        lead.contact_title = linkedInResult.title;
-        lead.contact_source = linkedInResult.source;
-        lead.contact_confidence = linkedInResult.confidence;
+    // =============================================
+    // PHASE 1: WEBSITE INTELLIGENCE (Footprint First)
+    // =============================================
+    console.log(`    🌐 PHASE 1: Website Intelligence...`);
+    const { teamMembers, emails: siteEmails, altDomains } = await scrapeWebsite(lead.website_url);
+    
+    // ALWAYS try website domain first, alt domains are fallback only
+    const domainsToTry = [websiteDomain];
+    if (altDomains.length > 0) {
+      altDomains.forEach(d => {
+        if (!domainsToTry.includes(d)) domainsToTry.push(d);
+      });
+      console.log(`       🔀 Alt domain found: ${altDomains.join(', ')} (will try as fallback)`);
+    }
+    
+    // Detect parent company
+    let parentCompany = null;
+    try {
+      const homepage = await axios.get(lead.website_url, { timeout: 8000, headers: { 'User-Agent': 'Mozilla/5.0' } });
+      parentCompany = detectParentCompany(homepage.data);
+      if (parentCompany) {
+        console.log(`       🏢 Parent company detected: "${parentCompany}"`);
+      }
+    } catch (e) {}
+    
+    let foundEmail = null;
+    let foundContact = null;
+    let discoverySource = 'none';
+    const triedNames = [];
+    
+    // This holds alias/generic-provider emails found on site as a fallback.
+    // We DON'T stop on these — we keep searching for a real person first.
+    let websiteAliasBackup = null;
+    
+    // This holds first-name-only email hits from Phase 1A.
+    // We try LinkedIn enrichment before committing.
+    let firstNameHit = null;
+    
+    // PHASE 1A: Test emails found directly on the website
+    if (siteEmails.length > 0) {
+      console.log(`       📧 Testing emails found on website...`);
+      for (const email of siteEmails) {
+        const localPart = email.split('@')[0];
+        const emailDomain = email.split('@')[1];
+        const isGenericProvider = GENERIC_EMAIL_PROVIDERS.includes(emailDomain);
+        const isAlias = ALIAS_LOCAL_PARTS.includes(localPart);
         
-        console.log(`     ✅ FOUND (LinkedIn): ${linkedInResult.name} (${linkedInResult.title})\n`);
-      } else {
-        lead.contact_name = "Owner/Founder";
-        lead.contact_title = null;
-        lead.contact_source = 'none';
-        lead.contact_confidence = 'NONE';
+        process.stdout.write(`         ${email}... `);
+        const result = await verifyEmail(email);
         
-        console.log(`     ⚠️  No contact found\n`);
+        if (result.status === 'deliverable' || result.status === 'catch_all') {
+          console.log(`✅ ${result.status.toUpperCase()}`);
+          
+          if (!isAlias && !isGenericProvider) {
+            // Personal email on business domain — save it
+            const displayName = localPart.charAt(0).toUpperCase() + localPart.slice(1);
+            
+            // Save for LinkedIn enrichment attempt
+            firstNameHit = {
+              email: result,
+              firstName: displayName,
+              localPart: localPart
+            };
+            console.log(`       ✓ Personal email on business domain — will enrich name via LinkedIn`);
+            break;
+          } else {
+            // Alias or generic provider — save as fallback, keep searching for real person
+            if (!websiteAliasBackup) {
+              websiteAliasBackup = {
+                email: { ...result, is_alias: true, alias_type: localPart },
+                contact: { name: 'Owner/Operator', title: isGenericProvider ? 'generic email' : localPart, source: 'alias' },
+                source: 'website_scrape'
+              };
+              console.log(`       ⚠️ Alias/generic — saved as fallback, continuing search for real person`);
+            }
+          }
+        } else {
+          console.log(`❌ ${result.subresult || result.status}`);
+        }
+        await new Promise(resolve => setTimeout(resolve, 200));
       }
     }
     
+    // PHASE 1A-ENRICH: If we found a first-name email, try LinkedIn to get full name
+    if (firstNameHit) {
+      const enriched = await enrichFirstNameViaLinkedIn(firstNameHit.firstName, lead.company_name);
+      
+      if (enriched) {
+        // LinkedIn found the full name — use it with the verified email
+        foundEmail = firstNameHit.email;
+        foundContact = enriched;
+        discoverySource = 'website+linkedin';
+        triedNames.push(enriched.name);
+      } else {
+        // LinkedIn couldn't find them — still use the email with first-name-only
+        foundEmail = firstNameHit.email;
+        foundContact = { name: firstNameHit.firstName, title: 'website contact', source: 'website' };
+        discoverySource = 'website_scrape';
+      }
+    }
+    
+    // PHASE 1B: Try website-discovered team members
+    if (!foundEmail && teamMembers.length > 0) {
+      console.log(`       📧 Testing website-discovered contacts...`);
+      for (const member of teamMembers.slice(0, 3)) {
+        triedNames.push(member.name);
+        const emailResult = await tryPersonOnDomains(member.name, domainsToTry);
+        
+        if (emailResult) {
+          foundEmail = emailResult;
+          foundContact = member;
+          discoverySource = 'website_scrape';
+          break;
+        }
+      }
+    }
+    
+    // =============================================
+    // PHASE 2: LINKEDIN (Department + Seniority)
+    // =============================================
+    if (!foundEmail) {
+      console.log(`    🔍 PHASE 2: LinkedIn search (Department + Seniority)...`);
+      const linkedIn1 = await searchLinkedIn(lead.company_name, triedNames);
+      
+      if (linkedIn1) {
+        console.log(`       ✓ Found: ${linkedIn1.name} (${linkedIn1.title})`);
+        triedNames.push(linkedIn1.name);
+        
+        const emailResult = await tryPersonOnDomains(linkedIn1.name, domainsToTry);
+        
+        if (emailResult) {
+          foundEmail = emailResult;
+          foundContact = linkedIn1;
+          discoverySource = 'linkedin_direct';
+        }
+      } else {
+        console.log(`       ⚠️ No contacts found`);
+      }
+    }
+    
+    // =============================================
+    // PHASE 3: RECURSIVE LINKEDIN
+    // =============================================
+    if (!foundEmail && triedNames.length > 0) {
+      console.log(`    🔍 PHASE 3: Recursive LinkedIn (excluding ${triedNames.join(', ')})...`);
+      const linkedIn2 = await searchLinkedIn(lead.company_name, triedNames);
+      
+      if (linkedIn2) {
+        console.log(`       ✓ Found: ${linkedIn2.name} (${linkedIn2.title})`);
+        triedNames.push(linkedIn2.name);
+        
+        const emailResult = await tryPersonOnDomains(linkedIn2.name, domainsToTry);
+        
+        if (emailResult) {
+          foundEmail = emailResult;
+          foundContact = linkedIn2;
+          discoverySource = 'linkedin_direct';
+        }
+      } else {
+        console.log(`       ⚠️ No additional contacts found`);
+      }
+    }
+    
+    // =============================================
+    // PHASE 4: PARENT COMPANY SEARCH
+    // =============================================
+    if (!foundEmail && parentCompany) {
+      console.log(`    🔍 PHASE 4: Parent company search ("${parentCompany}")...`);
+      const parentResult = await searchParentCompany(parentCompany, triedNames);
+      
+      if (parentResult) {
+        console.log(`       ✓ Found: ${parentResult.name} (${parentResult.title})`);
+        triedNames.push(parentResult.name);
+        
+        const emailResult = await tryPersonOnDomains(parentResult.name, domainsToTry);
+        
+        if (emailResult) {
+          foundEmail = emailResult;
+          foundContact = parentResult;
+          discoverySource = 'parent_company_match';
+        }
+      } else {
+        console.log(`       ⚠️ No contacts found via parent company`);
+      }
+    }
+    
+    // =============================================
+    // PHASE 5: FALLBACK (Website alias first, then functional aliases)
+    // =============================================
+    if (!foundEmail) {
+      // Prefer website-discovered alias over blind functional alias guessing
+      if (websiteAliasBackup) {
+        console.log(`    🔍 PHASE 5: Using website-discovered alias (fallback)...`);
+        foundEmail = websiteAliasBackup.email;
+        foundContact = websiteAliasBackup.contact;
+        discoverySource = websiteAliasBackup.source;
+        console.log(`       ✓ Using saved alias: ${foundEmail.email}`);
+      } else {
+        console.log(`    🔍 PHASE 5: Functional alias fallback...`);
+        
+        for (const domain of domainsToTry) {
+          const aliasResult = await findFunctionalAlias(domain);
+          
+          if (aliasResult) {
+            foundEmail = aliasResult;
+            foundContact = { 
+              name: 'Owner/Operator', 
+              title: aliasResult.alias_type,
+              source: 'alias'
+            };
+            discoverySource = 'alias_fallback';
+            break;
+          }
+        }
+      }
+    }
+    
+    // Set results
+    if (foundEmail && foundContact) {
+      lead.contact_name = foundContact.name;
+      lead.contact_title = foundContact.title;
+      lead.contact_source = foundContact.source || discoverySource;
+      lead.contact_email = foundEmail.email;
+      lead.email_status = foundEmail.status;
+      lead.email_score_impact = foundEmail.score_impact;
+      lead.email_is_alias = foundEmail.is_alias || false;
+      lead.email_verification = foundEmail;
+      lead.discovery_source = discoverySource;
+      lead.first_name_only = isFirstNameOnly(foundContact.name);
+      
+      console.log(`     ✅ RESULT: ${foundContact.name} <${foundEmail.email}> (${foundEmail.status}) [${discoverySource}]${lead.first_name_only ? ' ⚠️ first name only' : ''}`);
+    } else {
+      lead.contact_name = triedNames[0] || "Owner/Operator";
+      lead.contact_title = null;
+      lead.contact_source = 'none';
+      lead.contact_email = null;
+      lead.email_status = 'not_found';
+      lead.email_score_impact = -100;
+      lead.discovery_source = 'none';
+      lead.first_name_only = false;
+      
+      console.log(`     ❌ NO VALID EMAIL FOUND`);
+    }
+    
+    console.log('');
     await new Promise(resolve => setTimeout(resolve, 500));
   }
   
   fs.writeFileSync('leads_master.json', JSON.stringify(leads, null, 2));
   console.log("✅ Investigation complete!\n");
+  
+  const deliverable = leads.filter(l => l.email_status === 'deliverable').length;
+  const catchAll = leads.filter(l => l.email_status === 'catch_all').length;
+  const unknown = leads.filter(l => l.email_status === 'unknown').length;
+  const alias = leads.filter(l => l.email_is_alias).length;
+  const invalid = leads.filter(l => l.email_status === 'invalid' || l.email_status === 'not_found').length;
+  
+  const bySrc = {};
+  leads.forEach(l => { bySrc[l.discovery_source] = (bySrc[l.discovery_source] || 0) + 1; });
+  
+  console.log('📊 EMAIL SUMMARY:');
+  console.log(`   ✅ Deliverable: ${deliverable}`);
+  console.log(`   ⚠️  Catch-all: ${catchAll}`);
+  console.log(`   ⚠️  Unknown: ${unknown}`);
+  console.log(`   🏢 Alias: ${alias}`);
+  console.log(`   ❌ Invalid/Not found: ${invalid}`);
+  console.log('');
+  console.log('📡 DISCOVERY SOURCES:');
+  Object.entries(bySrc).forEach(([src, count]) => {
+    console.log(`   ${src}: ${count}`);
+  });
+  console.log('');
 }
 
 run();
