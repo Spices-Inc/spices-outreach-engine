@@ -62,12 +62,13 @@
         "151",
         "152"
       ],
-      "keywords_searched": [],
-      "keywords_remaining": [
+      "keywords_searched": [
         "Meal Prep Delivery",
         "Prepared Meals",
         "Ready to Eat Meals",
-        "Healthy Meal Service",
+        "Healthy Meal Service"
+      ],
+      "keywords_remaining": [
         "Weekly Menu Delivery",
         "Subscription Meal Plan",
         "Direct to Consumer Food",
@@ -77,11 +78,11 @@
         "Macro-Counted Meals",
         "Gourmet Prepared Food"
       ],
-      "total_companies_found": 0,
+      "total_companies_found": 9,
       "new_companies_last_run": 0,
-      "consecutive_zero_runs": 0,
+      "consecutive_zero_runs": 1,
       "status": "active",
-      "last_searched": null
+      "last_searched": "2026-02-10T20:25:35.596Z"
     },
     {
       "city": "Washington",
