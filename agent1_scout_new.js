@@ -22,6 +22,9 @@ const SUPPRESSED_NATIONALS = [
   'mealpro',
   'chick-fil-a',
   'chickfila',
+  'chik-fil-a',
+  'chick-fil-a',
+  'chickfila',
   'chik-fil-a'
 ];
 
