@@ -1,70 +1,39 @@
 const axios = require('axios');
-const fs = require('fs');
 require('dotenv').config();
-
-const SEARCH_QUERY = "meal prep delivery Pennsylvania";
 
 // Block listicles, magazines, aggregators, social
 const BLOCKED_PATTERNS = [
-  'yelp.com',
-  'facebook.com',
-  'instagram.com',
-  'twitter.com',
-  'linkedin.com',
-  'youtube.com',
-  'tripadvisor.com',
-  'doordash.com',
-  'ubereats.com',
-  'grubhub.com',
-  'reddit.com',
-  'quora.com',
-  'mag.com',
-  'magazine',
-  'blog',
-  'news',
-  'article',
-  'reviews',
-  'best-of',
-  'top-10',
-  'ranking'
+  'yelp.com', 'facebook.com', 'instagram.com', 'twitter.com',
+  'linkedin.com', 'youtube.com', 'tripadvisor.com', 'doordash.com',
+  'ubereats.com', 'grubhub.com', 'reddit.com', 'quora.com',
+  'mag.com', 'magazine', 'blog', 'news', 'article', 'reviews',
+  'best-of', 'top-10', 'ranking'
 ];
 
-// National players - suppress (price-focused, not our ICP)
+// National players - suppress
 const SUPPRESSED_NATIONALS = [
-  'hellofresh',
-  'factor75',
-  'factor.',
-  'blue apron',
-  'blueapron',
-  'home chef',
-  'homechef',
-  'everyplate',
-  'dinnerly',
-  'bistromd',
-  'purple carrot',
-  'purplecarrot',
-  'cookunity',
-  'trifecta'
+  'hellofresh', 'factor75', 'factor.', 'blue apron', 'blueapron',
+  'home chef', 'homechef', 'everyplate', 'dinnerly', 'bistromd',
+  'purple carrot', 'purplecarrot', 'cookunity', 'trifecta',
+  'momsmeals',
+  'moms meals',
+  'momsmeals',
+  'moms meals',
+  'mealpro',
+  'chick-fil-a',
+  'chickfila',
+  'chik-fil-a'
 ];
 
-// Existing customers - already buying from us
+// Existing customers
 const EXISTING_CUSTOMERS = [
-  'nutre',
-  'nutre meal',
-  'fit food nj',
-  'fitfoodnj',
-  'performance meal prep',
-  'eatpmp',
-  'farerx',
-  'fare rx',
-  'fit meals direct',
-  'fitmealsdirect',
-  'global village cuisine',
+  'nutre', 'nutre meal', 'fit food nj', 'fitfoodnj',
+  'performance meal prep', 'eatpmp', 'farerx', 'fare rx',
+  'fit meals direct', 'fitmealsdirect', 'global village cuisine',
   'globalvillagecuisine'
 ];
 
-// Generic words that appear in SERP titles, NOT in real business names
-// If 2+ of these appear in the main title (before the dash), it's a snippet
+// Generic SERP snippet words
 const GENERIC_TITLE_WORDS = [
   'meal', 'meals', 'prep', 'delivery', 'service', 'services',
   'healthy', 'home delivered', 'home-delivered', 'prepared',
@@ -72,7 +41,7 @@ const GENERIC_TITLE_WORDS = [
   'best', 'top', 'order', 'online', 'catering'
 ];
 
-// Location suffixes to strip from domain names
+// Location suffixes to strip
 const LOCATION_SUFFIXES = [
   'philly', 'pgh', 'nyc', 'nola', 'chi', 'atl', 'bos',
   'dc', 'la', 'sf', 'stl', 'clt', 'rdu', 'jax',
@@ -80,7 +49,7 @@ const LOCATION_SUFFIXES = [
   'va', 'nc', 'sc', 'ga', 'fl', 'oh', 'mi', 'il'
 ];
 
-// Common words found in domain names to help split all-lowercase domains
+// Domain word splitter
 const DOMAIN_WORDS = [
   'appetit', 'appetite', 'circle', 'full', 'fresh', 'mighty',
   'clean', 'eatz', 'meal', 'meals', 'prep', 'home', 'food',
@@ -97,12 +66,10 @@ const DOMAIN_WORDS = [
 function isBlocked(url, title) {
   const urlLower = url.toLowerCase();
   const titleLower = title.toLowerCase();
-  
   if (BLOCKED_PATTERNS.some(p => urlLower.includes(p))) return true;
   if (/^\d+\s+(best|top|healthy|local|great)/i.test(titleLower)) return true;
   if (SUPPRESSED_NATIONALS.some(c => urlLower.includes(c) || titleLower.includes(c))) return true;
   if (EXISTING_CUSTOMERS.some(c => urlLower.includes(c) || titleLower.includes(c))) return true;
-  
   return false;
 }
 
@@ -117,21 +84,16 @@ function getCleanTitle(serpTitle) {
 
 function isSerpSnippet(serpTitle) {
   const mainPart = getCleanTitle(serpTitle).toLowerCase();
-  
   let genericCount = 0;
   for (const word of GENERIC_TITLE_WORDS) {
     if (mainPart.includes(word)) genericCount++;
   }
-  
-  if (genericCount >= 2) return true;
-  
-  return false;
+  return genericCount >= 2;
 }
 
 function splitDomainName(domain) {
   let remaining = domain.toLowerCase();
   let parts = [];
-  
   while (remaining.length > 0) {
     let matched = false;
     const sorted = [...DOMAIN_WORDS].sort((a, b) => b.length - a.length);
@@ -152,37 +114,53 @@ function splitDomainName(domain) {
       remaining = remaining.substring(1);
     }
   }
-  
   return parts;
+}
+
+/**
+ * Extract the ROOT domain from a URL, stripping subdomains.
+ * "https://locations.cleaneatz.com/..." → "cleaneatz.com"
+ * "https://www.pghfresh.com/" → "pghfresh.com"
+ * This prevents subdomain pages from entering the pipeline as separate companies.
+ */
+function extractDomain(url) {
+  try {
+    const hostname = new URL(url).hostname.replace('www.', '').toLowerCase();
+    const parts = hostname.split('.');
+    // For standard .com/.net/.org domains, take the last 2 parts
+    // This handles: locations.cleaneatz.com → cleaneatz.com
+    if (parts.length > 2) {
+      return parts.slice(-2).join('.');
+    }
+    return hostname;
+  } catch (e) {
+    return null;
+  }
 }
 
 function extractNameFromDomain(url) {
   try {
     const hostname = new URL(url).hostname.replace('www.', '');
     let domain = hostname.split('.')[0];
-    
-    // Strip common URL prefixes
-    if (domain.startsWith('eat') && domain.length > 5) {
-      domain = domain.substring(3);
+
+    // If it's a subdomain, use the main domain part for the name instead
+    const parts = hostname.split('.');
+    if (parts.length > 2) {
+      domain = parts[parts.length - 2]; // e.g. "cleaneatz" from "locations.cleaneatz.com"
     }
-    if (domain.startsWith('get') && domain.length > 5) {
-      domain = domain.substring(3);
-    }
-    if (domain.startsWith('try') && domain.length > 5) {
-      domain = domain.substring(3);
-    }
-    
-    // Strip location suffixes from the end
+
+    if (domain.startsWith('eat') && domain.length > 5) domain = domain.substring(3);
+    if (domain.startsWith('get') && domain.length > 5) domain = domain.substring(3);
+    if (domain.startsWith('try') && domain.length > 5) domain = domain.substring(3);
+
     for (const suffix of LOCATION_SUFFIXES) {
       if (domain.toLowerCase().endsWith(suffix) && domain.length > suffix.length + 2) {
         domain = domain.substring(0, domain.length - suffix.length);
         break;
       }
     }
-    
-    // Try camelCase split first
+
     const camelParts = domain.split(/(?<=[a-z])(?=[A-Z])/);
-    
     let nameParts;
     if (camelParts.length >= 2) {
       nameParts = camelParts;
@@ -191,12 +169,8 @@ function extractNameFromDomain(url) {
     } else {
       nameParts = splitDomainName(domain);
     }
-    
-    const name = nameParts.map(w =>
-      w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
-    ).join(' ');
-    
-    return name;
+
+    return nameParts.map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
   } catch (e) {
     return null;
   }
@@ -204,61 +178,86 @@ function extractNameFromDomain(url) {
 
 function getBestCompanyName(serpTitle, url) {
   const cleanTitle = getCleanTitle(serpTitle);
-  
-  if (!isSerpSnippet(serpTitle)) {
-    return cleanTitle;
-  }
-  
+  if (!isSerpSnippet(serpTitle)) return cleanTitle;
   const domainName = extractNameFromDomain(url);
   if (domainName && domainName.length >= 3) {
     console.log(`     🔄 "${cleanTitle}" is a SERP snippet → using domain: "${domainName}"`);
     return domainName;
   }
-  
   return cleanTitle;
 }
 
-async function run() {
-  console.log("\n🔍 Agent 1 (Scout): Finding companies...\n");
-  
+/**
+ * Search for companies using SerpAPI.
+ * Called by Agent 0 (Dispatcher) with a specific query.
+ * @param {string} query - e.g. "Meal Prep Delivery Pittsburgh PA"
+ * @param {Set} knownDomains - Domains to skip (already discovered)
+ * @returns {Array} Array of { company_name, serp_title, website_url, domain }
+ */
+async function searchForCompanies(query, knownDomains = new Set()) {
+  console.log(`  🔍 Searching: "${query}"`);
+
   try {
     const res = await axios.get('https://serpapi.com/search.json', {
       params: {
-        q: SEARCH_QUERY,
+        q: query,
         api_key: process.env.SERP_API_KEY,
         engine: "google",
         num: 20
       }
     });
-    
-    const leads = [];
-    
+
+    const results = [];
+
     for (const result of res.data.organic_results || []) {
       const url = result.link;
       const title = result.title;
-      
+
       if (isBlocked(url, title)) {
-        console.log(`  ❌ Blocked: ${title.substring(0, 50)}...`);
+        console.log(`     ❌ Blocked: ${title.substring(0, 50)}...`);
         continue;
       }
-      
+
+      const domain = extractDomain(url);
+      if (!domain) continue;
+
+      if (knownDomains.has(domain)) {
+        console.log(`     ⏭️  Already found: ${domain}`);
+        continue;
+      }
+
       const companyName = getBestCompanyName(title, url);
-      
-      leads.push({
+
+      results.push({
         company_name: companyName,
         serp_title: title,
-        website_url: url
+        website_url: url,
+        domain: domain
       });
-      
-      console.log(`  ✅ ${companyName} (${url})`);
+
+      console.log(`     ✅ ${companyName} (${domain})`);
     }
-    
-    fs.writeFileSync('leads_master.json', JSON.stringify(leads, null, 2));
-    console.log(`\n✅ Scout complete! ${leads.length} companies saved to leads_master.json\n`);
-    
+
+    console.log(`     📊 ${results.length} new companies from this search\n`);
+    return results;
+
   } catch (e) {
-    console.error("❌ Scout error:", e.message);
+    console.error(`     ❌ SerpAPI error: ${e.message}`);
+    return [];
   }
 }
 
-run();
+// Standalone mode — for manual testing only
+// Usage: node agent1_scout_new.js "meal prep delivery Pittsburgh PA"
+if (require.main === module) {
+  const fs = require('fs');
+  const testQuery = process.argv[2] || "meal prep delivery Pennsylvania";
+  (async () => {
+    console.log("\n🔍 Agent 1 (Scout): Standalone test mode\n");
+    const results = await searchForCompanies(testQuery);
+    fs.writeFileSync('leads_master.json', JSON.stringify(results, null, 2));
+    console.log(`✅ Scout complete! ${results.length} companies saved to leads_master.json\n`);
+  })();
+}
+
+module.exports = { searchForCompanies, extractDomain };

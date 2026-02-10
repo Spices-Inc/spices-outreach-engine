@@ -20,8 +20,49 @@ const FUNCTIONAL_ALIASES = [
 const ALIAS_LOCAL_PARTS = [
   'info', 'contact', 'hello', 'support', 'ops', 'orders',
   'production', 'purchasing', 'operations', 'sales', 'admin',
-  'team', 'general', 'office', 'help'
+  'team', 'general', 'office', 'help', 'service', 'billing',
+  'accounts', 'hr', 'marketing', 'media', 'press', 'careers',
+  'jobs', 'feedback', 'enquiries', 'inquiries', 'partnerships',
+  'partnership', 'catering', 'events', 'delivery', 'shipping',
+  'returns', 'webmaster', 'postmaster', 'noreply', 'no-reply',
+  'customersupport', 'customerservice', 'customercare'
 ];
+
+// Smart alias detection: catches things ALIAS_LOCAL_PARTS exact match misses
+function isLikelyAlias(localPart) {
+  const lp = localPart.toLowerCase();
+
+  // Exact match against known aliases
+  if (ALIAS_LOCAL_PARTS.includes(lp)) return true;
+
+  // Contains a known alias word anywhere (e.g. "customersupport" contains "support")
+  const ALIAS_FRAGMENTS = [
+    'support', 'service', 'admin', 'info', 'contact', 'office',
+    'team', 'sales', 'help', 'general', 'billing', 'orders',
+    'shipping', 'delivery', 'noreply', 'marketing', 'press',
+    'partnership', 'catering', 'events', 'inquiry', 'enquir'
+  ];
+  if (ALIAS_FRAGMENTS.some(f => lp.includes(f))) return true;
+
+  // Contains numbers (e.g. "store123", "location5") — not a name
+  if (/\d/.test(lp)) return true;
+
+  // Longer than 15 chars — almost certainly not a first name
+  if (lp.length > 15) return true;
+
+  // Looks like a location (e.g. "foxchapelpa", "pittsburghstore")
+  const LOCATION_HINTS = [
+    'pa', 'nj', 'ny', 'ct', 'ma', 'md', 'va', 'nc', 'oh', 'fl', 'ga', 'sc',
+    'north', 'south', 'east', 'west', 'store', 'location', 'branch', 'shop',
+    'downtown', 'uptown', 'midtown', 'chapel', 'heights', 'springs', 'creek',
+    'plaza', 'square', 'center', 'centre', 'village', 'township'
+  ];
+  for (const hint of LOCATION_HINTS) {
+    if (lp.endsWith(hint) && lp.length > hint.length + 2) return true;
+  }
+
+  return false;
+}
 
 const GENERIC_EMAIL_PROVIDERS = [
   'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com',
@@ -433,7 +474,7 @@ async function run() {
         const localPart = email.split('@')[0];
         const emailDomain = email.split('@')[1];
         const isGenericProvider = GENERIC_EMAIL_PROVIDERS.includes(emailDomain);
-        const isAlias = ALIAS_LOCAL_PARTS.includes(localPart);
+        const isAlias = isLikelyAlias(localPart);
         
         process.stdout.write(`         ${email}... `);
         const result = await verifyEmail(email);

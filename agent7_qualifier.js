@@ -32,15 +32,18 @@ function isRealPersonName(name, companyName) {
   // Catch LLC, Inc, etc.
   if (/\b(llc|inc|corp|company|co)\b/i.test(nameLower)) return false;
   
-  // Catch if contact name contains the company name or vice versa
+  // Catch if contact name is basically the company name
+  // Threshold: 75% of name words must appear in company name to disqualify.
+  // This prevents false positives like "Colleen Howell" at "Homemade By Colleen"
+  // where only 1 of 2 name words overlaps (50%), which is below the 75% threshold.
+  // A true company-name match like "Clean Eatz" at "Clean Eatz" hits 100%.
   if (companyName) {
     const companyLower = companyName.toLowerCase().trim();
     const companyWords = companyLower.split(/\s+/).filter(w => w.length > 2);
     const nameWords = nameLower.split(/\s+/);
     
-    // If most of the name words appear in the company name, it's probably the company
     const matchingWords = nameWords.filter(w => companyWords.includes(w));
-    if (matchingWords.length >= Math.ceil(nameWords.length * 0.5) && nameWords.length <= 3) {
+    if (matchingWords.length >= Math.ceil(nameWords.length * 0.75) && nameWords.length <= 3) {
       return false;
     }
   }

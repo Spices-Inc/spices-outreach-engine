@@ -21,12 +21,14 @@ function initRejectionLog() {
 
 function logRejection(company, domain, city, state, stage, reason, score) {
     const date = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
+    const safeDate = `"${date}"`;
     const safeCompany = company ? `"${company.replace(/"/g, '""')}"` : '"Unknown"';
     const safeDomain = domain || 'unknown';
     const safeCity = city || '';
     const safeState = state || '';
+    const safeStage = `"${stage}"`;
     const safeReason = reason ? `"${reason.replace(/"/g, '""')}"` : '""';
-    const row = `${date},${safeCompany},${safeDomain},${safeCity},${safeState},${stage},${safeReason},${score || 0}\n`;
+    const row = `${safeDate},${safeCompany},${safeDomain},${safeCity},${safeState},${safeStage},${safeReason},${score || 0}\n`;
     fs.appendFileSync(REJECTION_LOG, row);
 }
 
