@@ -1,26 +1,18 @@
 {
-  "created_at": "2026-02-10T20:25:25.836Z",
-  "last_updated": "2026-02-10T20:28:56.356Z",
+  "created_at": "2026-02-11T12:26:45.155Z",
+  "last_updated": "2026-02-11T12:27:01.063Z",
   "domains": [
     "pghfresh.com",
     "homemadebycolleen.com",
     "familytablepgh.com",
-    "freshpreppgh.com",
     "cleaneatz.com",
     "myhummusfit.com",
+    "ieatcleanmealprep-order.com",
+    "freshpreppgh.com",
     "csmppgh.com",
     "shopalliannaskitchen.com",
-    "ieatcleanmealprep-order.com",
     "square.site",
-    "hungryfortime.com",
-    "freshpoint.com",
-    "freshdirect.com",
-    "eatnpark.com",
-    "nappiesfoods.com",
-    "performancefoodservice.com",
-    "localharvest.org",
-    "visitpittsburgh.com",
-    "ij.org"
+    "hungryfortime.com"
   ],
-  "total_discovered": 19
+  "total_discovered": 11
 }

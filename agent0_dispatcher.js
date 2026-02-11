@@ -4,9 +4,20 @@ const { searchForCompanies, extractDomain } = require('./agent1_scout_new');
 
 // ============================================================
 // CONFIGURATION
+//
+// TARGET_RAW_LEADS = 20 (up from 12)
+//   Reservoir strategy: We aim for ~10 qualified leads per run.
+//   With ~50% survival through exit gates + Agent 7 scoring,
+//   20 raw leads should yield 8-12 qualified.
+//   Top 5 go to Rob, rest go into the reservoir (safety stock).
+//
+// MAX_SEARCHES_PER_RUN = 6 (up from 4)
+//   More fuel to hit the higher raw target.
+//   Worst case: 6 SerpAPI calls per day.
+//   Best case: hits target in 3-4 searches, exits early.
 // ============================================================
-const MAX_SEARCHES_PER_RUN = 4;       // SerpAPI calls per daily run (conserve credits)
-const TARGET_RAW_LEADS = 12;          // Stop early if we hit this (12 raw ≈ 5-6 qualified)
+const MAX_SEARCHES_PER_RUN = 6;       // SerpAPI calls per daily run
+const TARGET_RAW_LEADS = 20;          // Aim high to fill reservoir
 const MAX_CONSECUTIVE_ZEROS = 3;      // Mark region "depleted" after 3 zero-result searches
 
 const LEDGER_PATH = path.join(__dirname, 'scf_search_ledger.json');

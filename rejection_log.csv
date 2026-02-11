@@ -1,16 +1,1 @@
-"2/10/2026, 3:25:24 PM","Nutrition Washington",wrcameronwellness.org,Belleville,NJ,"Agent 7: Qualifier","Score too low: 65/100",65
-"2/10/2026, 3:25:24 PM","The Nutrition Fix, 189 S Main St, Washington, PA 15301, US",mapquest.com,Washington,PA,"Agent 7: Qualifier","Score too low: 65/100",65
-"2/10/2026, 3:25:24 PM","Performance Ready Nutrition",performancereadynutrition.com,Athens,GA,"Agent 7: Qualifier","Score too low: 60/100",60
-"2/10/2026, 3:25:24 PM","Casespecificnutrition",casespecificnutrition.com,Pittsburgh,PA,"Agent 7: Qualifier","Score too low: 65/100",65
-"2/10/2026, 3:25:24 PM","Waivergroup",waivergroup.com,Bala Cynwyd,PA,"Agent 7: Qualifier","Score too low: 65/100",65
-"2/10/2026, 3:25:24 PM","Power Plate Meals",powerplatemeals.com,Grand Forks,ND,"Agent 7: Qualifier","Score too low: 45/100",45
-"2/10/2026, 3:25:24 PM","Pivotal Nutrition LLC",pivotalnutrition1.com,Providence,RI,"Agent 7: Qualifier","No valid email found",0
-"2/10/2026, 3:25:24 PM","Menu",farmersfridge.com,Clifton,NJ,"Agent 7: Qualifier","Score too low: 60/100",60
-"2/10/2026, 3:25:24 PM","Full Circle Food",eatfullcirclefood.com,Landenberg,PA,"Agent 7: Qualifier","No valid email found",0
-"2/10/2026, 3:25:24 PM","Macro Meals",eatmacromeals.com,Montclair,NJ,"Agent 7: Qualifier","Score too low: 55/100",55
-"2/10/2026, 3:25:24 PM","Fit AF Nutrition – Fresh food. Flexible meal plans. Delivered",fitafnutrition.com,Carbondale,PA,"Agent 7: Qualifier","Score too low: 65/100",65
-"2/10/2026, 3:26:37 PM","Family Table",familytablepgh.com,Worcester,MA,"Exit Gate: Spice","Zero spice keywords found by Agent 3",0
-"2/10/2026, 3:26:37 PM","Csmp",csmppgh.com,Clifton,NJ,"Exit Gate: Spice","Zero spice keywords found by Agent 3",0
-"2/10/2026, 3:28:53 PM","Ieatcleanmealprep Order",ieatcleanmealprep-order.com,Pittsburgh,PA,"Agent 7: Qualifier","No valid email found",0
-"2/10/2026, 3:29:06 PM","Fresh Direct",freshdirect.com,,,"Exit Gate: Address","No address found by Agent 2",0
-"2/10/2026, 3:29:06 PM","Farm to Table Buy Local",localharvest.org,,,"Exit Gate: Address","No address found by Agent 2",0
+Date,Company,Domain,City,State,Stage,Reason,Score

@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "created_at": "2026-02-10T20:23:12.148Z",
+  "created_at": "2026-02-11T12:23:16.272Z",
   "icp": "meal_prep",
   "waterfall_order": [
     "gold_1day",
@@ -68,21 +68,21 @@
         "Ready to Eat Meals",
         "Healthy Meal Service",
         "Weekly Menu Delivery",
-        "Subscription Meal Plan",
-        "Direct to Consumer Food",
-        "Freshly Prepared Food Delivery"
+        "Subscription Meal Plan"
       ],
       "keywords_remaining": [
+        "Direct to Consumer Food",
+        "Freshly Prepared Food Delivery",
         "Performance Nutrition Meals",
         "Dietary Meal Delivery",
         "Macro-Counted Meals",
         "Gourmet Prepared Food"
       ],
-      "total_companies_found": 19,
-      "new_companies_last_run": 0,
-      "consecutive_zero_runs": 1,
+      "total_companies_found": 11,
+      "new_companies_last_run": 1,
+      "consecutive_zero_runs": 0,
       "status": "active",
-      "last_searched": "2026-02-10T20:28:56.353Z"
+      "last_searched": "2026-02-11T12:27:01.059Z"
     },
     {
       "city": "Washington",

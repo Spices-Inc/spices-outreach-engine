@@ -1,0 +1,63 @@
+[
+  {
+    "company_name": "Myhummus Fit",
+    "serp_title": "Pittsburgh Meal Prep Delivery Service",
+    "website_url": "https://myhummusfit.com/pages/pittsburgh-meal-prep?srsltid=AfmBOopmdeugw-fvOMtr8QnSrzNUmo-lFZQg0ze3xbc_7BVRRCLjP7p0",
+    "domain": "myhummusfit.com",
+    "source_region": "Pittsburgh, PA",
+    "source_tier": "gold_1day",
+    "source_keyword": "Meal Prep Delivery",
+    "city": "Lindenhurst",
+    "state": "NY",
+    "zip": "11757",
+    "formatted_address": "38 Sunrise Hwy, Lindenhurst, NY 11757, USA",
+    "transit_days": 1,
+    "transit_days_text": "tomorrow",
+    "spice_keywords_found": [
+      "taco",
+      "burrito",
+      "teriyaki",
+      "mediterranean",
+      "thai",
+      "chipotle",
+      "buffalo",
+      "bbq",
+      "barbecue",
+      "garlic",
+      "ginger",
+      "ranch",
+      "honey garlic",
+      "seasoned"
+    ],
+    "rotation_day": "wednesday",
+    "has_weekly_rotation": "wednesday",
+    "custom_blend_signals": [
+      "custom"
+    ],
+    "spice_forward": true,
+    "contact_name": "Owner/Operator",
+    "contact_title": "help",
+    "contact_source": "alias",
+    "contact_email": "help@myhummusfit.com",
+    "email_status": "deliverable",
+    "email_score_impact": 0,
+    "email_is_alias": true,
+    "email_verification": {
+      "email": "help@myhummusfit.com",
+      "status": "deliverable",
+      "score_impact": 0,
+      "result": "ok",
+      "subresult": "ok",
+      "is_alias": true,
+      "alias_type": "help"
+    },
+    "discovery_source": "website_scrape",
+    "first_name_only": true,
+    "strike_level": 3,
+    "sequence_track": "B",
+    "qualification_score": 85,
+    "qualified": true,
+    "tier": "gold",
+    "reservoir_added": "2026-02-11T12:33:35.486Z"
+  }
+]
