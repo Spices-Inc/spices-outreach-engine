@@ -1,0 +1,26 @@
+[
+  {
+    "date": "2/11/2026, 2:00:45 PM",
+    "company": "Clean Eatz",
+    "contact_name": "Quinn Newhall",
+    "email": "quinn@cleaneatz.com",
+    "city": "Lancaster",
+    "state": "PA",
+    "domain": "cleaneatz.com",
+    "reason": "Sequence skip: contacts_with_job_change",
+    "apollo_contact_id": "698cd1dc898527001d62c473",
+    "score": 90
+  },
+  {
+    "date": "2/11/2026, 3:58:30 PM",
+    "company": "Clean Eatz",
+    "contact_name": "Quinn Newhall",
+    "email": "quinn@cleaneatz.com",
+    "city": "Lancaster",
+    "state": "PA",
+    "domain": "cleaneatz.com",
+    "reason": "Sequence skip: contacts_with_job_change",
+    "apollo_contact_id": "698ced7641363300215dc956",
+    "score": 90
+  }
+]

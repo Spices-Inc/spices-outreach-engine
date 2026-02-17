@@ -1,0 +1,10 @@
+var l = JSON.parse(require('fs').readFileSync('scf_search_ledger.json','utf8'));
+var regions = l.regions;
+var gold1 = regions.filter(function(r) { return r.tier === 'gold_1day' && r.status !== 'depleted'; });
+var gold2 = regions.filter(function(r) { return r.tier === 'gold_2day' && r.status !== 'depleted'; });
+var depleted = regions.filter(function(r) { return r.status === 'depleted'; });
+console.log('Gold 1-day available: ' + gold1.length);
+gold1.slice(0,5).forEach(function(r) { console.log('  ' + r.city + ', ' + r.state + ' (SCF ' + r.scfs[0] + ')'); });
+console.log('Gold 2-day available: ' + gold2.length);
+console.log('Depleted: ' + depleted.length);
+depleted.forEach(function(r) { console.log('  ' + r.city + ', ' + r.state); });

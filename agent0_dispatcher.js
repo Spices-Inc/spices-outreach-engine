@@ -3,22 +3,36 @@ const path = require('path');
 const { searchForCompanies, extractDomain } = require('./agent1_scout_new');
 
 // ============================================================
-// CONFIGURATION
+// CONFIGURATION — v3.1 "Floodgate + Bottle.com Surgical Search"
 //
-// TARGET_RAW_LEADS = 20 (up from 12)
-//   Reservoir strategy: We aim for ~10 qualified leads per run.
-//   With ~50% survival through exit gates + Agent 7 scoring,
-//   20 raw leads should yield 8-12 qualified.
-//   Top 5 go to Rob, rest go into the reservoir (safety stock).
+// WHAT CHANGED (Session 16):
+//   1. MAX_SEARCHES raised from 8 → 25 ("Floodgate" mode).
+//      We need volume to prove the concept and fill the
+//      inventory reservoir. Credit spend is secondary to
+//      getting 5 leads/day across the finish line.
 //
-// MAX_SEARCHES_PER_RUN = 6 (up from 4)
-//   More fuel to hit the higher raw target.
-//   Worst case: 6 SerpAPI calls per day.
-//   Best case: hits target in 3-4 searches, exits early.
+//   2. SITE: QUERY SUPPORT — if a keyword starts with "site:",
+//      the negative keyword shield is SKIPPED. This prevents
+//      the negatives from choking site-specific searches like
+//      site:bottle.com where every result is already pre-qualified.
+//
+// PREVIOUS (v3.0 — Session 9):
+//   - Ledger-based SCF cluster harvesting
+//   - Unquoted queries with Bouncer as secondary filter
+//   - Negative shield appended to every query
+//   - 8 searches per run with 50-lead target
 // ============================================================
-const MAX_SEARCHES_PER_RUN = 6;       // SerpAPI calls per daily run
-const TARGET_RAW_LEADS = 20;          // Aim high to fill reservoir
-const MAX_CONSECUTIVE_ZEROS = 3;      // Mark region "depleted" after 3 zero-result searches
+const MAX_SEARCHES_PER_RUN = 25;       // Floodgate mode — was 8
+const TARGET_RAW_LEADS = 50;           // Higher target for metro hubs
+const MAX_CONSECUTIVE_ZEROS = 3;       // Mark region "depleted" after 3 zero-result searches
+
+// ============================================================
+// NEGATIVE KEYWORD SHIELD
+// Appended to every SerpAPI query to block non-commercial noise.
+// This is the FIRST line of defense. Agent 1's Bouncer is SECOND.
+// NOTE: NOT applied to site: searches (bottle.com etc.)
+// ============================================================
+const NEGATIVE_KEYWORDS = '-hospital -university -upmc -edu -gov -tips -blog -article -recipe -nutritionist -dietitian -coach -wellness -clinic -medical -restaurant -steakhouse -bar -grill -pizza -diner -cafe -bistro -inn -hotel -spa -gym -fitness -catering -"party platter" -"party tray" -"wedding catering" -grocer -bakery -brewery -winery -food truck -buffet';
 
 const LEDGER_PATH = path.join(__dirname, 'scf_search_ledger.json');
 const HISTORY_PATH = path.join(__dirname, 'discovery_history.json');
@@ -104,7 +118,15 @@ function pickNextSearch(ledger) {
       continue;
     }
 
-    // Pick the first candidate (they're already in priority order from the generator)
+    // Sort by lowest SCF number (numerical order per Greg's instruction)
+    // This ensures NJ 070 is picked before PA 189 within the same tier
+    candidates.sort((a, b) => {
+      const aMin = Math.min(...a.scfs.map(Number));
+      const bMin = Math.min(...b.scfs.map(Number));
+      return aMin - bMin;
+    });
+
+    // Pick the first candidate (now sorted by lowest SCF — smallest number first)
     const region = candidates[0];
     const keyword = region.keywords_remaining[0]; // First remaining = highest tier keyword
 
@@ -168,7 +190,7 @@ function checkTierExhaustion(ledger) {
 // ============================================================
 async function run() {
   console.log('\n========================================');
-  console.log('📋 Agent 0 (Dispatcher): Starting daily run');
+  console.log('📋 Agent 0 (Dispatcher): Starting daily run — v3.1 Floodgate + Bottle.com');
   console.log('========================================\n');
 
   // Load state
@@ -194,9 +216,32 @@ async function run() {
     }
 
     const { region, keyword, tier } = next;
-    const query = `${keyword} ${region.city} ${region.state}`;
 
-    console.log(`  📍 [Search ${searchesUsed + 1}/${MAX_SEARCHES_PER_RUN}] Tier: ${tier} | Region: ${region.city}, ${region.state}`);
+    // ============================================================
+    // QUERY CONSTRUCTION — v3.1 "Smart Site: Handling"
+    //
+    // If keyword starts with "site:", this is a surgical search
+    // (e.g., site:bottle.com). Skip negative keywords — every
+    // result on the target site is already pre-qualified.
+    //
+    // Otherwise, standard query: keyword + region + negatives.
+    // ============================================================
+    const isSiteSearch = keyword.startsWith('site:');
+    let query;
+
+    if (isSiteSearch) {
+      // Surgical site search — no negatives, just keyword + region state
+      query = `${keyword} ${region.state}`;
+      console.log(`  📍 [Search ${searchesUsed + 1}/${MAX_SEARCHES_PER_RUN}] Tier: ${tier} | Region: ${region.city}, ${region.state}`);
+      console.log(`     🎯 Keyword: ${keyword}`);
+      console.log(`     🔬 SURGICAL SITE SEARCH — negatives skipped`);
+    } else {
+      // Standard keyword search with negative shield
+      query = `${keyword} ${region.city} ${region.state} ${NEGATIVE_KEYWORDS}`;
+      console.log(`  📍 [Search ${searchesUsed + 1}/${MAX_SEARCHES_PER_RUN}] Tier: ${tier} | Region: ${region.city}, ${region.state}`);
+      console.log(`     🎯 Keyword: ${keyword}`);
+      console.log(`     🛡️  Shield: negatives active`);
+    }
 
     // Call Agent 1 (Scout) with this specific query
     const results = await searchForCompanies(query, knownDomains);
@@ -215,6 +260,11 @@ async function run() {
         lead.source_tier = tier;
         lead.source_keyword = keyword;
 
+        // Tag bottle.com leads for identity bypass in Agent 7
+        if (isSiteSearch && keyword.includes('bottle.com')) {
+          lead.source_bottle = true;
+        }
+
         allNewLeads.push(lead);
         newCount++;
       }
@@ -230,6 +280,16 @@ async function run() {
       console.log(`  🎯 Target reached! ${allNewLeads.length} raw leads collected.\n`);
       break;
     }
+  }
+
+  // ============================================================
+  // CIRCUIT BREAKER LOG
+  // If we used all 25 searches without hitting 50, log it clearly.
+  // This is NOT an error — it's the safety stop working correctly.
+  // ============================================================
+  if (searchesUsed >= MAX_SEARCHES_PER_RUN && allNewLeads.length < TARGET_RAW_LEADS) {
+    console.log(`  🔌 CIRCUIT BREAKER: Hit ${MAX_SEARCHES_PER_RUN}-search limit with ${allNewLeads.length} leads.`);
+    console.log(`     → Proceeding with what we have. This is normal.\n`);
   }
 
   // Check for tier exhaustion

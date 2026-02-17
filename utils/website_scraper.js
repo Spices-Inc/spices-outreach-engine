@@ -25,6 +25,13 @@ const GENERIC_EMAIL_PROVIDERS = [
   'live.com', 'msn.com', 'comcast.net', 'verizon.net'
 ];
 
+const JUNK_EMAIL_DOMAINS = [
+  'sentry.io', 'sentry.wixpress.com', 'sentry-next.wixpress.com',
+  'wixpress.com', 'example.com',
+  'test.com', 'localhost', 'domain.com', 'email.com',
+  'yourcompany.com', 'company.com', 'placeholder.com'
+];
+
 function looksLikePersonName(text) {
   if (!text || text.length < 3 || text.length > 40) return false;
   const words = text.trim().split(/\s+/);
@@ -210,14 +217,17 @@ async function scrapeWebsite(websiteUrl) {
   }
   
   // Deduplicate emails
-  const uniqueEmails = [...new Set(allEmails)];
+  const uniqueEmails = [...new Set(allEmails)].filter(function(e) {
+    var d = e.split('@')[1];
+    return !JUNK_EMAIL_DOMAINS.some(function(j) { return d && d.indexOf(j) !== -1; });
+  });
   
   // Find alternate email domains
   const altDomains = [];
   for (const email of uniqueEmails) {
     const domain = email.split('@')[1];
     if (domain && domain !== websiteDomain && domain !== `www.${websiteDomain}`) {
-      if (!GENERIC_EMAIL_PROVIDERS.includes(domain) && !altDomains.includes(domain)) {
+      if (!GENERIC_EMAIL_PROVIDERS.includes(domain) && !altDomains.includes(domain) && !JUNK_EMAIL_DOMAINS.some(function(j) { return domain.indexOf(j) !== -1; })) {
         altDomains.push(domain);
       }
     }

@@ -419,7 +419,32 @@ async function run() {
   for (let lead of leads) {
     console.log(`  📋 ${lead.company_name}`);
     
-    const websiteDomain = extractDomain(lead.website_url);
+    let websiteDomain = extractDomain(lead.website_url);
+
+    // ============================================================
+    // DOMAIN CORRECTION (Session 15 — Claude fix)
+    //
+    // THE BUG:
+    //   Top Chef Meals had website_url = sendbottles.com (a marketing
+    //   tracker). Agent 5 tested all emails against sendbottles.com.
+    //   Every email bounced. Meanwhile, google_website had the real
+    //   domain: topchefmeals.com.
+    //
+    // THE FIX:
+    //   If google_website exists and has a DIFFERENT domain than
+    //   website_url, trust Google. Swap the primary domain.
+    //   Keep the old domain as a fallback in case Google is wrong.
+    // ============================================================
+    let originalDomain = websiteDomain;
+    if (lead.google_website) {
+      const googleDomain = extractDomain(lead.google_website);
+      if (googleDomain && googleDomain !== websiteDomain) {
+        console.log('       \u{1F504} DOMAIN CORRECTION: "' + websiteDomain + '" \u2192 "' + googleDomain + '" (from Google Business Profile)');
+        websiteDomain = googleDomain;
+        lead.domain = googleDomain;
+      }
+    }
+
     if (!websiteDomain) {
       console.log(`     ❌ No domain found\n`);
       lead.contact_email = null;
@@ -437,6 +462,10 @@ async function run() {
     
     // ALWAYS try website domain first, alt domains are fallback only
     const domainsToTry = [websiteDomain];
+    if (originalDomain && originalDomain !== websiteDomain && !domainsToTry.includes(originalDomain)) {
+      domainsToTry.push(originalDomain);
+      console.log('       \u{1F500} Fallback domain: ' + originalDomain);
+    }
     if (altDomains.length > 0) {
       altDomains.forEach(d => {
         if (!domainsToTry.includes(d)) domainsToTry.push(d);
