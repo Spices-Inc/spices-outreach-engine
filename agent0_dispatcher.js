@@ -3,36 +3,50 @@ const path = require('path');
 const { searchForCompanies, extractDomain } = require('./agent1_scout_new');
 
 // ============================================================
-// CONFIGURATION — v3.1 "Floodgate + Bottle.com Surgical Search"
+// Agent 0 (Dispatcher) — v4.0 "State-Level Broad Search"
 //
-// WHAT CHANGED (Session 16):
-//   1. MAX_SEARCHES raised from 8 → 25 ("Floodgate" mode).
-//      We need volume to prove the concept and fill the
-//      inventory reservoir. Credit spend is secondary to
-//      getting 5 leads/day across the finish line.
+// WHAT CHANGED FROM v3.1 (Session 17 — "The Rebuild"):
 //
-//   2. SITE: QUERY SUPPORT — if a keyword starts with "site:",
-//      the negative keyword shield is SKIPPED. This prevents
-//      the negatives from choking site-specific searches like
-//      site:bottle.com where every result is already pre-qualified.
+// 1. STATE-LEVEL SEARCHES replace 54 micro-region searches.
+//    11 states × 5 query templates = 55 total searches.
+//    Each search pulls 100 results via Agent 1's num=100.
 //
-// PREVIOUS (v3.0 — Session 9):
-//   - Ledger-based SCF cluster harvesting
-//   - Unquoted queries with Bouncer as secondary filter
-//   - Negative shield appended to every query
-//   - 8 searches per run with 50-lead target
+//    THE ROOT CAUSE FIX: Greg typed "meal prep companies
+//    New Jersey" into Google and found 7 qualified leads on
+//    page 1 in 30 seconds. The machine ran for 3 weeks with
+//    54 micro-regions and found 2. The search strategy was
+//    too granular. This fixes it.
+//
+// 2. ROUND-ROBIN STATE PICKER replaces exhaust-then-move.
+//    Within each tier, the dispatcher picks the state with
+//    the MOST queries remaining. This gives geographic
+//    diversity in every daily batch — Greg sees leads from
+//    NJ, NY, PA, and MD in the same morning review instead
+//    of 25 straight NJ leads.
+//
+// 3. NEGATIVE KEYWORD SHIELD: REMOVED.
+//    The shield was blocking legitimate results at the Google
+//    query level before we ever saw them. Filtering is now
+//    handled post-search by two layers:
+//      - Agent 1's Bouncer (URL-level filter)
+//      - Agent 7's Industry Blacklist (company-level filter)
+//
+// 4. LEDGER FORMAT: v4.0 state-level structure.
+//    Each entry is a state (not a city/region).
+//    Fields: queries_remaining, queries_searched (not keywords_*).
+//    No SCFs, no city, no consecutive_zero_runs.
+//
+// UNCHANGED:
+//   - Discovery history dedup (domain-based, cross-run)
+//   - Bottle.com source tagging (source_bottle = true)
+//   - Circuit breaker (MAX_SEARCHES_PER_RUN)
+//   - Output to leads_master.json
+//   - Interface with Agent 1 (searchForCompanies)
+//   - Standalone + module export (run_pipeline.js compatible)
 // ============================================================
-const MAX_SEARCHES_PER_RUN = 25;       // Floodgate mode — was 8
-const TARGET_RAW_LEADS = 50;           // Higher target for metro hubs
-const MAX_CONSECUTIVE_ZEROS = 3;       // Mark region "depleted" after 3 zero-result searches
 
-// ============================================================
-// NEGATIVE KEYWORD SHIELD
-// Appended to every SerpAPI query to block non-commercial noise.
-// This is the FIRST line of defense. Agent 1's Bouncer is SECOND.
-// NOTE: NOT applied to site: searches (bottle.com etc.)
-// ============================================================
-const NEGATIVE_KEYWORDS = '-hospital -university -upmc -edu -gov -tips -blog -article -recipe -nutritionist -dietitian -coach -wellness -clinic -medical -restaurant -steakhouse -bar -grill -pizza -diner -cafe -bistro -inn -hotel -spa -gym -fitness -catering -"party platter" -"party tray" -"wedding catering" -grocer -bakery -brewery -winery -food truck -buffet';
+const MAX_SEARCHES_PER_RUN = 55;       // Safety cap per daily run
+const TARGET_RAW_LEADS = 100;          // Raised from 50 — broad searches yield more volume
 
 const LEDGER_PATH = path.join(__dirname, 'scf_search_ledger.json');
 const HISTORY_PATH = path.join(__dirname, 'discovery_history.json');
@@ -72,7 +86,7 @@ function saveHistory(history) {
 // ============================================================
 function loadLedger() {
   const data = JSON.parse(fs.readFileSync(LEDGER_PATH, 'utf8'));
-  console.log(`  📂 Loaded SCF ledger v${data.version}: ${data.summary.total_regions} regions, ${data.summary.active_regions} active\n`);
+  console.log(`  📂 Loaded search ledger v${data.version}: ${data.summary.total_states} states, ${data.summary.active_states} active\n`);
   return data;
 }
 
@@ -80,106 +94,106 @@ function saveLedger(ledger) {
   // Recalculate summary stats
   let active = 0;
   let depleted = 0;
-  for (const region of ledger.regions) {
-    if (region.status === 'active') active++;
-    if (region.status === 'depleted') depleted++;
+  let searchesCompleted = 0;
+
+  for (const state of ledger.states) {
+    if (state.status === 'active') active++;
+    if (state.status === 'depleted') depleted++;
+    searchesCompleted += state.queries_searched.length;
   }
-  ledger.summary.active_regions = active;
-  ledger.summary.depleted_regions = depleted;
+
+  ledger.summary.active_states = active;
+  ledger.summary.depleted_states = depleted;
+  ledger.summary.searches_completed = searchesCompleted;
 
   fs.writeFileSync(LEDGER_PATH, JSON.stringify(ledger, null, 2));
-  console.log(`  💾 Ledger saved: ${active} active regions, ${depleted} depleted\n`);
+  console.log(`  💾 Ledger saved: ${active} active states, ${depleted} depleted, ${searchesCompleted}/${ledger.summary.total_searches} searches completed\n`);
 }
 
 // ============================================================
-// REGION PICKER (Waterfall Logic)
+// STATE PICKER — Round-Robin Within Tier
 //
-// Priority order:
-//   1. Gold 1-day regions (tier = "gold_1day")
-//   2. Gold 2-day regions (tier = "gold_2day")
-//   3. Silver 3-day regions (tier = "silver_3day")
+// Priority order (waterfall):
+//   1. Gold 1-day states (PA, NY, DE)
+//   2. Gold 2-day states (NJ, CT, MA, MD, VA, DC, OH, KY)
 //
-// Within a tier, picks the first region that still has
-// keywords_remaining and status = "active".
+// Within a tier, picks the state with the MOST queries
+// remaining. This creates a round-robin effect:
+//   Run 1: PA(5), NY(5), DE(5) → picks PA → PA(4)
+//   Run 2: PA(4), NY(5), DE(5) → picks NY → NY(4)
+//   Run 3: PA(4), NY(4), DE(5) → picks DE → DE(4)
+//   Run 4: PA(4), NY(4), DE(4) → picks PA → PA(3)
+//   ...and so on, ensuring geographic diversity.
+//
+// If there's a tie, it picks alphabetically by state code
+// for deterministic ordering (DE before NY before PA).
 // ============================================================
 function pickNextSearch(ledger) {
-  const tierOrder = ledger.waterfall_order; // ["gold_1day", "gold_2day", "silver_3day"]
+  const tierOrder = ledger.waterfall_order;
 
   for (const tier of tierOrder) {
-    // Get all active regions in this tier that still have keywords to search
-    const candidates = ledger.regions.filter(r =>
-      r.tier === tier &&
-      r.status === 'active' &&
-      r.keywords_remaining.length > 0
+    // Get all active states in this tier with queries left
+    const candidates = ledger.states.filter(s =>
+      s.tier === tier &&
+      s.status === 'active' &&
+      s.queries_remaining.length > 0
     );
 
     if (candidates.length === 0) {
-      console.log(`  ⏭️  Tier "${tier}": All regions exhausted or depleted, moving to next tier`);
+      console.log(`  ⏭️  Tier "${tier}": All states exhausted, moving to next tier`);
       continue;
     }
 
-    // Sort by lowest SCF number (numerical order per Greg's instruction)
-    // This ensures NJ 070 is picked before PA 189 within the same tier
+    // Sort by MOST queries remaining (descending), then alphabetically for ties
     candidates.sort((a, b) => {
-      const aMin = Math.min(...a.scfs.map(Number));
-      const bMin = Math.min(...b.scfs.map(Number));
-      return aMin - bMin;
+      if (b.queries_remaining.length !== a.queries_remaining.length) {
+        return b.queries_remaining.length - a.queries_remaining.length;
+      }
+      return a.state.localeCompare(b.state);
     });
 
-    // Pick the first candidate (now sorted by lowest SCF — smallest number first)
-    const region = candidates[0];
-    const keyword = region.keywords_remaining[0]; // First remaining = highest tier keyword
+    // Pick the first candidate (most queries remaining = least searched)
+    const stateEntry = candidates[0];
+    const query = stateEntry.queries_remaining[0];
 
-    return { region, keyword, tier };
+    return { stateEntry, query, tier };
   }
 
-  // If we get here, ALL regions in ALL tiers are exhausted
+  // All states in all tiers are exhausted
   return null;
 }
 
 // ============================================================
-// UPDATE REGION AFTER SEARCH
-// Moves keyword from remaining → searched, updates stats
+// UPDATE STATE AFTER SEARCH
+// Moves query from remaining → searched, updates stats
 // ============================================================
-function updateRegionAfterSearch(region, keyword, newCompanyCount) {
-  // Move keyword from remaining to searched
-  region.keywords_remaining = region.keywords_remaining.filter(k => k !== keyword);
-  region.keywords_searched.push(keyword);
+function updateStateAfterSearch(stateEntry, query, newCompanyCount) {
+  // Move query from remaining to searched
+  stateEntry.queries_remaining = stateEntry.queries_remaining.filter(q => q !== query);
+  stateEntry.queries_searched.push(query);
 
   // Update stats
-  region.total_companies_found += newCompanyCount;
-  region.new_companies_last_run = newCompanyCount;
-  region.last_searched = new Date().toISOString();
+  stateEntry.total_companies_found += newCompanyCount;
+  stateEntry.last_searched = new Date().toISOString();
 
-  // Track consecutive zeros for depletion detection
-  if (newCompanyCount === 0) {
-    region.consecutive_zero_runs++;
-  } else {
-    region.consecutive_zero_runs = 0;
-  }
-
-  // Depletion check: 3 zeros in a row OR no keywords left
-  if (region.consecutive_zero_runs >= MAX_CONSECUTIVE_ZEROS) {
-    region.status = 'depleted';
-    console.log(`  🏁 Region "${region.city}, ${region.state}" marked DEPLETED (${MAX_CONSECUTIVE_ZEROS} consecutive zero-result searches)`);
-  } else if (region.keywords_remaining.length === 0) {
-    region.status = 'depleted';
-    console.log(`  🏁 Region "${region.city}, ${region.state}" marked DEPLETED (all keywords searched)`);
+  // Depletion check: all queries used up
+  if (stateEntry.queries_remaining.length === 0) {
+    stateEntry.status = 'depleted';
+    console.log(`  🏁 State "${stateEntry.state_full}" (${stateEntry.state}) marked DEPLETED (all 5 queries searched)`);
   }
 }
 
 // ============================================================
 // TIER EXHAUSTION ALERT
-// Fires when an entire waterfall tier has no active regions left
 // ============================================================
 function checkTierExhaustion(ledger) {
   for (const tier of ledger.waterfall_order) {
-    const activeInTier = ledger.regions.filter(r =>
-      r.tier === tier && r.status === 'active' && r.keywords_remaining.length > 0
+    const activeInTier = ledger.states.filter(s =>
+      s.tier === tier && s.status === 'active' && s.queries_remaining.length > 0
     );
     if (activeInTier.length === 0) {
-      const totalInTier = ledger.regions.filter(r => r.tier === tier).length;
-      console.log(`\n  🚨 ALERT: Tier "${tier}" is FULLY EXHAUSTED (${totalInTier} regions searched)`);
+      const totalInTier = ledger.states.filter(s => s.tier === tier).length;
+      console.log(`\n  🚨 ALERT: Tier "${tier}" is FULLY EXHAUSTED (${totalInTier} states searched)`);
       console.log(`     → Waterfall is advancing to the next tier automatically.\n`);
     }
   }
@@ -190,7 +204,7 @@ function checkTierExhaustion(ledger) {
 // ============================================================
 async function run() {
   console.log('\n========================================');
-  console.log('📋 Agent 0 (Dispatcher): Starting daily run — v3.1 Floodgate + Bottle.com');
+  console.log('📋 Agent 0 (Dispatcher) v4.0: State-Level Broad Search');
   console.log('========================================\n');
 
   // Load state
@@ -205,45 +219,37 @@ async function run() {
   // Main loop: keep searching until we hit target or budget
   while (searchesUsed < MAX_SEARCHES_PER_RUN && allNewLeads.length < TARGET_RAW_LEADS) {
 
-    // Pick next region + keyword
+    // Pick next state + query (round-robin)
     const next = pickNextSearch(ledger);
 
     if (!next) {
-      console.log('\n  🚨 ALL REGIONS EXHAUSTED across all tiers!');
-      console.log('     → No more search combinations available for ICP1 (Meal Prep).');
-      console.log('     → Time to build ICP2 (Butchers) keyword tiers.\n');
+      console.log('\n  🚨 ALL STATES EXHAUSTED across all tiers!');
+      console.log('     → All 55 searches have been completed for ICP1 (Meal Prep).');
+      console.log('     → Options: Add Silver tier states, add ICP2 (Butchers), or reset queries.\n');
       break;
     }
 
-    const { region, keyword, tier } = next;
+    const { stateEntry, query, tier } = next;
 
     // ============================================================
-    // QUERY CONSTRUCTION — v3.1 "Smart Site: Handling"
+    // QUERY — No Negative Shield (Session 17)
     //
-    // If keyword starts with "site:", this is a surgical search
-    // (e.g., site:bottle.com). Skip negative keywords — every
-    // result on the target site is already pre-qualified.
+    // The query goes to SerpAPI exactly as written in the ledger.
+    // Filtering is handled post-search by Agent 1 (Bouncer) and
+    // Agent 7 (Industry Blacklist). No Google-level suppression.
     //
-    // Otherwise, standard query: keyword + region + negatives.
+    // If query starts with "site:", it's a Bottle.com search.
+    // We tag resulting leads with source_bottle = true.
     // ============================================================
-    const isSiteSearch = keyword.startsWith('site:');
-    let query;
+    const isSiteSearch = query.startsWith('site:');
 
+    console.log(`  📍 [Search ${searchesUsed + 1}/${MAX_SEARCHES_PER_RUN}] Tier: ${tier} | State: ${stateEntry.state_full} (${stateEntry.state})`);
+    console.log(`     🎯 Query: "${query}"`);
     if (isSiteSearch) {
-      // Surgical site search — no negatives, just keyword + region state
-      query = `${keyword} ${region.state}`;
-      console.log(`  📍 [Search ${searchesUsed + 1}/${MAX_SEARCHES_PER_RUN}] Tier: ${tier} | Region: ${region.city}, ${region.state}`);
-      console.log(`     🎯 Keyword: ${keyword}`);
-      console.log(`     🔬 SURGICAL SITE SEARCH — negatives skipped`);
-    } else {
-      // Standard keyword search with negative shield
-      query = `${keyword} ${region.city} ${region.state} ${NEGATIVE_KEYWORDS}`;
-      console.log(`  📍 [Search ${searchesUsed + 1}/${MAX_SEARCHES_PER_RUN}] Tier: ${tier} | Region: ${region.city}, ${region.state}`);
-      console.log(`     🎯 Keyword: ${keyword}`);
-      console.log(`     🛡️  Shield: negatives active`);
+      console.log(`     🔬 BOTTLE.COM SEARCH — leads tagged source_bottle=true`);
     }
 
-    // Call Agent 1 (Scout) with this specific query
+    // Call Agent 1 (Scout) with this query
     const results = await searchForCompanies(query, knownDomains);
     searchesUsed++;
 
@@ -255,13 +261,14 @@ async function run() {
         history.domains.push(lead.domain);
         history.total_discovered++;
 
-        // Tag the lead with its source region and tier
-        lead.source_region = `${region.city}, ${region.state}`;
+        // Tag the lead with its source state and tier
+        lead.source_state = stateEntry.state;
+        lead.source_state_full = stateEntry.state_full;
         lead.source_tier = tier;
-        lead.source_keyword = keyword;
+        lead.source_query = query;
 
-        // Tag bottle.com leads for identity bypass in Agent 7
-        if (isSiteSearch && keyword.includes('bottle.com')) {
+        // Tag bottle.com leads for Agent 7 scoring bonus
+        if (isSiteSearch && query.includes('bottle.com')) {
           lead.source_bottle = true;
         }
 
@@ -270,10 +277,10 @@ async function run() {
       }
     }
 
-    // Update the ledger for this region
-    updateRegionAfterSearch(region, keyword, newCount);
+    // Update the ledger for this state
+    updateStateAfterSearch(stateEntry, query, newCount);
 
-    console.log(`  📊 Search yielded ${newCount} new companies (${allNewLeads.length} total this run)\n`);
+    console.log(`  📊 Search yielded ${results.length} results, ${newCount} new companies (${allNewLeads.length} total this run)\n`);
 
     // Early exit if we've hit the target
     if (allNewLeads.length >= TARGET_RAW_LEADS) {
@@ -284,8 +291,6 @@ async function run() {
 
   // ============================================================
   // CIRCUIT BREAKER LOG
-  // If we used all 25 searches without hitting 50, log it clearly.
-  // This is NOT an error — it's the safety stop working correctly.
   // ============================================================
   if (searchesUsed >= MAX_SEARCHES_PER_RUN && allNewLeads.length < TARGET_RAW_LEADS) {
     console.log(`  🔌 CIRCUIT BREAKER: Hit ${MAX_SEARCHES_PER_RUN}-search limit with ${allNewLeads.length} leads.`);
@@ -304,7 +309,7 @@ async function run() {
 
   // Final report
   console.log('========================================');
-  console.log('📋 Agent 0 (Dispatcher): Daily Run Summary');
+  console.log('📋 Agent 0 (Dispatcher) v4.0: Daily Run Summary');
   console.log('========================================');
   console.log(`  🔍 Searches used:     ${searchesUsed}/${MAX_SEARCHES_PER_RUN}`);
   console.log(`  🏢 New leads found:   ${allNewLeads.length}`);

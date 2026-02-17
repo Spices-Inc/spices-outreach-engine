@@ -13,19 +13,17 @@ const sheets = google.sheets({ version: 'v4', auth });
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
 
 // ============================================================
-// CONFIGURATION — v2.3 "Confidence Columns"
+// CONFIGURATION — v2.2 "LinkedIn Sniper Tab"
 //
-// WHAT CHANGED (Session 17):
-//   1. TWO NEW COLUMNS added to Sheet1 (at the END):
-//      - Column V: Contact Confidence (high/medium/low/alias)
-//      - Column W: LinkedIn Caution ("⚠️ STALE" or blank)
+// WHAT CHANGED (Session 16):
+//   1. NEW TAB: "LinkedIn Sniper" — receives leads that have
+//      a real person name from LinkedIn but no working email.
+//      Greg or a VA uses this for manual LinkedIn outreach.
 //
-//   2. Ranges updated from U to W across all Sheet1 operations.
-//      Columns A through U are UNTOUCHED. Agent 9 and Agent 10
-//      read/write columns A-U and are NOT affected.
+//   2. Includes a pre-built LinkedIn search URL so Greg can
+//      find the person in one click.
 //
-// PREVIOUS (v2.2 — Session 16):
-//   - LinkedIn Sniper tab
+// PREVIOUS (v2.1 — Session 10):
 //   - Archive → Clear → Write flow for Sheet1
 //   - Inventory tab sync from reservoir
 //   - History tab archiving
@@ -112,48 +110,30 @@ function buildLinkedInSearchURL(contactName, companyName) {
 }
 
 // ============================================================
-// Helper: Contact confidence display label — Session 17
-// ============================================================
-function getConfidenceLabel(confidence) {
-    const labels = {
-        'high': 'HIGH',
-        'medium': 'MEDIUM',
-        'low': 'LOW',
-        'alias': 'ALIAS'
-    };
-    return labels[confidence] || confidence || '';
-}
-
-// ============================================================
-// HEADERS — 23 columns (A:W) — Sheet1
-//
-// Session 17: Added V (Contact Confidence) and W (LinkedIn Caution)
-// Columns A-U are UNCHANGED from v2.2
+// HEADERS — 21 columns (A:U) — Sheet1
 // ============================================================
 const HEADERS = [
-    'Date Added',           // A
-    'Company',              // B
-    'City',                 // C
-    'State',                // D
-    'Days to Delivery',     // E
-    'Transit Text',         // F
-    'Rotation Day',         // G
-    'Rotation Line',        // H
-    'Blend Hook',           // I
-    'Spice Keywords',       // J
-    'Tier',                 // K
-    'Score',                // L
-    'Contact',              // M
-    'Title',                // N
-    'Email',                // O
-    'Email Status',         // P
-    'Strike',               // Q
-    'Sequence Track',       // R
-    'Discovery Source',     // S
-    'Apollo Status',        // T
-    'Status',               // U  (Greg writes "Nix" here to reject)
-    'Confidence',           // V  — Session 17 NEW
-    'LinkedIn Caution'      // W  — Session 17 NEW
+    'Date Added',       // A
+    'Company',          // B
+    'City',             // C
+    'State',            // D
+    'Days to Delivery', // E
+    'Transit Text',     // F
+    'Rotation Day',     // G
+    'Rotation Line',    // H
+    'Blend Hook',       // I
+    'Spice Keywords',   // J
+    'Tier',             // K
+    'Score',            // L
+    'Contact',          // M
+    'Title',            // N
+    'Email',            // O
+    'Email Status',     // P
+    'Strike',           // Q
+    'Sequence Track',   // R
+    'Discovery Source', // S
+    'Apollo Status',    // T
+    'Status'            // U  (Greg writes "Nix" here to reject)
 ];
 
 const HISTORY_HEADERS = HEADERS;
@@ -177,6 +157,15 @@ const INVENTORY_HEADERS = [
 
 // ============================================================
 // LINKEDIN SNIPER TAB HEADERS
+//
+// Columns designed for quick manual LinkedIn outreach:
+//   - Company + City for context
+//   - Contact Name + Title for the connection request
+//   - Domain so Greg knows the company website
+//   - Potential Score = what the lead WOULD score without email penalty
+//   - Spice Keywords for personalization in the LinkedIn message
+//   - LinkedIn URL = one-click search to find the person
+//   - Status = Greg marks "Sent" after connecting, "Replied", etc.
 // ============================================================
 const SNIPER_HEADERS = [
     'Date Added',       // A
@@ -187,11 +176,11 @@ const SNIPER_HEADERS = [
     'Contact Name',     // F
     'Contact Title',    // G
     'Domain',           // H
-    'Potential Score',  // I
+    'Potential Score',  // I  (score without email penalty)
     'Spice Keywords',   // J
     'Rotation Day',     // K
     'LinkedIn URL',     // L
-    'Status'            // M
+    'Status'            // M  (Sent / Replied / Approved / Nix)
 ];
 
 // ============================================================
@@ -203,7 +192,7 @@ async function archiveToHistory() {
     try {
         const currentData = await sheets.spreadsheets.values.get({
             spreadsheetId: SHEET_ID,
-            range: 'Sheet1!A2:W1000'
+            range: 'Sheet1!A2:U1000'
         });
 
         const existingRows = currentData.data.values || [];
@@ -265,7 +254,7 @@ async function archiveToHistory() {
 // MAIN FUNCTION: Push leads to Google Sheet (Tab 1)
 // ============================================================
 async function pushLeadsToSheet() {
-    console.log('\n📊 Agent 8 v2.3: Pushing leads to Google Sheet...\n');
+    console.log('\n📊 Agent 8: Pushing leads to Google Sheet...\n');
 
     const leads = JSON.parse(fs.readFileSync('qualified_leads.json', 'utf8'));
 
@@ -296,10 +285,8 @@ async function pushLeadsToSheet() {
         lead.strike_level || '',                              // Q
         getTrackLabel(lead),                                 // R
         getDiscoveryLabel(lead.discovery_source),            // S
-        '',                                                  // T (Apollo Status — written by Agent 10)
-        '',                                                  // U (Status — written by Greg)
-        getConfidenceLabel(lead.contact_confidence),         // V — Session 17 NEW
-        lead.linkedin_caution ? '⚠️ STALE' : ''             // W — Session 17 NEW
+        '',                                                  // T
+        ''                                                   // U
     ]);
 
     try {
@@ -308,7 +295,7 @@ async function pushLeadsToSheet() {
         console.log('  🧹 Clearing Sheet1 (yesterday\'s data)...');
         await sheets.spreadsheets.values.clear({
             spreadsheetId: SHEET_ID,
-            range: 'Sheet1!A1:W1000'
+            range: 'Sheet1!A1:U1000'
         });
 
         await sheets.spreadsheets.values.update({
@@ -324,8 +311,7 @@ async function pushLeadsToSheet() {
         leads.forEach((lead, i) => {
             const company = cleanCompanyName(lead.company_name);
             const track = lead.sequence_track === 'B' ? 'Track B (Alias)' : 'Track A (Direct)';
-            const conf = lead.contact_confidence ? ` [${lead.contact_confidence.toUpperCase()}]` : '';
-            console.log(`  ${i + 1}. ${company} (${lead.city}) — ${lead.tier.toUpperCase()} ${lead.qualification_score}pts — ${track}${conf} — ${lead.contact_email || 'NO EMAIL'} [${getDiscoveryLabel(lead.discovery_source)}]`);
+            console.log(`  ${i + 1}. ${company} (${lead.city}) — ${lead.tier.toUpperCase()} ${lead.qualification_score}pts — ${track} — ${lead.contact_email || 'NO EMAIL'} [${getDiscoveryLabel(lead.discovery_source)}]`);
         });
 
         console.log('\n👉 Review the sheet. Leave blank to approve, type "Nix" in Status column (U) to reject.');
@@ -397,10 +383,20 @@ async function syncInventoryTab() {
 
 // ============================================================
 // LINKEDIN SNIPER TAB SYNC — Session 16
+//
+// UNLIKE Sheet1, this tab is APPEND-ONLY. We never clear it.
+// Sniper leads accumulate over time so Greg has a running
+// list of high-value LinkedIn targets.
+//
+// Deduplication: Before appending, we read existing rows and
+// skip any company+contact combo that's already on the tab.
+// This prevents duplicates if the same lead appears in
+// multiple pipeline runs.
 // ============================================================
 async function syncSniperTab() {
     console.log('🎯 Syncing LinkedIn Sniper tab...\n');
 
+    // Load sniper leads from today's run
     let sniperLeads = [];
     try {
         if (fs.existsSync(SNIPER_PATH)) {
@@ -416,6 +412,7 @@ async function syncSniperTab() {
     }
 
     try {
+        // Check if tab has headers
         let needsHeaders = false;
         let existingRows = [];
         try {
@@ -427,12 +424,14 @@ async function syncSniperTab() {
             if (allRows.length === 0 || allRows[0][0] !== 'Date Added') {
                 needsHeaders = true;
             } else {
+                // Skip header row for dedup check
                 existingRows = allRows.slice(1);
             }
         } catch (err) {
             needsHeaders = true;
         }
 
+        // Write headers if needed
         if (needsHeaders) {
             console.log('  📝 Writing LinkedIn Sniper tab headers (first time)...');
             await sheets.spreadsheets.values.update({
@@ -443,6 +442,7 @@ async function syncSniperTab() {
             });
         }
 
+        // Build dedup set from existing rows: "company|contact"
         const existingKeys = new Set();
         for (const row of existingRows) {
             if (row[1] && row[5]) {
@@ -450,6 +450,7 @@ async function syncSniperTab() {
             }
         }
 
+        // Build new rows, skipping duplicates
         const newRows = [];
         for (const lead of sniperLeads) {
             const company = cleanCompanyName(lead.company_name);
@@ -462,19 +463,19 @@ async function syncSniperTab() {
             }
 
             newRows.push([
-                getToday(),
-                company,
-                lead.city || '',
-                lead.state || '',
-                getTransitText(lead.transit_days),
-                contact,
-                lead.contact_title || '',
-                lead.domain || '',
-                lead.sniper_score || '',
-                (lead.spice_keywords_found || []).join(', '),
-                lead.rotation_day || '',
-                buildLinkedInSearchURL(contact, lead.company_name),
-                ''
+                getToday(),                                              // A - Date
+                company,                                                 // B - Company
+                lead.city || '',                                         // C - City
+                lead.state || '',                                        // D - State
+                getTransitText(lead.transit_days),                       // E - Transit
+                contact,                                                 // F - Contact Name
+                lead.contact_title || '',                                // G - Contact Title
+                lead.domain || '',                                       // H - Domain
+                lead.sniper_score || '',                                 // I - Potential Score
+                (lead.spice_keywords_found || []).join(', '),            // J - Spice Keywords
+                lead.rotation_day || '',                                 // K - Rotation Day
+                buildLinkedInSearchURL(contact, lead.company_name),      // L - LinkedIn URL
+                ''                                                       // M - Status
             ]);
         }
 
@@ -483,6 +484,7 @@ async function syncSniperTab() {
             return;
         }
 
+        // Append new rows
         await sheets.spreadsheets.values.append({
             spreadsheetId: SHEET_ID,
             range: 'LinkedIn Sniper!A1',
@@ -510,7 +512,11 @@ async function syncSniperTab() {
 }
 
 // ============================================================
+// MAIN EXECUTION
+// ============================================================
+// ============================================================
 // REJECTIONS TAB SYNC — append-only (restored Session 16)
+// Appends today's disqualified leads. Never clears.
 // ============================================================
 async function syncRejectionsTab() {
     console.log('\u274C Syncing Rejections tab...\n');
@@ -555,9 +561,6 @@ async function syncRejectionsTab() {
     }
 }
 
-// ============================================================
-// MAIN EXECUTION
-// ============================================================
 async function run() {
     await pushLeadsToSheet();
     await syncInventoryTab();

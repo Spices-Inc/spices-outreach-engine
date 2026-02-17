@@ -1,42 +1,28 @@
 const fs = require('fs');
 
 // ============================================================
-// Agent 7 (Qualifier) — v3.3 "Industry Blacklist + Bottle Bonus"
+// Agent 7 (Qualifier) — v3.2 "LinkedIn Sniper + Identity Bypass + Retail Trap"
 //
-// WHAT CHANGED FROM v3.2 (Session 17 — "Blacklist"):
+// WHAT CHANGED FROM v3.1 (Session 16 — "LinkedIn Sniper"):
 //
-// 1. INDUSTRY BLACKLIST (HARD KILL):
-//    Non-food businesses were scoring 90+ because they had
-//    Monday rotations + spice keywords + 1-day transit.
-//    THE ARCHETYPE: A travel agency that scored 90.
+// 1. LINKEDIN SNIPER ROUTING: Leads that have a real person
+//    name found via LinkedIn BUT no working email are routed
+//    to linkedin_sniper_leads.json instead of being killed.
+//    Agent 8 pushes these to a "LinkedIn Sniper" tab in Google
+//    Sheets so Greg can do manual LinkedIn outreach.
 //
-//    The blacklist runs FIRST — before scoring, before Identity
-//    Bypass, before everything. If your company name or domain
-//    contains a blacklisted industry term, you're dead. Period.
+//    THE ARCHETYPE: Beast Village Meal Prep — Luke Berger,
+//    Director of Production. Perfect lead. dns_error on both
+//    domains. Without this fix, Luke disappears forever.
 //
-//    Uses WORD-BOUNDARY matching (regex \b), not substring:
-//      "Day Spa"          → "spa" matches    → KILLED (correct)
-//      "Spanish Kitchen"  → "spa" no match   → SAFE  (correct)
-//      "Lawson's Meals"   → "law" no match   → SAFE  (correct)
-//      "Law Firm LLC"     → "law" matches    → KILLED (correct)
+//    CRITERIA FOR SNIPER ROUTING:
+//      a) Has a real person name (not alias, not generic)
+//      b) Name was found via LinkedIn (discovery_source includes 'linkedin')
+//      c) Email is broken: not_found, dns_error, no_code, etc.
+//      d) Lead has a valid address (transit_days exists)
 //
-//    34 blacklisted terms. No bypass. No rescue. No override.
-//
-// 2. BOTTLE.COM SOURCE BONUS (+15 pts):
-//    Leads sourced from Bottle.com are pre-validated meal prep
-//    infrastructure companies. They get +15 points in scoring
-//    to float them to the top of Greg's review sheet.
-//    (Bottle.com was already in Identity Bypass — this adds a
-//    separate scoring reward on top of that.)
-//
-// 3. BLACKLIST AUDIT FILE:
-//    Blacklisted leads are written to blacklisted_leads.json
-//    so Greg can audit for false positives during the first
-//    few runs after the broad search rebuild.
-//
-// UNCHANGED FROM v3.2:
-//   - Identity Bypass (19 meal-prep name patterns + bottle.com)
-//   - LinkedIn Sniper routing (real name + broken email)
+// UNCHANGED FROM v3.1:
+//   - Identity Bypass (meal prep name patterns + bottle.com)
 //   - Retail Brand Penalty (-25 / -50)
 //   - Kitchen Forward Bonus (+10 / +15)
 //   - Identity Anchor Bonus (+15 / +25)
@@ -44,15 +30,13 @@ const fs = require('fs');
 //   - Universal Lifeline (catch-all rescue)
 //   - Generic Name Guard
 //   - Strike level + Track A/B routing
-//   - All file I/O (leads_master, qualified, disqualified, linkedin_sniper)
 //
-// SCORING MODEL (max theoretical = 130):
+// SCORING MODEL (max theoretical = 115):
 //   Geography:       40 pts (1-day=40, 2-day=30, 3-day=20)
 //   Product match:   25 pts (3+ spice keywords=25, 1-2=15)
 //   Menu rotation:   20 pts (specific day found)
 //   Contact:         15 pts (verified real name)
 //   Kitchen bonus:   15 pts (3+ kitchen-forward signals)
-//   Bottle bonus:    15 pts (source_bottle = true)
 //   Retail penalty: -50 pts (3+ retail brand signals)
 //   Email penalties: -5 to -100
 // ============================================================
@@ -62,70 +46,6 @@ var GENERIC_EMAIL_PROVIDERS = [
   'aol.com', 'icloud.com', 'mail.com', 'protonmail.com',
   'live.com', 'msn.com', 'comcast.net', 'verizon.net'
 ];
-
-// ============================================================
-// INDUSTRY BLACKLIST — Session 17 "The Bouncer"
-//
-// 34 terms. Word-boundary matching. No exceptions.
-// If the company name or domain contains one of these terms
-// as a standalone word, the lead is killed before scoring.
-//
-// WHY THESE TERMS:
-//   - agency/travel/fitness/gym/crossfit/yoga: The original
-//     false positives that triggered this rebuild
-//   - cannabis/dispensary: Legal but not our ICP
-//   - marketing/software/consulting/coaching: Service businesses
-//   - boutique/salon/spa/studio: Personal care / retail
-//   - realty/realtor/insurance: Finance / property
-//   - church/school/university/college: Institutions
-//   - hospital/clinic/dental/veterinary: Healthcare
-//   - plumbing/electric/construction/roofing/landscaping: Trades
-//   - cleaning/daycare/accounting/tax: Other non-food services
-// ============================================================
-var INDUSTRY_BLACKLIST = [
-  'agency', 'travel', 'fitness', 'gym', 'crossfit', 'yoga',
-  'cannabis', 'dispensary', 'marketing', 'software', 'legal',
-  'law', 'consulting', 'coaching', 'boutique', 'salon', 'spa',
-  'studio', 'realty', 'realtor', 'insurance', 'church', 'school',
-  'university', 'college', 'hospital', 'clinic', 'dental',
-  'veterinary', 'plumbing', 'electric', 'construction', 'roofing',
-  'landscaping', 'cleaning', 'daycare', 'accounting', 'tax'
-];
-
-// Pre-compile regex patterns once at startup for performance
-var BLACKLIST_PATTERNS = INDUSTRY_BLACKLIST.map(function(term) {
-  return { term: term, regex: new RegExp('\\b' + term + '\\b', 'i') };
-});
-
-// ============================================================
-// isBlacklisted()
-//
-// Checks company_name and domain against the industry blacklist
-// using word-boundary matching.
-//
-// Returns: { blacklisted: true/false, term: string, matched_in: string }
-//
-// IMPORTANT: This function does NOT check any bypass lists.
-// The blacklist is absolute. "Fitness Meal Prep" is killed
-// even though "meal prep" is in the Identity Bypass list.
-// ============================================================
-function isBlacklisted(lead) {
-  var name = (lead.company_name || '');
-  var domain = (lead.domain || '');
-
-  for (var i = 0; i < BLACKLIST_PATTERNS.length; i++) {
-    var pattern = BLACKLIST_PATTERNS[i];
-
-    if (pattern.regex.test(name)) {
-      return { blacklisted: true, term: pattern.term, matched_in: 'company_name' };
-    }
-    if (pattern.regex.test(domain)) {
-      return { blacklisted: true, term: pattern.term, matched_in: 'domain' };
-    }
-  }
-
-  return { blacklisted: false, term: null, matched_in: null };
-}
 
 // ============================================================
 // IDENTITY BYPASS PATTERNS — Session 16 "Floodgate"
@@ -275,32 +195,6 @@ function qualifiesForLifeline(lead) {
 }
 
 function qualifyLead(lead) {
-
-  // ============================================================
-  // INDUSTRY BLACKLIST — RUNS FIRST
-  //
-  // No bypass. No rescue. No Identity Override.
-  // If the company name or domain contains a blacklisted
-  // industry term (word-boundary matched), the lead is dead.
-  //
-  // "The Bouncer stands outside the club. If you have 'Agency'
-  //  or 'Spa' on your ID, we don't care if you're wearing a
-  //  'Meal Prep' t-shirt. You're out." — Greg, Session 17
-  // ============================================================
-  var blacklistCheck = isBlacklisted(lead);
-  if (blacklistCheck.blacklisted) {
-    lead.blacklisted = true;
-    lead.blacklist_term = blacklistCheck.term;
-    lead.blacklist_matched_in = blacklistCheck.matched_in;
-    return {
-      qualified: false,
-      score: 0,
-      reason: 'BLACKLISTED: "' + blacklistCheck.term + '" in ' + blacklistCheck.matched_in,
-      penalties: ['INDUSTRY_BLACKLIST(' + blacklistCheck.term + ' in ' + blacklistCheck.matched_in + ')'],
-      blacklisted: true
-    };
-  }
-
   var score = 0;
   var penalties = [];
 
@@ -330,22 +224,6 @@ function qualifyLead(lead) {
     } else {
       score += 15;
     }
-  }
-
-  // ============================================================
-  // BOTTLE.COM SOURCE BONUS — Session 17 (+15 pts)
-  //
-  // Leads discovered via Bottle.com are pre-validated meal prep
-  // infrastructure companies ("Infrastructure Whales"). They
-  // get a scoring bonus to float to the top of Greg's sheet.
-  //
-  // This is SEPARATE from the Identity Bypass (which gives a
-  // pass/fail gate). This is a scoring reward that makes
-  // Bottle.com leads rank higher among all qualified leads.
-  // ============================================================
-  if (lead.source_bottle === true) {
-    score += 15;
-    penalties.push('bottle_source_bonus(+15)');
   }
 
   // ============================================================
@@ -507,13 +385,12 @@ function qualifyLead(lead) {
 }
 
 async function run() {
-  console.log("\n🎯 Agent 7 v3.3: Qualifying leads (Blacklist + Bottle Bonus + LinkedIn Sniper + Identity Bypass + Retail Trap active)...");
+  console.log("\n🎯 Agent 7 v3.2: Qualifying leads (LinkedIn Sniper + Identity Bypass + Retail Trap active)...");
 
   var leads = JSON.parse(fs.readFileSync('leads_master.json', 'utf8'));
   var qualified = [];
   var disqualified = [];
   var sniperLeads = [];
-  var blacklistedLeads = [];
   var bypassed = 0;
 
   leads.forEach(function(lead, i) {
@@ -538,15 +415,7 @@ async function run() {
 
     if (lead.identity_bypass) bypassed++;
 
-    // ============================================================
-    // BLACKLISTED — Session 17
-    // Hard-killed by industry blacklist. Logged for audit.
-    // ============================================================
-    if (result.blacklisted) {
-      blacklistedLeads.push(lead);
-      console.log('  🚫 #' + (i+1) + ': ' + lead.company_name + ' - BLACKLISTED ("' + lead.blacklist_term + '" in ' + lead.blacklist_matched_in + ')');
-      console.log('         ' + (lead.domain || 'no domain') + ' | ' + (lead.city || '?') + ', ' + (lead.state || '?'));
-    } else if (result.sniper) {
+    if (result.sniper) {
       sniperLeads.push(lead);
       console.log('  🎯 #' + (i+1) + ': ' + lead.company_name + ' - LINKEDIN SNIPER (potential: ' + result.sniperScore + '/100)' + strikeLabel + signalLabel + penaltyLabel);
       console.log('         ' + lead.contact_name + ' [' + (lead.contact_title || 'no title') + '] — ' + (lead.domain || 'no domain') + ' [' + (lead.discovery_source || 'unknown') + ']');
@@ -566,12 +435,10 @@ async function run() {
   fs.writeFileSync('qualified_leads.json', JSON.stringify(qualified, null, 2));
   fs.writeFileSync('disqualified_leads.json', JSON.stringify(disqualified, null, 2));
   fs.writeFileSync('linkedin_sniper_leads.json', JSON.stringify(sniperLeads, null, 2));
-  fs.writeFileSync('blacklisted_leads.json', JSON.stringify(blacklistedLeads, null, 2));
 
-  console.log('\n📊 SUMMARY: ✅ ' + qualified.length + ' qualified | 🎯 ' + sniperLeads.length + ' sniper | 🚫 ' + blacklistedLeads.length + ' blacklisted | ❌ ' + disqualified.length + ' disqualified');
+  console.log('\n📊 SUMMARY: ✅ ' + qualified.length + ' qualified | 🎯 ' + sniperLeads.length + ' sniper | ❌ ' + disqualified.length + ' disqualified');
   if (bypassed > 0) console.log('   🔓 Identity Bypass: ' + bypassed + ' (machine deferred to Greg)');
   if (sniperLeads.length > 0) console.log('   🎯 LinkedIn Sniper: ' + sniperLeads.length + ' (manual LinkedIn outreach)');
-  if (blacklistedLeads.length > 0) console.log('   🚫 Blacklisted: ' + blacklistedLeads.length + ' (audit file: blacklisted_leads.json)');
   console.log('   Track A (Direct): ' + qualified.filter(function(l) { return l.sequence_track === 'A'; }).length);
   console.log('   Track B (Alias):  ' + qualified.filter(function(l) { return l.sequence_track === 'B'; }).length + '\n');
 }
