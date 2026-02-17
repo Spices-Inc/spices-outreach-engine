@@ -117,3 +117,41 @@ Date,Company,Domain,City,State,Stage,Reason,Score
 "2/16/2026, 11:21:52 PM","HPLT HQ",hpltraining.com,Village of Pelham,NY,Agent 7: Qualifier,"Score too low: 25/100",25
 "2/16/2026, 11:21:52 PM","Brooklyn Dim Sum Co",brooklyndimsumco.com,Queens,NY,Agent 7: Qualifier,"Score too low: 40/100",40
 "2/16/2026, 11:21:52 PM","kuchela kuizine",kuchelakuizine.com,Brooklyn,NY,Agent 7: Qualifier,"No valid email found",0
+"2/17/2026, 3:11:33 PM","Home Appetit",homeappetitphilly.com,,,Exit Gate: Address,"No address found by Agent 2",0
+"2/17/2026, 3:11:33 PM","Meal Prep Chef",mealprepchef.com,,,Exit Gate: Address,"No address found by Agent 2",0
+"2/17/2026, 3:11:33 PM","Jennies Kitchen",jennieskitchennyc.com,,,Exit Gate: Address,"No address found by Agent 2",0
+"2/17/2026, 3:11:33 PM","Heard Chef Meal Prep",heardchefmealprep.com,,,Exit Gate: Address,"No address found by Agent 2",0
+"2/17/2026, 3:11:33 PM","Dcist",dcist.com,,,Exit Gate: Address,"No address found by Agent 2",0
+"2/17/2026, 3:11:33 PM","Dinners At Your Door",dinnersatyourdoor.com,,,Exit Gate: Address,"No address found by Agent 2",0
+"2/17/2026, 3:11:33 PM","EatFit 24/7, LLC",eatfitfood247.com,,,Exit Gate: Address,"No address found by Agent 2",0
+"2/17/2026, 3:11:33 PM","Fresco Meal Prepboston",frescomealprepboston.com,,,Exit Gate: Address,"No address found by Agent 2",0
+"2/17/2026, 3:11:33 PM","Family Thyme Kitchen",familythymekitchen.com,,,Exit Gate: Address,"No address found by Agent 2",0
+"2/17/2026, 3:11:33 PM","Tempo Meals",tempomeals.com,,,Exit Gate: Address,"No address found by Agent 2",0
+"2/17/2026, 3:11:33 PM","In-Home Personal Chefs In Washington DC",weeklymealprep.com,,,Exit Gate: Address,"No address found by Agent 2",0
+"2/17/2026, 3:11:33 PM","Macroman Meals",macromanmeals.com,Louisville,KY,Postal Gate,"Transit 4 days exceeds max 3",0
+"2/17/2026, 3:11:33 PM","Zilla Meals & Supplement Store",zilla-meals.com,Somerset,KY,Postal Gate,"Transit 4 days exceeds max 3",0
+"2/17/2026, 3:11:33 PM","Etown Meal Prepping",etownmealprepping.com,Elizabethtown,KY,Postal Gate,"Transit 4 days exceeds max 3",0
+"2/17/2026, 3:11:33 PM","Paducah Meal Prep Co.",paducahmealprep.com,Paducah,KY,Postal Gate,"Transit 4 days exceeds max 3",0
+"2/17/2026, 3:11:33 PM","Dunn in the Kitchen, LLC",dunninthekitchen.com,Georgetown,KY,Postal Gate,"Transit 4 days exceeds max 3",0
+"2/17/2026, 3:11:33 PM","Home Cuisine",homecuisineonline.com,Louisville,KY,Postal Gate,"Transit 4 days exceeds max 3",0
+"2/17/2026, 3:11:33 PM","MegaFit Meals",megafitmeals.com,Calvert City,KY,Postal Gate,"Transit 4 days exceeds max 3",0
+"2/17/2026, 3:16:52 PM","Redefine Meals",redefinemeals.com,Lake Grove,NY,Exit Gate: Contextual Spice,"17 keywords + rotation ""monday"" but 5 retail signals (likely restaurant/retail)",0
+"2/17/2026, 3:16:52 PM","GoodEase - Take and Bake",goodeasetnb.com,Wilmington,DE,Exit Gate: Contextual Spice,"2 keywords + rotation ""monday"" but 3 retail signals (likely restaurant/retail)",0
+"2/17/2026, 3:16:52 PM","BrandywineMeals.com",brandywinemeals.com,Garnet Valley,PA,Exit Gate: Contextual Spice,"Zero spice keywords",0
+"2/17/2026, 3:16:52 PM","Caffe Gelato Restaurant",caffegelato.net,Newark,DE,Exit Gate: Contextual Spice,"Zero spice keywords",0
+"2/17/2026, 3:16:52 PM","Feast & Fettle",feastandfettle.com,East Providence,RI,Exit Gate: Contextual Spice,"45 keywords + rotation ""monday"" but 2 retail signals (likely restaurant/retail)",0
+"2/17/2026, 3:16:52 PM","( MOES MEALS INC) DBA/October Kitchen",octoberkitchen.com,Manchester,CT,Exit Gate: Contextual Spice,"2 keywords + rotation ""tuesday"" but 3 retail signals (likely restaurant/retail)",0
+"2/17/2026, 3:16:52 PM","Lean Kitchen - Bel Air",leankitchenco.com,Bel Air,MD,Exit Gate: Contextual Spice,"15 keywords + rotation ""monday"" but 3 retail signals (likely restaurant/retail)",0
+"2/17/2026, 3:16:52 PM","Best of the best construction",bestofnj.com,Teaneck,NJ,Exit Gate: Contextual Spice,"Zero spice keywords",0
+"2/17/2026, 3:16:52 PM","Fit Fresh Fast",fitfreshfast.com,Columbus,OH,Exit Gate: Contextual Spice,"16 keywords + rotation ""monday"" but 2 retail signals (likely restaurant/retail)",0
+"2/17/2026, 3:16:52 PM","360 Fitness Meals",360fitnessmeals.com,Columbus,OH,Exit Gate: Contextual Spice,"2 keywords but no rotation day (likely non-food business)",0
+"2/17/2026, 3:16:52 PM","Simply EZ",simplyez.com,Columbus,OH,Exit Gate: Contextual Spice,"1 keywords + rotation ""monday"" but 4 retail signals (likely restaurant/retail)",0
+"2/17/2026, 3:16:52 PM","Healthy is the Way",healthyistheway.com,Hartford,CT,Exit Gate: Contextual Spice,"3 keywords but no rotation day (likely non-food business)",0
+"2/17/2026, 3:16:52 PM","mademeals",mademeals.co,Kearny,NJ,Exit Gate: Contextual Spice,"42 keywords + rotation ""monday"" but 2 retail signals (likely restaurant/retail)",0
+"2/17/2026, 3:16:52 PM","Keeney's Kitchen Online Orders",keeneyskitchencbus.com,Lucasville,OH,Exit Gate: Contextual Spice,"2 keywords + rotation ""monday"" but 4 retail signals (likely restaurant/retail)",0
+"2/17/2026, 3:16:52 PM","Fit A.F. Nutrition",eatfitlifefoods.com,Carbondale,PA,Exit Gate: Contextual Spice,"Zero spice keywords",0
+"2/17/2026, 3:16:52 PM","Crossroads Deli & Catering",welovecrossroads.com,Bergenfield,NJ,Exit Gate: Contextual Spice,"9 keywords + rotation ""monday"" but 2 retail signals (likely restaurant/retail)",0
+"2/17/2026, 3:16:52 PM","Global Meals",globalmeals.com,Columbus,OH,Exit Gate: Contextual Spice,"Zero spice keywords",0
+"2/17/2026, 3:16:52 PM","Little Lady Chef",littleladychef.com,Washington,DC,Exit Gate: Contextual Spice,"5 keywords + rotation ""monday"" but 7 retail signals (likely restaurant/retail)",0
+"2/17/2026, 3:16:52 PM","District of Columbia International School",dcurbanmom.com,Washington,DC,Exit Gate: Contextual Spice,"Zero spice keywords",0
+"2/17/2026, 3:16:52 PM","Fuel Chef",fuelmeals.com,Newark,NJ,Exit Gate: Contextual Spice,"5 keywords + rotation ""monday"" but 4 retail signals (likely restaurant/retail)",0

@@ -380,9 +380,6 @@ console.log('========================================\n');
 // Initialize rejection log
 initRejectionLog();
 
-// Clear bouncer audit trail from previous run (fresh daily report)
-try { fs.unlinkSync(path.join(__dirname, 'bouncer_rejected_leads.json')); } catch(e) {}
-
 // STEP 1: Check the reservoir
 var reservoir = loadReservoir();
 var reservoirCount = reservoir.length;

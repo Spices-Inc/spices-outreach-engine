@@ -1,10 +1,8 @@
 const axios = require('axios');
-const fs = require('fs');
-const path = require('path');
 require('dotenv').config();
 
 // ============================================================
-// Agent 1 (Scout) — v5.1 "URL Trawler + Armored Bouncer + Audit Trail"
+// Agent 1 (Scout) — v4.0 "URL Trawler + Armored Bouncer"
 //
 // ROLE: Find URLs and pass them downstream. That's it.
 //
@@ -19,7 +17,6 @@ require('dotenv').config();
 //   2. Filters results through Block List + Bouncer
 //   3. Extracts domain and a raw name guess
 //   4. Passes { raw_name, domain, url } to leads_master.json
-//   5. Writes ALL kills to bouncer_rejected_leads.json (audit trail)
 //
 // WHAT THIS AGENT DOES NOT DO:
 //   - Determine the real business name (Agent 2's job)
@@ -33,17 +30,7 @@ require('dotenv').config();
 //           NEGATIVE_TITLE_WORDS (entities: gyms, hotels, museums,
 //           terminals, stadiums, etc.), added BLOCKED_ENTITY_WORDS
 //           for company name matching. Session 13, Feb 13 2026.
-//   v5.1 — Bouncer Audit Trail: Every blocked/bounced lead is
-//           written to bouncer_rejected_leads.json with reason,
-//           query, and timestamp. File is appended per search call
-//           so Agent 0's 55 searches accumulate into one report.
-//           Session 18, Feb 17 2026.
 // ============================================================
-
-// ============================================================
-// AUDIT TRAIL FILE PATH
-// ============================================================
-const BOUNCER_AUDIT_FILE = path.join(__dirname, 'bouncer_rejected_leads.json');
 
 // ============================================================
 // BLOCKED PATTERNS — v3.0
@@ -451,48 +438,11 @@ function getRawName(serpTitle, url) {
 }
 
 // ============================================================
-// BOUNCER AUDIT TRAIL — v5.1
-//
-// Collects every kill (blocked + bouncer) during a search call
-// and appends them to bouncer_rejected_leads.json.
-//
-// WHY APPEND (not overwrite):
-//   Agent 0 calls searchForCompanies() up to 55 times per run.
-//   Each call appends its kills so the full morning's report
-//   accumulates in one file.
-//
-// WHO CLEARS IT:
-//   run_pipeline.js deletes the file at pipeline start so each
-//   day's report is clean.
-//
-// WHAT GREG USES IT FOR:
-//   Weekly review to catch false positives — good meal prep
-//   companies that the bouncer killed by mistake.
-// ============================================================
-function appendToAuditTrail(kills) {
-  if (kills.length === 0) return;
-
-  try {
-    let existing = [];
-    if (fs.existsSync(BOUNCER_AUDIT_FILE)) {
-      existing = JSON.parse(fs.readFileSync(BOUNCER_AUDIT_FILE, 'utf8'));
-    }
-    const merged = existing.concat(kills);
-    fs.writeFileSync(BOUNCER_AUDIT_FILE, JSON.stringify(merged, null, 2));
-  } catch (e) {
-    console.log(`     ⚠️  Bouncer audit trail write failed: ${e.message} — not critical, pipeline continues`);
-  }
-}
-
-// ============================================================
 // MAIN SEARCH FUNCTION
 // Called by Agent 0 (Dispatcher) with a specific query.
 // ============================================================
 async function searchForCompanies(query, knownDomains = new Set()) {
   console.log(`  🔍 Searching: "${query}"`);
-
-  // Audit trail: collect kills for this search call
-  const bouncerKillLog = [];
 
   try {
     const res = await axios.get('https://serpapi.com/search.json', {
@@ -514,15 +464,6 @@ async function searchForCompanies(query, knownDomains = new Set()) {
       // FILTER 1: Block list (social, nationals, existing customers)
       if (isBlocked(url, title)) {
         console.log(`     ❌ Blocked: ${title.substring(0, 50)}...`);
-        bouncerKillLog.push({
-          raw_name: title.substring(0, 80),
-          url: url,
-          domain: extractDomain(url) || 'unknown',
-          kill_type: 'block_list',
-          reason: 'Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS',
-          query: query,
-          killed_at: new Date().toISOString()
-        });
         continue;
       }
 
@@ -542,15 +483,6 @@ async function searchForCompanies(query, knownDomains = new Set()) {
       if (bouncer.blocked) {
         bouncerKills++;
         console.log(`     🚫 Bouncer killed: "${rawName}" — reason: ${bouncer.reason}`);
-        bouncerKillLog.push({
-          raw_name: rawName,
-          url: url,
-          domain: domain,
-          kill_type: 'bouncer',
-          reason: bouncer.reason,
-          query: query,
-          killed_at: new Date().toISOString()
-        });
         continue;
       }
 
@@ -566,25 +498,20 @@ async function searchForCompanies(query, knownDomains = new Set()) {
     }
 
     console.log(`     📊 ${results.length} new companies from this search (${bouncerKills} killed by Bouncer)\n`);
-
-    // Write audit trail for this search call
-    appendToAuditTrail(bouncerKillLog);
-
     return results;
 
   } catch (e) {
     console.error(`     ❌ SerpAPI error: ${e.message}`);
-    // Still write any kills collected before the error
-    appendToAuditTrail(bouncerKillLog);
     return [];
   }
 }
 
 // Standalone mode — for manual testing only
 if (require.main === module) {
+  const fs = require('fs');
   const testQuery = process.argv[2] || 'meal prep delivery Pennsylvania -hospital -university -upmc -edu -gov -tips -blog -article -recipe -nutritionist -dietitian -coach -wellness -clinic -medical';
   (async () => {
-    console.log("\n🔍 Agent 1 (Scout v5.1): Standalone test mode\n");
+    console.log("\n🔍 Agent 1 (Scout v4.0): Standalone test mode\n");
     const results = await searchForCompanies(testQuery);
     fs.writeFileSync('leads_master.json', JSON.stringify(results, null, 2));
     console.log(`✅ Scout complete! ${results.length} companies saved to leads_master.json\n`);

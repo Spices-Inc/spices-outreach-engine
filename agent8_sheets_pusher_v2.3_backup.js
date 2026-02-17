@@ -13,29 +13,29 @@ const sheets = google.sheets({ version: 'v4', auth });
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
 
 // ============================================================
-// CONFIGURATION — v2.4 "Append-Only Inventory"
+// CONFIGURATION — v2.3 "Confidence Columns"
 //
-// WHAT CHANGED (Session 18):
-//   1. Inventory tab now uses SAME 23-column format as Sheet1.
-//      You can copy-paste rows between Inventory and Sheet1.
+// WHAT CHANGED (Session 17):
+//   1. TWO NEW COLUMNS added to Sheet1 (at the END):
+//      - Column V: Contact Confidence (high/medium/low/alias)
+//      - Column W: LinkedIn Caution ("⚠️ STALE" or blank)
 //
-//   2. Inventory tab is now APPEND-ONLY. New leads are added
-//      to the bottom. Nothing is ever deleted. This is your
-//      permanent archive of every qualified lead the system
-//      has ever found.
+//   2. Ranges updated from U to W across all Sheet1 operations.
+//      Columns A through U are UNTOUCHED. Agent 9 and Agent 10
+//      read/write columns A-U and are NOT affected.
 //
-//   3. Dedup by company name — same lead never added twice.
-//
-// PREVIOUS (v2.3 — Session 17):
-//   - Added Confidence (V) and LinkedIn Caution (W) columns
-//   - Inventory tab was 11 columns, wiped and rewritten each run
+// PREVIOUS (v2.2 — Session 16):
+//   - LinkedIn Sniper tab
+//   - Archive → Clear → Write flow for Sheet1
+//   - Inventory tab sync from reservoir
+//   - History tab archiving
 //
 // FLOW:
 //   4:15 AM → Pipeline runs → Agent 8:
 //     STEP 0: Read Sheet1 → Append to History tab (with date)
 //     STEP 1: Clear Sheet1
 //     STEP 2: Write today's qualified leads
-//     STEP 3: Append new leads to Inventory tab (never clears)
+//     STEP 3: Sync Inventory tab from reservoir
 //     STEP 4: Sync LinkedIn Sniper tab (append, never clear)
 //   5:45 AM → Greg reviews fresh Sheet1
 //   8:00 AM → Agent 9 reads → Agent 10 pushes to Apollo
@@ -159,11 +159,21 @@ const HEADERS = [
 const HISTORY_HEADERS = HEADERS;
 
 // ============================================================
-// INVENTORY TAB HEADERS — v2.4
-// Now matches Sheet1 exactly (23 columns A:W).
-// This means you can copy-paste rows between Inventory and Sheet1.
+// INVENTORY TAB HEADERS
 // ============================================================
-const INVENTORY_HEADERS = HEADERS;
+const INVENTORY_HEADERS = [
+    'Company',          // A
+    'City',             // B
+    'State',            // C
+    'Score',            // D
+    'Tier',             // E
+    'Contact',          // F
+    'Email',            // G
+    'Email Status',     // H
+    'Track',            // I
+    'Transit Days',     // J
+    'Date Queued'       // K
+];
 
 // ============================================================
 // LINKEDIN SNIPER TAB HEADERS
@@ -255,7 +265,7 @@ async function archiveToHistory() {
 // MAIN FUNCTION: Push leads to Google Sheet (Tab 1)
 // ============================================================
 async function pushLeadsToSheet() {
-    console.log('\n📊 Agent 8 v2.4: Pushing leads to Google Sheet...\n');
+    console.log('\n📊 Agent 8 v2.3: Pushing leads to Google Sheet...\n');
 
     const leads = JSON.parse(fs.readFileSync('qualified_leads.json', 'utf8'));
 
@@ -327,30 +337,11 @@ async function pushLeadsToSheet() {
 }
 
 // ============================================================
-// INVENTORY TAB SYNC — v2.4 "Append-Only Ledger"
-//
-// DESIGN (Session 18):
-//   - Inventory is a PERMANENT ARCHIVE. Nothing is ever deleted.
-//   - New reservoir leads are appended to the bottom.
-//   - Dedup by company name — same lead never added twice.
-//   - Uses the same 23-column format as Sheet1 so you can
-//     copy-paste rows between tabs.
-//
-// HOW DEDUP WORKS:
-//   Reads all existing company names from Inventory column B.
-//   Only appends leads whose company name isn't already there.
-//
-// ONE-TIME MIGRATION:
-//   If Inventory still has the old 11-column headers, this code
-//   detects it and rewrites the headers (row 1 only). Existing
-//   data rows from the old format will be misaligned, but Greg
-//   will clear those manually once. All future writes will be
-//   in the correct 23-column format.
+// INVENTORY TAB SYNC
 // ============================================================
 async function syncInventoryTab() {
-    console.log('📦 Syncing Inventory tab (append-only)...\n');
+    console.log('📦 Syncing Inventory tab from reservoir...\n');
 
-    // Load reservoir
     let reservoir = [];
     try {
         if (fs.existsSync(RESERVOIR_PATH)) {
@@ -360,125 +351,39 @@ async function syncInventoryTab() {
         console.log(`  ⚠️ Could not load reservoir: ${e.message}`);
     }
 
-    if (reservoir.length === 0) {
-        console.log('  📦 Reservoir is empty — nothing to append.\n');
-        return;
-    }
-
     try {
-        // STEP 1: Read existing Inventory data
-        let existingRows = [];
-        let needsHeaders = false;
-        let needsMigration = false;
+        console.log('  🧹 Clearing Inventory tab...');
+        await sheets.spreadsheets.values.clear({
+            spreadsheetId: SHEET_ID,
+            range: 'Inventory!A1:K1000'
+        });
 
-        try {
-            const existing = await sheets.spreadsheets.values.get({
-                spreadsheetId: SHEET_ID,
-                range: 'Inventory!A1:W5000'
-            });
-            const allRows = existing.data.values || [];
+        const rows = reservoir.map(lead => [
+            cleanCompanyName(lead.company_name),
+            lead.city || '',
+            lead.state || '',
+            lead.qualification_score || '',
+            lead.tier ? lead.tier.toUpperCase() : '',
+            lead.contact_name || '',
+            lead.contact_email || '',
+            lead.email_status || '',
+            lead.sequence_track || '',
+            lead.transit_days || '',
+            getToday()
+        ]);
 
-            if (allRows.length === 0) {
-                // Empty tab — needs headers
-                needsHeaders = true;
-            } else if (allRows[0][0] === 'Date Added' && allRows[0].length >= 23) {
-                // Correct 23-column format — existing data rows start at index 1
-                existingRows = allRows.slice(1);
-            } else {
-                // Old format or wrong headers — needs migration
-                needsMigration = true;
-                console.log('  🔄 Detected old Inventory format — migrating to 23-column layout...');
-            }
-        } catch (err) {
-            // Tab might not exist yet
-            needsHeaders = true;
-        }
-
-        // STEP 2: If migration needed, clear old format and write new headers
-        if (needsMigration || needsHeaders) {
-            if (needsMigration) {
-                await sheets.spreadsheets.values.clear({
-                    spreadsheetId: SHEET_ID,
-                    range: 'Inventory!A1:W5000'
-                });
-                console.log('  🧹 Cleared old 11-column data (leads are safe in reservoir file)');
-            }
-
-            await sheets.spreadsheets.values.update({
-                spreadsheetId: SHEET_ID,
-                range: 'Inventory!A1',
-                valueInputOption: 'RAW',
-                resource: { values: [INVENTORY_HEADERS] }
-            });
-            console.log('  📝 Wrote 23-column headers to Inventory tab');
-            existingRows = []; // Start fresh after migration
-        }
-
-        // STEP 3: Build dedup set from existing company names (column B = index 1)
-        const existingCompanies = new Set();
-        for (const row of existingRows) {
-            if (row[1]) {
-                existingCompanies.add(row[1].toLowerCase().trim());
-            }
-        }
-
-        // STEP 4: Build new rows from reservoir (same format as Sheet1)
-        const newRows = [];
-        for (const lead of reservoir) {
-            const company = cleanCompanyName(lead.company_name);
-            const companyKey = company.toLowerCase().trim();
-
-            if (existingCompanies.has(companyKey)) {
-                console.log(`  ⏭️  Already on Inventory: ${company}`);
-                continue;
-            }
-
-            newRows.push([
-                getToday(),                                          // A — Date Added
-                company,                                             // B — Company
-                lead.city || '',                                     // C — City
-                lead.state || '',                                    // D — State
-                lead.transit_days || '',                              // E — Days to Delivery
-                getTransitText(lead.transit_days),                   // F — Transit Text
-                lead.rotation_day || '',                              // G — Rotation Day
-                getRotationLine(lead.rotation_day),                  // H — Rotation Line
-                getBlendHook(lead.custom_blend_signals),             // I — Blend Hook
-                (lead.spice_keywords_found || []).join(', '),        // J — Spice Keywords
-                lead.tier ? lead.tier.toUpperCase() : '',            // K — Tier
-                lead.qualification_score || '',                       // L — Score
-                lead.contact_name || '',                              // M — Contact
-                lead.contact_title || '',                             // N — Title
-                lead.contact_email || '',                             // O — Email
-                lead.email_status || '',                              // P — Email Status
-                lead.strike_level || '',                              // Q — Strike
-                getTrackLabel(lead),                                 // R — Sequence Track
-                getDiscoveryLabel(lead.discovery_source),            // S — Discovery Source
-                '',                                                  // T — Apollo Status
-                '',                                                  // U — Status (Greg)
-                getConfidenceLabel(lead.contact_confidence),         // V — Confidence
-                lead.linkedin_caution ? '⚠️ STALE' : ''             // W — LinkedIn Caution
-            ]);
-        }
-
-        // STEP 5: Append new rows
-        if (newRows.length === 0) {
-            console.log('  📦 All reservoir leads already on Inventory (0 new).\n');
-            return;
-        }
-
-        await sheets.spreadsheets.values.append({
+        await sheets.spreadsheets.values.update({
             spreadsheetId: SHEET_ID,
             range: 'Inventory!A1',
             valueInputOption: 'RAW',
-            insertDataOption: 'INSERT_ROWS',
-            resource: { values: newRows }
+            resource: { values: [INVENTORY_HEADERS, ...rows] }
         });
 
-        console.log(`  ✅ Appended ${newRows.length} new leads to Inventory (${existingRows.length} already there)`);
-        for (const row of newRows) {
-            console.log(`     📦 ${row[1]} (${row[2]}, ${row[3]}) — ${row[11]}pts — ${row[14] || 'NO EMAIL'}`);
+        if (reservoir.length > 0) {
+            console.log(`  ✅ Inventory tab updated: ${reservoir.length} leads in reservoir`);
+        } else {
+            console.log(`  📦 Reservoir is empty — wrote headers only.`);
         }
-        console.log('');
 
     } catch (error) {
         if (error.message && error.message.includes('Unable to parse range')) {
