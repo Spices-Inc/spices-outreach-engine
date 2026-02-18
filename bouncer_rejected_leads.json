@@ -1,0 +1,890 @@
+[
+  {
+    "raw_name": "About – Google Maps",
+    "url": "https://www.google.com/maps/about/",
+    "domain": "google.com",
+    "kill_type": "bouncer",
+    "reason": "junk_name:/^(about|tips|how to|selling|the)\\s/i",
+    "query": "maps",
+    "killed_at": "2026-02-18T21:08:17.269Z"
+  },
+  {
+    "raw_name": "Multidisciplinary Association for Psychedelic Studies – MAPS",
+    "url": "https://maps.org/",
+    "domain": "maps.org",
+    "kill_type": "bouncer",
+    "reason": "domain_extension:.org",
+    "query": "maps",
+    "killed_at": "2026-02-18T21:08:17.271Z"
+  },
+  {
+    "raw_name": "FITfood",
+    "url": "https://www.fitfoodnj.com/",
+    "domain": "fitfoodnj.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery New Jersey",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:35:49.393Z"
+  },
+  {
+    "raw_name": "Shore Fresh Meal Prep",
+    "url": "https://www.shorefreshmealprep.org/",
+    "domain": "shorefreshmealprep.org",
+    "kill_type": "bouncer",
+    "reason": "domain_extension:.org",
+    "query": "meal prep delivery New Jersey",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:35:49.394Z"
+  },
+  {
+    "raw_name": "The Lab Meal Prep",
+    "url": "http://www.thelabmealprep.com/",
+    "domain": "thelabmealprep.com",
+    "kill_type": "bouncer",
+    "reason": "junk_name:/^(about|tips|how to|selling|the)\\s/i",
+    "query": "meal prep delivery New Jersey",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:35:49.395Z"
+  },
+  {
+    "raw_name": "About The Table Personal Chef Service",
+    "url": "http://www.aboutthetable.com/",
+    "domain": "aboutthetable.com",
+    "kill_type": "bouncer",
+    "reason": "junk_name:/^(about|tips|how to|selling)\\s/i",
+    "query": "meal prep Delaware",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:53:47.665Z"
+  },
+  {
+    "raw_name": "Performance Meal Prep",
+    "url": "https://www.eatpmp.com/",
+    "domain": "eatpmp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep Delaware",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:53:47.665Z"
+  },
+  {
+    "raw_name": "Meals On Wheels Delaware",
+    "url": "http://www.mealsonwheelsde.org/",
+    "domain": "mealsonwheelsde.org",
+    "kill_type": "bouncer",
+    "reason": "domain_extension:.org",
+    "query": "meal prep Delaware",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:53:47.665Z"
+  },
+  {
+    "raw_name": "Meals On Wheels Lewes-Rehoboth",
+    "url": "http://www.mealsonwheels-lr.org/",
+    "domain": "mealsonwheels-lr.org",
+    "kill_type": "bouncer",
+    "reason": "domain_extension:.org",
+    "query": "meal prep Delaware",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:53:47.667Z"
+  },
+  {
+    "raw_name": "Dinnerly",
+    "url": "https://dinnerly.com/",
+    "domain": "dinnerly.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep New York",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:53:48.719Z"
+  },
+  {
+    "raw_name": "Meal Prep Delivery",
+    "url": "https://www.mealprepdelivery.com/",
+    "domain": "mealprepdelivery.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep New York",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:53:48.719Z"
+  },
+  {
+    "raw_name": "CheFelix Catering",
+    "url": "https://www.facebook.com/chefelix.catering",
+    "domain": "facebook.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep New York",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:53:48.719Z"
+  },
+  {
+    "raw_name": "Performance Meal Prep",
+    "url": "https://www.eatpmp.com/",
+    "domain": "eatpmp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep Pennsylvania",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:53:49.324Z"
+  },
+  {
+    "raw_name": "Fit Meals Prep",
+    "url": "http://www.fitmealsprep.org/",
+    "domain": "fitmealsprep.org",
+    "kill_type": "bouncer",
+    "reason": "domain_extension:.org",
+    "query": "meal prep Pennsylvania",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:53:49.325Z"
+  },
+  {
+    "raw_name": "Meal Prep Delivery",
+    "url": "https://www.mealprepdelivery.com/",
+    "domain": "mealprepdelivery.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery New York",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:53:51.559Z"
+  },
+  {
+    "raw_name": "Dinnerly",
+    "url": "https://dinnerly.com/",
+    "domain": "dinnerly.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery New York",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:53:51.559Z"
+  },
+  {
+    "raw_name": "Factor",
+    "url": "https://www.factor75.com/",
+    "domain": "factor75.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery New York",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:53:51.560Z"
+  },
+  {
+    "raw_name": "Shore Fresh Meal Prep",
+    "url": "https://www.shorefreshmealprep.org/",
+    "domain": "shorefreshmealprep.org",
+    "kill_type": "bouncer",
+    "reason": "domain_extension:.org",
+    "query": "meal prep delivery New York",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:53:51.560Z"
+  },
+  {
+    "raw_name": "Performance Meal Prep",
+    "url": "https://www.eatpmp.com/",
+    "domain": "eatpmp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery Pennsylvania",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:53:52.577Z"
+  },
+  {
+    "raw_name": "Fit Food Prep LLC",
+    "url": "http://www.fitfoodprep.org/",
+    "domain": "fitfoodprep.org",
+    "kill_type": "bouncer",
+    "reason": "domain_extension:.org",
+    "query": "meal prep delivery Pennsylvania",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:53:52.577Z"
+  },
+  {
+    "raw_name": "About The Table Personal Chef Service",
+    "url": "http://www.aboutthetable.com/",
+    "domain": "aboutthetable.com",
+    "kill_type": "bouncer",
+    "reason": "junk_name:/^(about|tips|how to|selling)\\s/i",
+    "query": "meal prep companies Delaware",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:54:00.694Z"
+  },
+  {
+    "raw_name": "Performance Meal Prep",
+    "url": "https://www.eatpmp.com/",
+    "domain": "eatpmp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep companies Delaware",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:54:00.694Z"
+  },
+  {
+    "raw_name": "Meals On Wheels Delaware",
+    "url": "http://www.mealsonwheelsde.org/",
+    "domain": "mealsonwheelsde.org",
+    "kill_type": "bouncer",
+    "reason": "domain_extension:.org",
+    "query": "meal prep companies Delaware",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:54:00.694Z"
+  },
+  {
+    "raw_name": "Wegmans Meals 2GO",
+    "url": "https://meals2go.com/?cid=GMB_M2GO_2024:aw:ow:gb:gb:ao::",
+    "domain": "meals2go.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep companies Delaware",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:54:00.695Z"
+  },
+  {
+    "raw_name": "Dinnerly",
+    "url": "https://dinnerly.com/",
+    "domain": "dinnerly.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep companies New York",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:54:01.598Z"
+  },
+  {
+    "raw_name": "Meal Prep Delivery",
+    "url": "https://www.mealprepdelivery.com/",
+    "domain": "mealprepdelivery.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep companies New York",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:54:01.599Z"
+  },
+  {
+    "raw_name": "Performance Meal Prep",
+    "url": "https://www.eatpmp.com/",
+    "domain": "eatpmp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep companies Pennsylvania",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:54:02.680Z"
+  },
+  {
+    "raw_name": "Fit Food Prep LLC",
+    "url": "http://www.fitfoodprep.org/",
+    "domain": "fitfoodprep.org",
+    "kill_type": "bouncer",
+    "reason": "domain_extension:.org",
+    "query": "meal prep companies Pennsylvania",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:54:02.682Z"
+  },
+  {
+    "raw_name": "Delaware Home-Delivered Meal Plans",
+    "url": "https://www.momsmeals.com/our-food-programs/how-to-qualify/delaware/",
+    "domain": "momsmeals.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep companies Delaware",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:04.380Z"
+  },
+  {
+    "raw_name": "Prepared Meal Delivery in Wilmington DE",
+    "url": "https://mightymeals.com/blog/wilmington-de-meal-delivery/",
+    "domain": "mightymeals.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep companies Delaware",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:04.380Z"
+  },
+  {
+    "raw_name": "TOP 10 BEST Meal Prep in Wilmington, DE - Updated 2026",
+    "url": "https://www.yelp.com/search?find_desc=Meal+Prep&find_loc=Wilmington%2C+DE",
+    "domain": "yelp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep companies Delaware",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:04.380Z"
+  },
+  {
+    "raw_name": "Performance Meal Prep: Philadelphia Meal Prep. New Jersey ...",
+    "url": "https://www.eatpmp.com/",
+    "domain": "eatpmp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep companies Delaware",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:04.380Z"
+  },
+  {
+    "raw_name": "Best meal prep service? : r/AskNYC",
+    "url": "https://www.reddit.com/r/AskNYC/comments/s3mu4a/best_meal_prep_service/",
+    "domain": "reddit.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep companies New York",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:07.700Z"
+  },
+  {
+    "raw_name": "New York Meal Delivery | Prepared Meals Service in NYC",
+    "url": "https://www.factor75.com/eat/nyc-meal-delivery",
+    "domain": "factor75.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep companies New York",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:07.700Z"
+  },
+  {
+    "raw_name": "Blue Apron | Meal Kits, Oven-Ready & Ready-to-Eat Meals ...",
+    "url": "https://www.blueapron.com/?srsltid=AfmBOor7OGGuosESgSBvEFfFrT_FprsnOeDoewlNen-njOB5ijhnTdF9",
+    "domain": "blueapron.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep companies New York",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:07.700Z"
+  },
+  {
+    "raw_name": "Performance Meal Prep: Philadelphia Meal Prep. New Jersey ...",
+    "url": "https://www.eatpmp.com/",
+    "domain": "eatpmp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep companies Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:09.462Z"
+  },
+  {
+    "raw_name": "Fit Food Prep",
+    "url": "https://fitfoodprep.org/",
+    "domain": "fitfoodprep.org",
+    "kill_type": "bouncer",
+    "reason": "domain_extension:.org",
+    "query": "meal prep companies Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:09.462Z"
+  },
+  {
+    "raw_name": "13 Healthy Meal Delivery Services in Philadelphia",
+    "url": "https://www.phillymag.com/be-well-philly/2025/03/05/meal-delivery-services/",
+    "domain": "phillymag.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep companies Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:09.462Z"
+  },
+  {
+    "raw_name": "TOP 10 BEST Meal Prep in Pittsburgh, PA - Updated 2026",
+    "url": "https://www.yelp.com/search?find_desc=Meal+Prep&find_loc=Pittsburgh%2C+PA",
+    "domain": "yelp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep companies Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:09.463Z"
+  },
+  {
+    "raw_name": "Delaware Home-Delivered Meal Plans",
+    "url": "https://www.momsmeals.com/our-food-programs/how-to-qualify/delaware/",
+    "domain": "momsmeals.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery Delaware",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:11.779Z"
+  },
+  {
+    "raw_name": "Prepared Meal Delivery in Wilmington DE",
+    "url": "https://mightymeals.com/blog/wilmington-de-meal-delivery/",
+    "domain": "mightymeals.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery Delaware",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:11.779Z"
+  },
+  {
+    "raw_name": "Mealsonwheels",
+    "url": "https://mealsonwheelsde.org/",
+    "domain": "mealsonwheelsde.org",
+    "kill_type": "bouncer",
+    "reason": "domain_extension:.org",
+    "query": "meal prep delivery Delaware",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:11.780Z"
+  },
+  {
+    "raw_name": "Top 10 Best Meal Delivery Service Near Newark, Delaware",
+    "url": "https://www.yelp.com/search?find_desc=Meal+Delivery+Service&find_loc=Newark%2C+DE",
+    "domain": "yelp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery Delaware",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:11.780Z"
+  },
+  {
+    "raw_name": "Meal Delivery for Busy People in N. Wilmington? (X-Post ...",
+    "url": "https://www.reddit.com/r/Delaware/comments/3ihxk5/meal_delivery_for_busy_people_in_n_wilmington/",
+    "domain": "reddit.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery Delaware",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:11.780Z"
+  },
+  {
+    "raw_name": "New York Meal Delivery | Prepared Meals Service in NYC",
+    "url": "https://www.factor75.com/eat/nyc-meal-delivery",
+    "domain": "factor75.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery New York",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:15.286Z"
+  },
+  {
+    "raw_name": "CookUnity: Save 50% Off 1st Week | Chef-Crafted Meal Delivery",
+    "url": "https://www.cookunity.com/",
+    "domain": "cookunity.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery New York",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:15.287Z"
+  },
+  {
+    "raw_name": "Prepared Meal Delivery in New York NY",
+    "url": "https://mightymeals.com/blog/new-york-ny-meal-delivery/",
+    "domain": "mightymeals.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery New York",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:15.287Z"
+  },
+  {
+    "raw_name": "Performance Meal Prep: Philadelphia Meal Prep. New Jersey ...",
+    "url": "https://www.eatpmp.com/",
+    "domain": "eatpmp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:17.277Z"
+  },
+  {
+    "raw_name": "13 Healthy Meal Delivery Services in Philadelphia",
+    "url": "https://www.phillymag.com/be-well-philly/2025/03/05/meal-delivery-services/",
+    "domain": "phillymag.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:17.277Z"
+  },
+  {
+    "raw_name": "Mom's Meals: Nutritious, Home-Delivered Meals",
+    "url": "https://www.momsmeals.com/",
+    "domain": "momsmeals.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:17.278Z"
+  },
+  {
+    "raw_name": "Prepared Meal Delivery in Lancaster PA",
+    "url": "https://mightymeals.com/blog/lancaster-pa-meal-delivery/",
+    "domain": "mightymeals.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:17.278Z"
+  },
+  {
+    "raw_name": "Prepared Meal Delivery in Philadelphia, PA",
+    "url": "https://www.factor75.com/eat/philadelphia-meal-delivery",
+    "domain": "factor75.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep delivery Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:17.278Z"
+  },
+  {
+    "raw_name": "Delaware Home-Delivered Meal Plans",
+    "url": "https://www.momsmeals.com/our-food-programs/how-to-qualify/delaware/",
+    "domain": "momsmeals.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep services Delaware",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:20.600Z"
+  },
+  {
+    "raw_name": "Prepared Meal Delivery in Wilmington DE",
+    "url": "https://mightymeals.com/blog/wilmington-de-meal-delivery/",
+    "domain": "mightymeals.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep services Delaware",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:20.600Z"
+  },
+  {
+    "raw_name": "New York Meal Delivery | Prepared Meals Service in NYC",
+    "url": "https://www.factor75.com/eat/nyc-meal-delivery",
+    "domain": "factor75.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep services New York",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:26.664Z"
+  },
+  {
+    "raw_name": "TOP 10 BEST Meal Prep Delivery in New York, NY",
+    "url": "https://www.yelp.com/search?find_desc=Meal+Prep+Delivery&find_loc=New+York%2C+NY",
+    "domain": "yelp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep services New York",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:26.664Z"
+  },
+  {
+    "raw_name": "Best meal plan for NYC living? : r/AskNYC",
+    "url": "https://www.reddit.com/r/AskNYC/comments/1aecruh/best_meal_plan_for_nyc_living/",
+    "domain": "reddit.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep services New York",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:26.664Z"
+  },
+  {
+    "raw_name": "God's Love We Deliver",
+    "url": "https://www.glwd.org/",
+    "domain": "glwd.org",
+    "kill_type": "bouncer",
+    "reason": "domain_extension:.org",
+    "query": "meal prep services New York",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:26.664Z"
+  },
+  {
+    "raw_name": "Performance Meal Prep: Philadelphia Meal Prep. New Jersey ...",
+    "url": "https://www.eatpmp.com/",
+    "domain": "eatpmp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep services Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:28.952Z"
+  },
+  {
+    "raw_name": "Prepared Meal Delivery in Philadelphia, PA",
+    "url": "https://www.factor75.com/eat/philadelphia-meal-delivery",
+    "domain": "factor75.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep services Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:28.952Z"
+  },
+  {
+    "raw_name": "Mom's Meals: Nutritious, Home-Delivered Meals",
+    "url": "https://www.momsmeals.com/",
+    "domain": "momsmeals.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep services Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:28.952Z"
+  },
+  {
+    "raw_name": "Home Chef: Meal Delivery Service - Fresh Weekly Meal Kit ...",
+    "url": "https://www.homechef.com/?srsltid=AfmBOoqHzTKOlKUA9mFCS242wyc01N23rZDyM7nO_H91lJA9mcMSwDN0",
+    "domain": "homechef.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep services Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:28.952Z"
+  },
+  {
+    "raw_name": "Prepared Meal Delivery in Lancaster PA",
+    "url": "https://mightymeals.com/blog/lancaster-pa-meal-delivery/",
+    "domain": "mightymeals.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep services Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:28.952Z"
+  },
+  {
+    "raw_name": "TOP 10 BEST Meal Prep in Wilmington, DE - Updated 2025",
+    "url": "https://www.yelp.com/search?find_desc=Meal+Prep&find_loc=Wilmington%2C+DE",
+    "domain": "yelp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "best meal prep Delaware",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:31.912Z"
+  },
+  {
+    "raw_name": "Prepared Meal Delivery in Wilmington DE",
+    "url": "https://mightymeals.com/blog/wilmington-de-meal-delivery/",
+    "domain": "mightymeals.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "best meal prep Delaware",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:31.912Z"
+  },
+  {
+    "raw_name": "Delaware Home-Delivered Meal Plans",
+    "url": "https://www.momsmeals.com/our-food-programs/how-to-qualify/delaware/",
+    "domain": "momsmeals.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "best meal prep Delaware",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:31.912Z"
+  },
+  {
+    "raw_name": "Best meal plan for NYC living? : r/AskNYC",
+    "url": "https://www.reddit.com/r/AskNYC/comments/1aecruh/best_meal_plan_for_nyc_living/",
+    "domain": "reddit.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "best meal prep New York",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:44.888Z"
+  },
+  {
+    "raw_name": "New York Meal Delivery | Prepared Meals Service in NYC",
+    "url": "https://www.factor75.com/eat/nyc-meal-delivery",
+    "domain": "factor75.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "best meal prep New York",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:44.889Z"
+  },
+  {
+    "raw_name": "TOP 10 BEST Meal Prep in New York, NY - Yelp",
+    "url": "https://www.yelp.com/search?find_desc=Meal+Prep&find_loc=New+York%2C+NY",
+    "domain": "yelp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "best meal prep New York",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:44.889Z"
+  },
+  {
+    "raw_name": "Prepared Meal Delivery in New York NY",
+    "url": "https://mightymeals.com/blog/new-york-ny-meal-delivery/",
+    "domain": "mightymeals.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "best meal prep New York",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:44.889Z"
+  },
+  {
+    "raw_name": "13 Healthy Meal Delivery Services in Philadelphia",
+    "url": "https://www.phillymag.com/be-well-philly/2025/03/05/meal-delivery-services/",
+    "domain": "phillymag.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "best meal prep Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:48.984Z"
+  },
+  {
+    "raw_name": "TOP 10 BEST Meal Prep in Philadelphia, PA - Updated 2026",
+    "url": "https://www.yelp.com/search?find_desc=Meal+Prep&find_loc=Philadelphia%2C+PA",
+    "domain": "yelp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "best meal prep Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:48.984Z"
+  },
+  {
+    "raw_name": "What do you think is the best tasting/best quality meal kit ...",
+    "url": "https://www.reddit.com/r/mealkits/comments/1iswz8s/what_do_you_think_is_the_best_tastingbest_quality/",
+    "domain": "reddit.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "best meal prep Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:48.984Z"
+  },
+  {
+    "raw_name": "Performance Meal Prep: Philadelphia Meal Prep. New Jersey ...",
+    "url": "https://www.eatpmp.com/",
+    "domain": "eatpmp.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "best meal prep Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:48.984Z"
+  },
+  {
+    "raw_name": "10 Best Meal Delivery Services in Philadelphia 2026",
+    "url": "https://www.deliveryrank.com/blog/best-meal-delivery-services-in-philadelphia",
+    "domain": "deliveryrank.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "best meal prep Pennsylvania",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:48.985Z"
+  },
+  {
+    "raw_name": "The Complete Guide to Meal Prep Business Licensing and ...",
+    "url": "https://www.bottle.com/blog/the-complete-guide-to-meal-prep-business-licensing-and-permits-your-legal-roadmap-to-success",
+    "domain": "bottle.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "site:bottle.com New York meal prep",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:59.185Z"
+  },
+  {
+    "raw_name": "Navigating State and Local Meal Prep Regulations - Bottle",
+    "url": "https://www.bottle.com/blog/navigating-state-and-local-meal-prep-regulations-your-complete-legal-compliance-guide",
+    "domain": "bottle.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "site:bottle.com New York meal prep",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:59.186Z"
+  },
+  {
+    "raw_name": "5 Food Photography Tips to Make Your Meals Look—and ...",
+    "url": "https://www.bottle.com/blog/5-food-photography-tips-to-make-your-meals-look--and-sell--like-a-pro-in-2025",
+    "domain": "bottle.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "site:bottle.com New York meal prep",
+    "source": "ORGANIC",
+    "killed_at": "2026-02-18T21:54:59.186Z"
+  },
+  {
+    "raw_name": "Sweet Pea Cuisine - Personal Chef & Holistic Health Coaching",
+    "url": "http://www.sweetpeacuisine.biz/",
+    "domain": "sweetpeacuisine.biz",
+    "kill_type": "bouncer",
+    "reason": "negative_title_word:\"coach\"",
+    "query": "meal prep Connecticut",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:55:03.386Z"
+  },
+  {
+    "raw_name": "Meal Prep Delivery S",
+    "url": "https://www.mealprepdelivery.com/",
+    "domain": "mealprepdelivery.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep Washington DC",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:55:04.557Z"
+  },
+  {
+    "raw_name": "Territory Foods",
+    "url": "https://www.territoryfoods.com/",
+    "domain": "territoryfoods.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep Washington DC",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:55:04.560Z"
+  },
+  {
+    "raw_name": "Food & Friends",
+    "url": "http://www.foodandfriends.org/",
+    "domain": "foodandfriends.org",
+    "kill_type": "bouncer",
+    "reason": "domain_extension:.org",
+    "query": "meal prep Washington DC",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:55:04.560Z"
+  },
+  {
+    "raw_name": "Nutre Meal Plans",
+    "url": "https://www.gonutre.com/",
+    "domain": "gonutre.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep Massachusetts",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:55:06.748Z"
+  },
+  {
+    "raw_name": "Natasha Wellness, LLC",
+    "url": "http://www.natashawellness.com/",
+    "domain": "natashawellness.com",
+    "kill_type": "bouncer",
+    "reason": "negative_title_word:\"wellness\"",
+    "query": "meal prep Massachusetts",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:55:06.751Z"
+  },
+  {
+    "raw_name": "Project Fit Meals",
+    "url": "https://instagram.com/project_fitmeals?igshid=YzA2ZDJiZGQ=",
+    "domain": "instagram.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep Maryland",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:55:07.827Z"
+  },
+  {
+    "raw_name": "Meals on Wheels of Central Maryland, Inc.",
+    "url": "http://www.mealsonwheelsmd.org/",
+    "domain": "mealsonwheelsmd.org",
+    "kill_type": "bouncer",
+    "reason": "domain_extension:.org",
+    "query": "meal prep Maryland",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:55:07.829Z"
+  },
+  {
+    "raw_name": "FITfood",
+    "url": "https://www.fitfoodnj.com/",
+    "domain": "fitfoodnj.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep New Jersey",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:55:14.069Z"
+  },
+  {
+    "raw_name": "Shore Fresh Meal Prep",
+    "url": "https://www.shorefreshmealprep.org/",
+    "domain": "shorefreshmealprep.org",
+    "kill_type": "bouncer",
+    "reason": "domain_extension:.org",
+    "query": "meal prep New Jersey",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:55:14.070Z"
+  },
+  {
+    "raw_name": "Jo Fit Meal Prep",
+    "url": "https://www.facebook.com/profile.php?id=100091651915550&mibextid=LQQJ4d",
+    "domain": "facebook.com",
+    "kill_type": "block_list",
+    "reason": "Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS",
+    "query": "meal prep New Jersey",
+    "source": "LOCAL_MAPS",
+    "killed_at": "2026-02-18T21:55:14.070Z"
+  }
+]

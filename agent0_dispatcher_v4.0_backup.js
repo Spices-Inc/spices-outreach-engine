@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { searchForCompanies, searchMaps, extractDomain } = require('./agent1_scout_new');
+const { searchForCompanies, extractDomain } = require('./agent1_scout_new');
 
 // ============================================================
 // Agent 0 (Dispatcher) — v4.0 "State-Level Broad Search"
@@ -242,20 +242,15 @@ async function run() {
     // We tag resulting leads with source_bottle = true.
     // ============================================================
     const isSiteSearch = query.startsWith('site:');
-    const isMapsSearch = query.startsWith('maps:');
-    const searchQuery = isMapsSearch ? query.replace(/^maps:\s*/, '') : query;
 
     console.log(`  📍 [Search ${searchesUsed + 1}/${MAX_SEARCHES_PER_RUN}] Tier: ${tier} | State: ${stateEntry.state_full} (${stateEntry.state})`);
     console.log(`     🎯 Query: "${query}"`);
     if (isSiteSearch) {
       console.log(`     🔬 BOTTLE.COM SEARCH — leads tagged source_bottle=true`);
     }
-    if (isMapsSearch) {
-      console.log(`     🗺️  MAPS SEARCH — canonical names + address from Google Maps`);
-    }
 
     // Call Agent 1 (Scout) with this query
-    const results = isMapsSearch ? await searchMaps(searchQuery, knownDomains) : await searchForCompanies(query, knownDomains);
+    const results = await searchForCompanies(query, knownDomains);
     searchesUsed++;
 
     // Deduplicate against history and add to collection

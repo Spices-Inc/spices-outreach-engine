@@ -1,17 +1,14 @@
 {
-  "version": "5.0",
-  "created_at": "2026-02-18T00:00:00.000Z",
+  "version": "4.0",
+  "created_at": "2026-02-17T00:00:00.000Z",
   "icp": "meal_prep",
-  "strategy": "platform_first_discovery",
-  "notes": "Session 18c rebuild. Added 3 Google Maps queries per state using maps: prefix (routes to searchMaps() in Agent 1 v5.2). Organic + Bottle.com queries reset and included for re-run — previous organic searches capped at ~10 results due to num bug. Maps queries run first via waterfall. Total: 88 searches across 11 states.",
+  "strategy": "state_level_broad_search",
+  "notes": "Session 17 rebuild. Replaced 54 micro-regions with 11 state-level broad searches. Each query pulls 100 results via SerpAPI num=100. Round-robin across states within each tier for geographic diversity.",
   "waterfall_order": [
     "gold_1day",
     "gold_2day"
   ],
   "query_templates": [
-    "maps:meal prep {state}",
-    "maps:meal prep delivery {state}",
-    "maps:meal prep companies {state}",
     "meal prep companies {state}",
     "meal prep delivery {state}",
     "meal prep services {state}",
@@ -22,10 +19,10 @@
     "total_states": 11,
     "gold_1day_states": 3,
     "gold_2day_states": 8,
-    "total_searches": 88,
-    "searches_completed": 30,
-    "active_states": 8,
-    "depleted_states": 3
+    "total_searches": 55,
+    "searches_completed": 55,
+    "active_states": 0,
+    "depleted_states": 11
   },
   "states": [
     {
@@ -35,17 +32,14 @@
       "status": "depleted",
       "queries_remaining": [],
       "queries_searched": [
-        "maps:meal prep Pennsylvania",
-        "maps:meal prep delivery Pennsylvania",
-        "maps:meal prep companies Pennsylvania",
         "meal prep companies Pennsylvania",
         "meal prep delivery Pennsylvania",
         "meal prep services Pennsylvania",
         "best meal prep Pennsylvania",
         "site:bottle.com Pennsylvania meal prep"
       ],
-      "total_companies_found": 18,
-      "last_searched": "2026-02-18T21:55:02.034Z"
+      "total_companies_found": 1,
+      "last_searched": "2026-02-17T20:07:48.159Z"
     },
     {
       "state": "NY",
@@ -54,17 +48,14 @@
       "status": "depleted",
       "queries_remaining": [],
       "queries_searched": [
-        "maps:meal prep New York",
-        "maps:meal prep delivery New York",
-        "maps:meal prep companies New York",
         "meal prep companies New York",
         "meal prep delivery New York",
         "meal prep services New York",
         "best meal prep New York",
         "site:bottle.com New York meal prep"
       ],
-      "total_companies_found": 11,
-      "last_searched": "2026-02-18T21:54:59.186Z"
+      "total_companies_found": 4,
+      "last_searched": "2026-02-17T20:07:43.024Z"
     },
     {
       "state": "DE",
@@ -73,175 +64,142 @@
       "status": "depleted",
       "queries_remaining": [],
       "queries_searched": [
-        "maps:meal prep Delaware",
-        "maps:meal prep delivery Delaware",
-        "maps:meal prep companies Delaware",
         "meal prep companies Delaware",
         "meal prep delivery Delaware",
         "meal prep services Delaware",
         "best meal prep Delaware",
         "site:bottle.com Delaware meal prep"
       ],
-      "total_companies_found": 12,
-      "last_searched": "2026-02-18T21:54:56.990Z"
+      "total_companies_found": 9,
+      "last_searched": "2026-02-17T20:07:36.814Z"
     },
     {
       "state": "NJ",
       "state_full": "New Jersey",
       "tier": "gold_2day",
-      "status": "active",
-      "queries_remaining": [
-        "maps:meal prep delivery New Jersey",
-        "maps:meal prep companies New Jersey",
+      "status": "depleted",
+      "queries_remaining": [],
+      "queries_searched": [
         "meal prep companies New Jersey",
         "meal prep delivery New Jersey",
         "meal prep services New Jersey",
         "best meal prep New Jersey",
         "site:bottle.com New Jersey meal prep"
       ],
-      "queries_searched": [
-        "maps:meal prep New Jersey"
-      ],
-      "total_companies_found": 7,
-      "last_searched": "2026-02-18T21:55:14.071Z"
+      "total_companies_found": 5,
+      "last_searched": "2026-02-17T20:10:26.517Z"
     },
     {
       "state": "CT",
       "state_full": "Connecticut",
       "tier": "gold_2day",
-      "status": "active",
-      "queries_remaining": [
-        "maps:meal prep delivery Connecticut",
-        "maps:meal prep companies Connecticut",
+      "status": "depleted",
+      "queries_remaining": [],
+      "queries_searched": [
         "meal prep companies Connecticut",
         "meal prep delivery Connecticut",
         "meal prep services Connecticut",
         "best meal prep Connecticut",
         "site:bottle.com Connecticut meal prep"
       ],
-      "queries_searched": [
-        "maps:meal prep Connecticut"
-      ],
-      "total_companies_found": 11,
-      "last_searched": "2026-02-18T21:55:03.387Z"
+      "total_companies_found": 5,
+      "last_searched": "2026-02-17T20:09:54.997Z"
     },
     {
       "state": "MA",
       "state_full": "Massachusetts",
       "tier": "gold_2day",
-      "status": "active",
-      "queries_remaining": [
-        "maps:meal prep delivery Massachusetts",
-        "maps:meal prep companies Massachusetts",
+      "status": "depleted",
+      "queries_remaining": [],
+      "queries_searched": [
         "meal prep companies Massachusetts",
         "meal prep delivery Massachusetts",
         "meal prep services Massachusetts",
         "best meal prep Massachusetts",
         "site:bottle.com Massachusetts meal prep"
       ],
-      "queries_searched": [
-        "maps:meal prep Massachusetts"
-      ],
-      "total_companies_found": 16,
-      "last_searched": "2026-02-18T21:55:06.752Z"
+      "total_companies_found": 3,
+      "last_searched": "2026-02-17T20:10:14.007Z"
     },
     {
       "state": "MD",
       "state_full": "Maryland",
       "tier": "gold_2day",
-      "status": "active",
-      "queries_remaining": [
-        "maps:meal prep delivery Maryland",
-        "maps:meal prep companies Maryland",
+      "status": "depleted",
+      "queries_remaining": [],
+      "queries_searched": [
         "meal prep companies Maryland",
         "meal prep delivery Maryland",
         "meal prep services Maryland",
         "best meal prep Maryland",
         "site:bottle.com Maryland meal prep"
       ],
-      "queries_searched": [
-        "maps:meal prep Maryland"
-      ],
-      "total_companies_found": 9,
-      "last_searched": "2026-02-18T21:55:07.831Z"
+      "total_companies_found": 3,
+      "last_searched": "2026-02-17T20:10:18.135Z"
     },
     {
       "state": "VA",
       "state_full": "Virginia",
       "tier": "gold_2day",
-      "status": "active",
-      "queries_remaining": [
-        "maps:meal prep Virginia",
-        "maps:meal prep delivery Virginia",
-        "maps:meal prep companies Virginia",
+      "status": "depleted",
+      "queries_remaining": [],
+      "queries_searched": [
         "meal prep companies Virginia",
         "meal prep delivery Virginia",
         "meal prep services Virginia",
         "best meal prep Virginia",
         "site:bottle.com Virginia meal prep"
       ],
-      "queries_searched": [],
-      "total_companies_found": 0,
-      "last_searched": null
+      "total_companies_found": 6,
+      "last_searched": "2026-02-17T20:10:34.516Z"
     },
     {
       "state": "DC",
       "state_full": "Washington DC",
       "tier": "gold_2day",
-      "status": "active",
-      "queries_remaining": [
-        "maps:meal prep delivery Washington DC",
-        "maps:meal prep companies Washington DC",
+      "status": "depleted",
+      "queries_remaining": [],
+      "queries_searched": [
         "meal prep companies Washington DC",
         "meal prep delivery Washington DC",
         "meal prep services Washington DC",
         "best meal prep Washington DC",
         "site:bottle.com Washington DC meal prep"
       ],
-      "queries_searched": [
-        "maps:meal prep Washington DC"
-      ],
-      "total_companies_found": 11,
-      "last_searched": "2026-02-18T21:55:04.562Z"
+      "total_companies_found": 6,
+      "last_searched": "2026-02-17T20:09:57.424Z"
     },
     {
       "state": "OH",
       "state_full": "Ohio",
       "tier": "gold_2day",
-      "status": "active",
-      "queries_remaining": [
-        "maps:meal prep Ohio",
-        "maps:meal prep delivery Ohio",
-        "maps:meal prep companies Ohio",
+      "status": "depleted",
+      "queries_remaining": [],
+      "queries_searched": [
         "meal prep companies Ohio",
         "meal prep delivery Ohio",
         "meal prep services Ohio",
         "best meal prep Ohio",
         "site:bottle.com Ohio meal prep"
       ],
-      "queries_searched": [],
-      "total_companies_found": 0,
-      "last_searched": null
+      "total_companies_found": 7,
+      "last_searched": "2026-02-17T20:10:27.906Z"
     },
     {
       "state": "KY",
       "state_full": "Kentucky",
       "tier": "gold_2day",
-      "status": "active",
-      "queries_remaining": [
-        "maps:meal prep delivery Kentucky",
-        "maps:meal prep companies Kentucky",
+      "status": "depleted",
+      "queries_remaining": [],
+      "queries_searched": [
         "meal prep companies Kentucky",
         "meal prep delivery Kentucky",
         "meal prep services Kentucky",
         "best meal prep Kentucky",
         "site:bottle.com Kentucky meal prep"
       ],
-      "queries_searched": [
-        "maps:meal prep Kentucky"
-      ],
-      "total_companies_found": 6,
-      "last_searched": "2026-02-18T21:55:05.754Z"
+      "total_companies_found": 9,
+      "last_searched": "2026-02-17T20:10:04.114Z"
     }
   ]
 }

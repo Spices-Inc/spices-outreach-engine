@@ -11,32 +11,34 @@ const sheets = google.sheets({ version: 'v4', auth });
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
 
 // ============================================================
-// Agent 9 (Sheet Reader) — v2.1 "Reordered 25-Column Schema"
+// Agent 9 (Sheet Reader) — v2.0 "Two-Tab Command Center"
 //
-// WHAT CHANGED FROM v2.0 (Session 18b):
+// WHAT CHANGED FROM v1.0 (Session 16):
 //
-//   All column index references updated to match Agent 8 v2.5
-//   reordered schema. Range expanded from A:U to A:Y.
+// 1. TWO-TAB READ:
+//    - Sheet1: Blank status = approved (same as before)
+//    - Manual Review: "Approved" in Status column = pick up
 //
-// NEW COLUMN MAP (25 columns, A:Y):
-//   A[0]:  Date Added       N[13]: Spice Keywords
-//   B[1]:  Company          O[14]: Tier
-//   C[2]:  City             P[15]: Contact
-//   D[3]:  State            Q[16]: Title
-//   E[4]:  URL              R[17]: Email
-//   F[5]:  Tech Flag        S[18]: Email Status
-//   G[6]:  Discovery Source T[19]: Strike
-//   H[7]:  Score            U[20]: Sequence Track
-//   I[8]:  Days to Delivery V[21]: Apollo Status
-//   J[9]:  Transit Text     W[22]: Status (Greg: Nix)
-//   K[10]: Rotation Day     X[23]: Confidence
-//   L[11]: Rotation Line    Y[24]: LinkedIn Caution
-//   M[12]: Blend Hook
+// 2. SHEET-NATIVE LEAD BUILDING:
+//    Old Agent 9 matched sheet rows against qualified_leads.json.
+//    That file gets overwritten every cron run. If Greg approves
+//    a Manual Review lead 2 days later, the JSON is gone.
 //
-// FLOW (unchanged):
+//    New Agent 9 builds the lead object directly from the sheet
+//    row. No dependency on any JSON file.
+//
+// 3. MANUAL REVIEW MARKING:
+//    After processing a Manual Review row, Agent 9 writes
+//    "Sent to Apollo" in the Status column so it doesn't get
+//    picked up again on the next run.
+//
+// 4. LINKEDIN SNIPER TAB: Not scanned. Greg handles LinkedIn
+//    outreach manually outside the pipeline.
+//
+// FLOW:
 //   6:15 AM cron → Agent 9:
-//     1. Read Sheet1!A:Y → pick up blank-status rows
-//     2. Read Manual Review!A:Y → pick up "Approved" rows
+//     1. Read Sheet1!A:U → pick up blank-status rows
+//     2. Read Manual Review!A:U → pick up "Approved" rows
 //     3. Build lead objects from both
 //     4. Mark Manual Review rows as "Sent to Apollo"
 //     5. Write approved_leads_for_apollo.json
@@ -46,50 +48,54 @@ const SHEET_ID = process.env.GOOGLE_SHEET_ID;
 // ============================================================
 // SHEET ROW → LEAD OBJECT BUILDER
 //
-// Columns match Agent 8 v2.5 HEADERS array (A:Y)
+// Columns match Agent 8's HEADERS array (A:U):
+//   A=Date, B=Company, C=City, D=State, E=Days to Delivery,
+//   F=Transit Text, G=Rotation Day, H=Rotation Line,
+//   I=Blend Hook, J=Spice Keywords, K=Tier, L=Score,
+//   M=Contact, N=Title, O=Email, P=Email Status,
+//   Q=Strike, R=Sequence Track, S=Discovery Source,
+//   T=Apollo Status, U=Status
 // ============================================================
 function buildLeadFromRow(row) {
-    // Parse sequence track back to code (col U = index 20)
-    var trackRaw = (row[20] || '').trim();
+    // Parse sequence track back to code
+    var trackRaw = (row[17] || '').trim();
     var sequenceTrack = null;
     if (trackRaw.indexOf('A') === 0) sequenceTrack = 'A';
     if (trackRaw.indexOf('B') === 0) sequenceTrack = 'B';
 
-    // Parse spice keywords back to array (col N = index 13)
-    var keywordsRaw = (row[13] || '').trim();
+    // Parse spice keywords back to array
+    var keywordsRaw = (row[9] || '').trim();
     var spiceKeywords = keywordsRaw ? keywordsRaw.split(',').map(function(k) { return k.trim(); }) : [];
 
-    // Parse strike level (col T = index 19)
-    var strikeLevel = parseInt(row[19]) || 0;
+    // Parse strike level
+    var strikeLevel = parseInt(row[16]) || 0;
 
-    // Parse score (col H = index 7)
-    var score = parseInt(row[7]) || 0;
+    // Parse score
+    var score = parseInt(row[11]) || 0;
 
-    // Parse transit days (col I = index 8)
-    var transitDays = parseInt(row[8]) || null;
+    // Parse transit days
+    var transitDays = parseInt(row[4]) || null;
 
     // Determine if alias based on strike level
     var isAlias = strikeLevel === 3;
 
     return {
-        company_name: (row[1] || '').trim(),             // B — Company
-        city: (row[2] || '').trim(),                     // C — City
-        state: (row[3] || '').trim(),                    // D — State
-        website_url: (row[4] || '').trim(),              // E — URL
-        tech_flag: (row[5] || '').trim(),                // F — Tech Flag
-        transit_days: transitDays,                        // I — Days to Delivery
-        rotation_day: (row[10] || '').trim() || null,    // K — Rotation Day
-        custom_blend_signals: (row[12] || '').trim() ? [(row[12] || '').trim()] : [],  // M — Blend Hook
-        spice_keywords_found: spiceKeywords,             // N — Spice Keywords
-        tier: (row[14] || '').trim().toLowerCase() || null,  // O — Tier
-        qualification_score: score,                       // H — Score
-        contact_name: (row[15] || '').trim(),            // P — Contact
-        contact_title: (row[16] || '').trim(),           // Q — Title
-        contact_email: (row[17] || '').trim(),           // R — Email
-        email_status: (row[18] || '').trim(),            // S — Email Status
-        strike_level: strikeLevel,                        // T — Strike
-        sequence_track: sequenceTrack,                    // U — Sequence Track
-        discovery_source: (row[6] || '').trim(),         // G — Discovery Source
+        company_name: (row[1] || '').trim(),
+        city: (row[2] || '').trim(),
+        state: (row[3] || '').trim(),
+        transit_days: transitDays,
+        rotation_day: (row[6] || '').trim() || null,
+        custom_blend_signals: (row[8] || '').trim() ? [(row[8] || '').trim()] : [],
+        spice_keywords_found: spiceKeywords,
+        tier: (row[10] || '').trim().toLowerCase() || null,
+        qualification_score: score,
+        contact_name: (row[12] || '').trim(),
+        contact_title: (row[13] || '').trim(),
+        contact_email: (row[14] || '').trim(),
+        email_status: (row[15] || '').trim(),
+        strike_level: strikeLevel,
+        sequence_track: sequenceTrack,
+        discovery_source: (row[18] || '').trim(),
         email_is_alias: isAlias,
         qualified: true
     };
@@ -104,7 +110,7 @@ async function readSheet1() {
     try {
         var response = await sheets.spreadsheets.values.get({
             spreadsheetId: SHEET_ID,
-            range: 'Sheet1!A:Y'
+            range: 'Sheet1!A:U'
         });
 
         var rows = response.data.values;
@@ -118,9 +124,9 @@ async function readSheet1() {
         var nixed = [];
 
         dataRows.forEach(function(row, index) {
-            var company = (row[1] || '').trim();                        // B — Company
-            var status = (row[22] || '').toLowerCase().trim();          // W — Status (Greg: Nix)
-            var apolloStatus = (row[21] || '').toLowerCase().trim();    // V — Apollo Status
+            var company = (row[1] || '').trim();
+            var status = (row[20] || '').toLowerCase().trim(); // Column U
+            var apolloStatus = (row[19] || '').toLowerCase().trim(); // Column T
 
             if (!company) return; // skip empty rows
 
@@ -160,7 +166,7 @@ async function readManualReview() {
     try {
         var response = await sheets.spreadsheets.values.get({
             spreadsheetId: SHEET_ID,
-            range: 'Manual Review!A:Y'
+            range: 'Manual Review!A:U'
         });
 
         var rows = response.data.values;
@@ -174,8 +180,8 @@ async function readManualReview() {
         var rowIndices = []; // track which rows to mark as processed
 
         dataRows.forEach(function(row, index) {
-            var company = (row[1] || '').trim();                    // B — Company
-            var status = (row[22] || '').toLowerCase().trim();      // W — Status
+            var company = (row[1] || '').trim();
+            var status = (row[20] || '').toLowerCase().trim(); // Column U
 
             if (!company) return;
 
@@ -208,11 +214,8 @@ async function readManualReview() {
 // ============================================================
 // MARK MANUAL REVIEW ROWS AS PROCESSED
 //
-// Writes "Sent to Apollo" in column W (index 22) for each
-// processed row. This prevents the same lead from being
-// picked up twice.
-//
-// NOTE: In old schema this was column U. Now column W.
+// Writes "Sent to Apollo" in column U for each processed row.
+// This prevents the same lead from being picked up twice.
 // ============================================================
 async function markManualReviewProcessed(rowIndices) {
     if (rowIndices.length === 0) return;
@@ -222,7 +225,7 @@ async function markManualReviewProcessed(rowIndices) {
     try {
         var data = rowIndices.map(function(rowNum) {
             return {
-                range: 'Manual Review!W' + rowNum,
+                range: 'Manual Review!U' + rowNum,
                 values: [['Sent to Apollo']]
             };
         });
@@ -246,7 +249,7 @@ async function markManualReviewProcessed(rowIndices) {
 // MAIN
 // ============================================================
 async function readApprovedLeads() {
-    console.log('\n📋 Agent 9 v2.1: Reading approved leads (Sheet1 + Manual Review)...\n');
+    console.log('\n📋 Agent 9 v2.0: Reading approved leads (Sheet1 + Manual Review)...\n');
 
     // Read both tabs
     var sheet1Results = await readSheet1();

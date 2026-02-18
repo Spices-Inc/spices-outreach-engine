@@ -241,11 +241,11 @@ async function writeBackEnrolled(lead) {
     try {
         await sheets.spreadsheets.values.update({
             spreadsheetId: SHEET_ID,
-            range: `'${tab}'!V${row}`,
+            range: `'${tab}'!T${row}`,
             valueInputOption: 'RAW',
             resource: { values: [['Enrolled']] }
         });
-        console.log(`      ✏️  Wrote "Enrolled" to ${tab}!V${row}`);
+        console.log(`      ✏️  Wrote "Enrolled" to ${tab}!T${row}`);
     } catch (error) {
         console.log(`      ⚠️  Write-back failed: ${error.message}`);
     }

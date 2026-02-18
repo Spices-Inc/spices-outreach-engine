@@ -4,58 +4,82 @@ const path = require('path');
 require('dotenv').config();
 
 // ============================================================
-// Agent 1 (Scout) — v5.2 "Maps + Organic + Tech Flag"
+// Agent 1 (Scout) — v5.1 "URL Trawler + Armored Bouncer + Audit Trail"
 //
-// ROLE: Find URLs and pass them downstream. That is it.
+// ROLE: Find URLs and pass them downstream. That's it.
 //
-// FUNCTIONS:
-//   searchForCompanies(query, knownDomains)
-//     — Organic Google search via SerpAPI engine:"google"
-//     — Parses organic_results
-//     — tech_flag: "ORGANIC"
+// This agent does NOT try to determine the real business name.
+// It passes a "raw_name" (best guess from SERP title or domain)
+// and Agent 2 (Geographer) overwrites it with the Google Places
+// verified business name. This eliminates "How It Works" and
+// "Pickup & Delivery" hallucinations at the source.
 //
-//   searchMaps(query, knownDomains)
-//     — Google Maps search via SerpAPI engine:"google_maps"
-//     — Parses local_results
-//     — Canonical business name from Maps (no guessing)
-//     — Physical address passed through to Agent 2
-//     — Skips results with no website URL
-//     — tech_flag: "LOCAL_MAPS"
+// WHAT THIS AGENT DOES:
+//   1. Calls SerpAPI with the query from Agent 0
+//   2. Filters results through Block List + Bouncer
+//   3. Extracts domain and a raw name guess
+//   4. Passes { raw_name, domain, url } to leads_master.json
+//   5. Writes ALL kills to bouncer_rejected_leads.json (audit trail)
 //
 // WHAT THIS AGENT DOES NOT DO:
-//   - Determine the real business name for organic (Agent 2's job)
+//   - Determine the real business name (Agent 2's job)
 //   - Verify the address or geography (Agent 2 + 2.5's job)
 //   - Score or qualify (Agent 7's job)
 //
 // CHANGELOG:
 //   v3.0 — URL Trawler baseline
-//   v4.0 — Armored Bouncer (Session 13, Feb 13 2026)
-//   v5.1 — Bouncer Audit Trail (Session 18, Feb 17 2026)
-//   v5.2 — Google Maps discovery + tech_flag on all results
-//           (Session 18c, Feb 18 2026)
+//   v4.0 — "Armored Bouncer" — expanded SUPPRESSED_NATIONALS
+//           (chains, delivery aggregators, grocers), expanded
+//           NEGATIVE_TITLE_WORDS (entities: gyms, hotels, museums,
+//           terminals, stadiums, etc.), added BLOCKED_ENTITY_WORDS
+//           for company name matching. Session 13, Feb 13 2026.
+//   v5.1 — Bouncer Audit Trail: Every blocked/bounced lead is
+//           written to bouncer_rejected_leads.json with reason,
+//           query, and timestamp. File is appended per search call
+//           so Agent 0's 55 searches accumulate into one report.
+//           Session 18, Feb 17 2026.
 // ============================================================
 
+// ============================================================
+// AUDIT TRAIL FILE PATH
+// ============================================================
 const BOUNCER_AUDIT_FILE = path.join(__dirname, 'bouncer_rejected_leads.json');
 
 // ============================================================
 // BLOCKED PATTERNS — v3.0
+// Block listicles, magazines, aggregators, social, delivery
+// platforms, directories. Matches against URL string.
+//
+// NOTE: 'yelp.' (with trailing dot) blocks yelp.com, yelp.ca, etc.
+// NOTE: 'restaurants-world.' blocks all TLDs of that directory
 // ============================================================
 const BLOCKED_PATTERNS = [
+  // Social & review platforms
   'yelp.', 'facebook.com', 'instagram.com', 'twitter.com',
   'linkedin.com', 'youtube.com', 'tripadvisor.com', 'reddit.com',
   'quora.com', 'airbnb.com', 'mapquest.com', 'restaurants-world.',
   'tiktok.com', 'pinterest.com',
+
+  // Delivery aggregators (URL-level block)
   'doordash.com', 'ubereats.com', 'grubhub.com', 'postmates.com',
   'seamless.com', 'caviar.com', 'delivery.com', 'hungryroot.com',
   'gopuff.com', 'instacart.com',
+
+  // Content / listicle patterns
   'mag.com', 'magazine', 'blog', 'news', 'article', 'reviews',
   'best-of', 'top-10', 'ranking'
 ];
 
 // ============================================================
 // SUPPRESSED NATIONALS — v3.0
+// National meal kit brands, chain restaurants, grocers, delivery
+// platforms, and lifestyle brands. Matched against URL + title.
+//
+// NOTE: "chipotle" here blocks the CHAIN, not the chile pepper.
+// This matches company name/domain, NOT menu text.
 // ============================================================
 const SUPPRESSED_NATIONALS = [
+  // National meal kit / delivery brands
   'hellofresh', 'factor75', 'factor.', 'blue apron', 'blueapron',
   'home chef', 'homechef', 'everyplate', 'dinnerly', 'bistromd',
   'purple carrot', 'purplecarrot', 'cookunity', 'trifecta',
@@ -64,6 +88,8 @@ const SUPPRESSED_NATIONALS = [
   'metabolic meals', 'metabolicmeals', 'freshn lean', 'freshnlean',
   'sunbasket', 'sun basket', 'greenchef', 'green chef',
   'marley spoon', 'marleyspoon',
+
+  // Chain restaurants
   'chick-fil-a', 'chickfila', 'chik-fil-a',
   'performancekitchen', 'performance kitchen',
   'chipotle', 'sweetgreen', 'shake shack', 'shakeshack',
@@ -81,16 +107,24 @@ const SUPPRESSED_NATIONALS = [
   'subway.com', 'mcdonalds', 'burgerking', 'wendys',
   'tacobell', 'taco bell', 'dominos', 'pizzahut', 'pizza hut',
   'papajohns', 'papa johns', 'little caesars', 'littlecaesars',
+
+  // Retail food marketplace / lifestyle brands
   'eataly', 'goop', 'thrive market', 'thrivemarket',
+
+  // Grocery chains
   'wawa', 'wegmans', 'wholefood', 'whole foods', 'wholefoods',
   'trader joe', 'traderjoe', 'aldi', 'costco', 'samsclub',
   'kroger', 'publix', 'safeway', 'albertsons', 'stopandshop',
   'stop and shop', 'shoprite', 'giantfood', 'giant food',
   'food lion', 'foodlion', 'harris teeter', 'harristeeter',
   'amazon fresh', 'amazonfresh', 'freshdirect',
+
+  // Delivery platforms (name-level block, complements URL block)
   'doordash', 'grubhub', 'ubereats', 'uber eats',
   'gopuff', 'instacart', 'seamless', 'caviar',
-  'sheetz', '7-eleven', '7eleven'
+
+  // Convenience
+  'sheetz', '7-eleven', '7eleven', 'wawa'
 ];
 
 // Existing customers — never contact
@@ -102,61 +136,108 @@ const EXISTING_CUSTOMERS = [
 ];
 
 // ============================================================
-// BOUNCER LOGIC — v3.0
+// BOUNCER LOGIC — v3.0 "The Armored Checklist"
+//
+// SECOND line of defense (Agent 0's negatives are FIRST).
+// Four checks: domain extension, title noise, entity type, name sanity.
+// Zero API cost — pure string matching.
+//
+// v3.0 ADDITIONS (Session 13):
+//   - Check 2 expanded: gyms, hotels, museums, terminals, stadiums
+//   - Check 2b NEW: Entity-type words matched against company name
 // ============================================================
+
+// Check 1: Domain extension kill gate
 const BLOCKED_DOMAIN_EXTENSIONS = ['.edu', '.gov', '.org'];
 
+// Check 2: Title/snippet noise words
+// These are matched against the SERP title + snippet.
+// If ANY of these appear in the title, the lead is killed.
 const NEGATIVE_TITLE_WORDS = [
+  // Healthcare / Education (original)
   'hospital', 'upmc', 'university', 'health system', 'health center',
   'clinic', 'medical', 'school district', 'community college',
+
+  // Content / Info (original)
   'tips', 'blog', 'nutritionist', 'dietitian', 'dietician',
   'coach', 'wellness', 'recipe', 'article', 'pinterest', 'wikipedia',
+
+  // Government / Social services (original)
   'chamber of commerce', 'food bank', 'food pantry', 'soup kitchen',
   'social services', 'department of', 'county government', 'city of',
+
+  // --- v3.0 ADDITIONS ---
+
+  // Transportation hubs
   'terminal', 'train station', 'bus station', 'bus terminal',
   'airport', 'amtrak', 'penn station', 'grand central',
+
+  // Attractions / Cultural
   'botanical', 'botanical garden', 'museum', 'gallery',
   'zoo', 'aquarium', 'planetarium', 'observatory',
+
+  // Entertainment venues
   'stadium', 'arena', 'coliseum', 'amphitheater', 'amphitheatre',
   'amusement park', 'theme park', 'water park',
   'movie theater', 'cinema', 'theatre',
   'casino', 'racetrack', 'raceway',
+
+  // Retail / Shopping
   'mall', 'shopping center', 'shopping plaza', 'outlet',
+
+  // Hospitality (not meal prep ICP)
   'hotel', 'resort', 'motel', 'bed and breakfast',
   'bed & breakfast', 'inn and suites', 'inn & suites',
   'marriott', 'hilton', 'hyatt', 'holiday inn',
   'best western', 'comfort inn', 'hampton inn',
   'courtyard by', 'fairfield inn', 'residence inn',
+
+  // Fitness (gyms selling pre-packed meals = retailers)
   'gym', 'fitness center', 'crossfit', 'planet fitness',
   'anytime fitness', 'equinox', 'orangetheory',
   'la fitness', 'lifetime fitness', 'ymca', 'ywca',
+
+  // Religious / Community
   'church', 'synagogue', 'mosque', 'temple',
   'parish', 'congregation', 'ministry',
+
+  // Care facilities
   'daycare', 'preschool', 'nursing home', 'assisted living',
   'senior center', 'senior living', 'retirement',
   'hospice', 'rehabilitation',
+
+  // Non-food businesses
   'funeral home', 'mortuary', 'car wash', 'auto repair',
   'dealership', 'real estate', 'realty', 'law firm', 'attorney',
   'accounting', 'insurance agency',
+
+  // Media (supplement the URL-level blocks)
   'news', 'magazine', 'digest', 'podcast',
   'newspaper', 'journal', 'gazette',
+
+  // Private clubs
   'country club', 'golf club', 'yacht club', 'tennis club',
+
+  // Corporate / Office
   'coworking', 'co-working', 'office space', 'regus', 'wework'
 ];
 
+// Check 3: Name sanity — reject junk fragments
 const JUNK_NAME_PATTERNS = [
-  /^.{0,2}$/,
-  /^(about|tips|how to|selling)\s/i,
-  /\b(tips for|how to|guide to)\b/i,
-  /\b(nutritionists? and|dietitians? and)\b/i,
-  /\b(student.athletes?|team that fuels)\b/i,
-  /\bfood delivery programs\b/i,
-  /\b(best|top) \d+/i
+  /^.{0,2}$/,                          // 1-2 character "names" like "1N"
+  /^(about|tips|how to|selling|the)\s/i, // Sentence starters
+  /\b(tips for|how to|guide to)\b/i,    // Article phrases
+  /\b(nutritionists? and|dietitians? and)\b/i, // Directory titles
+  /\b(student.athletes?|team that fuels)\b/i,  // University content
+  /\bfood delivery programs\b/i,         // Government service pages
+  /\b(best|top) \d+/i                   // "Best 10..." listicles that slip through
 ];
 
 // ============================================================
 // DOMAIN / NAME HELPERS
 // ============================================================
+
+// Generic SERP snippet words — if title has 2+ of these, it's noise
 const GENERIC_TITLE_WORDS = [
   'meal', 'meals', 'prep', 'delivery', 'service', 'services',
   'healthy', 'home delivered', 'home-delivered', 'prepared',
@@ -164,6 +245,7 @@ const GENERIC_TITLE_WORDS = [
   'best', 'top', 'order', 'online', 'catering'
 ];
 
+// Location suffixes to strip from domain names
 const LOCATION_SUFFIXES = [
   'philly', 'pgh', 'nyc', 'nola', 'chi', 'atl', 'bos',
   'dc', 'la', 'sf', 'stl', 'clt', 'rdu', 'jax',
@@ -171,6 +253,7 @@ const LOCATION_SUFFIXES = [
   'va', 'nc', 'sc', 'ga', 'fl', 'oh', 'mi', 'il'
 ];
 
+// Domain word splitter — breaks "cleanplatemealprep" into words
 const DOMAIN_WORDS = [
   'appetit', 'appetite', 'circle', 'full', 'fresh', 'mighty',
   'clean', 'eatz', 'meal', 'meals', 'prep', 'home', 'food',
@@ -201,11 +284,17 @@ function bouncerCheck(url, title, companyName) {
   const urlLower = url.toLowerCase();
   const titleLower = title.toLowerCase();
   const nameLower = (companyName || '').toLowerCase();
+
+  // CHECK 1: Domain extension kill gate
   for (const ext of BLOCKED_DOMAIN_EXTENSIONS) {
     try {
       const hostname = new URL(url).hostname.toLowerCase();
-      if (hostname.endsWith(ext)) return { blocked: true, reason: `domain_extension:${ext}` };
-      if (hostname.includes(`${ext}.`)) return { blocked: true, reason: `domain_extension:${ext}` };
+      if (hostname.endsWith(ext)) {
+        return { blocked: true, reason: `domain_extension:${ext}` };
+      }
+      if (hostname.includes(`${ext}.`)) {
+        return { blocked: true, reason: `domain_extension:${ext}` };
+      }
     } catch (e) {
       const domainMatch = urlLower.match(/https?:\/\/([^\/]+)/);
       if (domainMatch && domainMatch[1] && domainMatch[1].includes(ext)) {
@@ -213,19 +302,38 @@ function bouncerCheck(url, title, companyName) {
       }
     }
   }
+
+  // CHECK 2: Negative title words — match against title AND company name
   for (const word of NEGATIVE_TITLE_WORDS) {
-    if (titleLower.includes(word)) return { blocked: true, reason: `negative_title_word:"${word}"` };
-    if (nameLower.includes(word)) return { blocked: true, reason: `negative_name_word:"${word}"` };
+    if (titleLower.includes(word)) {
+      return { blocked: true, reason: `negative_title_word:"${word}"` };
+    }
+    // Also check the raw company name (catches "Grand Central Terminal"
+    // even if SERP title is "Grand Central Oyster Bar - Dining")
+    if (nameLower.includes(word)) {
+      return { blocked: true, reason: `negative_name_word:"${word}"` };
+    }
   }
+
+  // CHECK 3: Name sanity — reject junk fragments
   for (const pattern of JUNK_NAME_PATTERNS) {
-    if (pattern.test(companyName || '')) return { blocked: true, reason: `junk_name:${pattern}` };
+    if (pattern.test(companyName || '')) {
+      return { blocked: true, reason: `junk_name:${pattern}` };
+    }
   }
+
   return { blocked: false, reason: null };
 }
 
 // ============================================================
-// NAME EXTRACTION — Organic only
-// Maps gives us the real name so these helpers are not needed there
+// NAME EXTRACTION — "Best Guess" only
+//
+// Agent 1 provides a raw_name as a starting point. This is NOT
+// the final business name. Agent 2 will overwrite it with the
+// Google Places verified name.
+//
+// The raw_name helps Agent 2's fallback searches if domain-first
+// lookup fails.
 // ============================================================
 function getCleanTitle(serpTitle) {
   return serpTitle
@@ -271,11 +379,16 @@ function splitDomainName(domain) {
   return parts;
 }
 
+/**
+ * Extract the ROOT domain from a URL, stripping subdomains.
+ */
 function extractDomain(url) {
   try {
     const hostname = new URL(url).hostname.replace('www.', '').toLowerCase();
     const parts = hostname.split('.');
-    if (parts.length > 2) return parts.slice(-2).join('.');
+    if (parts.length > 2) {
+      return parts.slice(-2).join('.');
+    }
     return hostname;
   } catch (e) {
     return null;
@@ -287,16 +400,21 @@ function extractNameFromDomain(url) {
     const hostname = new URL(url).hostname.replace('www.', '');
     let domain = hostname.split('.')[0];
     const parts = hostname.split('.');
-    if (parts.length > 2) domain = parts[parts.length - 2];
+    if (parts.length > 2) {
+      domain = parts[parts.length - 2];
+    }
+
     if (domain.startsWith('eat') && domain.length > 5) domain = domain.substring(3);
     if (domain.startsWith('get') && domain.length > 5) domain = domain.substring(3);
     if (domain.startsWith('try') && domain.length > 5) domain = domain.substring(3);
+
     for (const suffix of LOCATION_SUFFIXES) {
       if (domain.toLowerCase().endsWith(suffix) && domain.length > suffix.length + 2) {
         domain = domain.substring(0, domain.length - suffix.length);
         break;
       }
     }
+
     const camelParts = domain.split(/(?<=[a-z])(?=[A-Z])/);
     let nameParts;
     if (camelParts.length >= 2) {
@@ -306,14 +424,21 @@ function extractNameFromDomain(url) {
     } else {
       nameParts = splitDomainName(domain);
     }
+
     return nameParts.map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
   } catch (e) {
     return null;
   }
 }
 
+/**
+ * Get a "raw name" — best guess from SERP title or domain.
+ * Agent 2 will overwrite this with the Google Places verified name.
+ */
 function getRawName(serpTitle, url) {
   const cleanTitle = getCleanTitle(serpTitle);
+
+  // If the SERP title is generic marketing fluff, use domain name instead
   if (isSerpSnippet(serpTitle)) {
     const domainName = extractNameFromDomain(url);
     if (domainName && domainName.length >= 3) {
@@ -321,14 +446,32 @@ function getRawName(serpTitle, url) {
       return domainName;
     }
   }
+
   return cleanTitle;
 }
 
 // ============================================================
 // BOUNCER AUDIT TRAIL — v5.1
+//
+// Collects every kill (blocked + bouncer) during a search call
+// and appends them to bouncer_rejected_leads.json.
+//
+// WHY APPEND (not overwrite):
+//   Agent 0 calls searchForCompanies() up to 55 times per run.
+//   Each call appends its kills so the full morning's report
+//   accumulates in one file.
+//
+// WHO CLEARS IT:
+//   run_pipeline.js deletes the file at pipeline start so each
+//   day's report is clean.
+//
+// WHAT GREG USES IT FOR:
+//   Weekly review to catch false positives — good meal prep
+//   companies that the bouncer killed by mistake.
 // ============================================================
 function appendToAuditTrail(kills) {
   if (kills.length === 0) return;
+
   try {
     let existing = [];
     if (fs.existsSync(BOUNCER_AUDIT_FILE)) {
@@ -342,189 +485,110 @@ function appendToAuditTrail(kills) {
 }
 
 // ============================================================
-// ORGANIC SEARCH — v5.1 logic unchanged, tech_flag added
-// Called by Agent 0 for standard Google organic queries.
+// MAIN SEARCH FUNCTION
+// Called by Agent 0 (Dispatcher) with a specific query.
 // ============================================================
 async function searchForCompanies(query, knownDomains = new Set()) {
-  console.log(`  🔍 [ORGANIC] Searching: "${query}"`);
+  console.log(`  🔍 Searching: "${query}"`);
+
+  // Audit trail: collect kills for this search call
   const bouncerKillLog = [];
+
   try {
     const res = await axios.get('https://serpapi.com/search.json', {
       params: {
         q: query,
         api_key: process.env.SERP_API_KEY,
-        engine: 'google',
+        engine: "google",
         num: 20
       }
     });
+
     const results = [];
     let bouncerKills = 0;
+
     for (const result of res.data.organic_results || []) {
       const url = result.link;
       const title = result.title;
+
+      // FILTER 1: Block list (social, nationals, existing customers)
       if (isBlocked(url, title)) {
         console.log(`     ❌ Blocked: ${title.substring(0, 50)}...`);
         bouncerKillLog.push({
-          raw_name: title.substring(0, 80), url,
+          raw_name: title.substring(0, 80),
+          url: url,
           domain: extractDomain(url) || 'unknown',
           kill_type: 'block_list',
           reason: 'Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS',
-          query, source: 'ORGANIC', killed_at: new Date().toISOString()
+          query: query,
+          killed_at: new Date().toISOString()
         });
         continue;
       }
+
       const domain = extractDomain(url);
       if (!domain) continue;
+
       if (knownDomains.has(domain)) {
         console.log(`     ⏭️  Already found: ${domain}`);
         continue;
       }
+
+      // Get raw name — this is a GUESS. Agent 2 will overwrite.
       const rawName = getRawName(title, url);
+
+      // FILTER 2: Bouncer (domain extension, title noise, entity type, name sanity)
       const bouncer = bouncerCheck(url, title, rawName);
       if (bouncer.blocked) {
         bouncerKills++;
         console.log(`     🚫 Bouncer killed: "${rawName}" — reason: ${bouncer.reason}`);
         bouncerKillLog.push({
-          raw_name: rawName, url, domain,
-          kill_type: 'bouncer', reason: bouncer.reason,
-          query, source: 'ORGANIC', killed_at: new Date().toISOString()
+          raw_name: rawName,
+          url: url,
+          domain: domain,
+          kill_type: 'bouncer',
+          reason: bouncer.reason,
+          query: query,
+          killed_at: new Date().toISOString()
         });
         continue;
       }
+
       results.push({
-        company_name: rawName,
-        raw_name: rawName,
+        company_name: rawName,       // Will be overwritten by Agent 2
+        raw_name: rawName,           // Preserved for Agent 2 fallback searches
         serp_title: title,
         website_url: url,
-        domain,
-        maps_address: null,
-        tech_flag: 'ORGANIC'
+        domain: domain
       });
+
       console.log(`     ✅ ${rawName} (${domain})`);
     }
+
     console.log(`     📊 ${results.length} new companies from this search (${bouncerKills} killed by Bouncer)\n`);
+
+    // Write audit trail for this search call
     appendToAuditTrail(bouncerKillLog);
+
     return results;
+
   } catch (e) {
-    console.error(`     ❌ SerpAPI organic error: ${e.message}`);
+    console.error(`     ❌ SerpAPI error: ${e.message}`);
+    // Still write any kills collected before the error
     appendToAuditTrail(bouncerKillLog);
     return [];
   }
 }
 
-// ============================================================
-// MAPS SEARCH — v5.2 NEW
-//
-// Uses SerpAPI engine:"google_maps" to find local businesses.
-// Returns canonical business name directly from Maps — no guessing.
-// Physical address passed through so Agent 2 can skip Places lookup.
-// Skips results with no website URL — no URL = no lead.
-// tech_flag: "LOCAL_MAPS"
-//
-// WHY THIS IS BETTER THAN ORGANIC:
-//   - Business name is canonical (not an SEO title)
-//   - Address is structured and verified by Google
-//   - These businesses chose to be locally discoverable
-//   - Bypasses the organic SEO wall entirely
-// ============================================================
-async function searchMaps(query, knownDomains = new Set()) {
-  console.log(`  🗺️  [MAPS] Searching: "${query}"`);
-  const bouncerKillLog = [];
-  try {
-    const res = await axios.get('https://serpapi.com/search.json', {
-      params: {
-        q: query,
-        api_key: process.env.SERP_API_KEY,
-        engine: 'google_maps',
-        type: 'search'
-      }
-    });
-    const results = [];
-    let bouncerKills = 0;
-    let noUrlSkips = 0;
-    for (const place of res.data.local_results || []) {
-      const businessName = (place.title || '').trim();
-      const address = place.address || null;
-      const url = place.website || null;
-      // MAPS-SPECIFIC: No website = no lead. We need a URL to scrape
-      // menus and find contacts. Skip silently with a count.
-      if (!url) {
-        noUrlSkips++;
-        console.log(`     ⏭️  No website — skipping: "${businessName}"`);
-        continue;
-      }
-      if (isBlocked(url, businessName)) {
-        console.log(`     ❌ Blocked: ${businessName.substring(0, 50)}`);
-        bouncerKillLog.push({
-          raw_name: businessName, url,
-          domain: extractDomain(url) || 'unknown',
-          kill_type: 'block_list',
-          reason: 'Matched BLOCKED_PATTERNS, SUPPRESSED_NATIONALS, or EXISTING_CUSTOMERS',
-          query, source: 'LOCAL_MAPS', killed_at: new Date().toISOString()
-        });
-        continue;
-      }
-      const domain = extractDomain(url);
-      if (!domain) continue;
-      if (knownDomains.has(domain)) {
-        console.log(`     ⏭️  Already found: ${domain}`);
-        continue;
-      }
-      // Maps gives us the real name so we pass it as both title and name
-      const bouncer = bouncerCheck(url, businessName, businessName);
-      if (bouncer.blocked) {
-        bouncerKills++;
-        console.log(`     🚫 Bouncer killed: "${businessName}" — reason: ${bouncer.reason}`);
-        bouncerKillLog.push({
-          raw_name: businessName, url, domain,
-          kill_type: 'bouncer', reason: bouncer.reason,
-          query, source: 'LOCAL_MAPS', killed_at: new Date().toISOString()
-        });
-        continue;
-      }
-      results.push({
-        company_name: businessName,   // Canonical from Maps — Agent 2 still verifies
-        raw_name: businessName,       // Preserved for Agent 2 fallback
-        serp_title: businessName,
-        website_url: url,
-        domain,
-        maps_address: address,        // Agent 2 can use this directly
-        tech_flag: 'LOCAL_MAPS'
-      });
-      console.log(`     ✅ ${businessName} (${domain}) — ${address || 'no address'}`);
-    }
-    console.log(`     📊 ${results.length} new companies from Maps (${bouncerKills} Bouncer kills, ${noUrlSkips} no-URL skips)\n`);
-    appendToAuditTrail(bouncerKillLog);
-    return results;
-  } catch (e) {
-    console.error(`     ❌ SerpAPI Maps error: ${e.message}`);
-    appendToAuditTrail(bouncerKillLog);
-    return [];
-  }
-}
-
-// ============================================================
-// STANDALONE TEST MODE
-// Usage:
-//   node agent1_scout_new.js maps "meal prep delivery New Jersey"
-//   node agent1_scout_new.js organic "meal prep delivery Pennsylvania"
-// ============================================================
+// Standalone mode — for manual testing only
 if (require.main === module) {
-  const mode = process.argv[2] || 'organic';
-  const testQuery = process.argv[3] || 'meal prep delivery New Jersey';
+  const testQuery = process.argv[2] || 'meal prep delivery Pennsylvania -hospital -university -upmc -edu -gov -tips -blog -article -recipe -nutritionist -dietitian -coach -wellness -clinic -medical';
   (async () => {
-    if (mode === 'maps') {
-      console.log('\n🗺️  Agent 1 (Scout v5.2): Maps test mode\n');
-      const results = await searchMaps(testQuery);
-      fs.writeFileSync('leads_master.json', JSON.stringify(results, null, 2));
-      console.log(`✅ Maps scout complete! ${results.length} companies saved to leads_master.json\n`);
-    } else {
-      console.log('\n🔍 Agent 1 (Scout v5.2): Organic test mode\n');
-      const results = await searchForCompanies(testQuery);
-      fs.writeFileSync('leads_master.json', JSON.stringify(results, null, 2));
-      console.log(`✅ Organic scout complete! ${results.length} companies saved to leads_master.json\n`);
-    }
+    console.log("\n🔍 Agent 1 (Scout v5.1): Standalone test mode\n");
+    const results = await searchForCompanies(testQuery);
+    fs.writeFileSync('leads_master.json', JSON.stringify(results, null, 2));
+    console.log(`✅ Scout complete! ${results.length} companies saved to leads_master.json\n`);
   })();
 }
 
-module.exports = { searchForCompanies, searchMaps, extractDomain };
+module.exports = { searchForCompanies, extractDomain };
