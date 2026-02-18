@@ -123,7 +123,7 @@ async function readSheet1() {
         var approved = [];
         var nixed = [];
 
-        dataRows.forEach(function(row) {
+        dataRows.forEach(function(row, index) {
             var company = (row[1] || '').trim();
             var status = (row[20] || '').toLowerCase().trim(); // Column U
             var apolloStatus = (row[19] || '').toLowerCase().trim(); // Column T
