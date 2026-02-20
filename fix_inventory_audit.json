@@ -1,0 +1,27 @@
+{
+  "mode": "DRY_RUN",
+  "date": "2/19/2026, 4:06:20 PM",
+  "rows_total": 49,
+  "rows_remapped": 49,
+  "rows_already_correct": 0,
+  "bottle_checked": 49,
+  "bottle_hits": 2,
+  "hits": [
+    {
+      "company": "Healthy Fresh Meals",
+      "domain": "healthyfreshmeals.com",
+      "oldFlag": "LOCAL_MAPS",
+      "newFlag": "LOCAL_MAPS | BOTTLE",
+      "oldScore": 70,
+      "newScore": 90
+    },
+    {
+      "company": "Wholey Meal Prep LLC",
+      "domain": "wholeymealprep.com",
+      "oldFlag": "LOCAL_MAPS",
+      "newFlag": "LOCAL_MAPS | BOTTLE",
+      "oldScore": 25,
+      "newScore": 45
+    }
+  ]
+}

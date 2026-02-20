@@ -13,178 +13,80 @@ const sheets = google.sheets({ version: 'v4', auth });
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
 
 // ============================================================
-// CONFIGURATION — v2.5 "Inventory-First + URL + Tech Flag"
+// AGENT 8 — v3.0 "Greg-Standard Rebuild"
 //
-// WHAT CHANGED (Session 18c):
+// WHAT THIS VERSION DOES:
+//   - Appends qualified leads to Inventory (append-only, never clear)
+//   - Appends sniper leads to LinkedIn Sniper tab (append-only)
+//   - Appends rejections to Rejections tab (append-only)
+//   - Checks and fixes headers on History and Manual Review tabs
+//   - NEVER touches Sheet1 (Greg's manual staging area)
 //
-//   1. TWO NEW COLUMNS added (at the END):
-//      - Column X: URL (website link for one-click verification)
-//      - Column Y: Tech Flag ("BOTTLE", "MAPS", "GOOGLE", etc.)
-//      Total: 25 columns (A:Y)
+// WHAT WAS REMOVED:
+//   - archiveAndClearSheet1() — deleted entirely
+//   - syncReservoirToInventory() — dead concept, deleted
+//   - Any clear() calls on Inventory, History, or Manual Review
 //
-//   2. ALL LEADS NOW GO TO INVENTORY, NOT SHEET1.
-//      Sheet1 is Greg's manual staging area. He moves leads
-//      from Inventory → Sheet1 for Apollo enrollment.
+// GREG-STANDARD COLUMN ORDER (25 columns, A:Y — IMMUTABLE):
+//   A: Date Added       N: Spice Keywords
+//   B: Company          O: Tier
+//   C: City             P: Contact
+//   D: State            Q: Title
+//   E: URL              R: Email
+//   F: Tech Flag        S: Email Status
+//   G: Discovery Source T: Strike
+//   H: Score            U: Sequence Track
+//   I: Days to Delivery V: Apollo Status
+//   J: Transit Text     W: Status (Greg writes "Nix")
+//   K: Rotation Day     X: Confidence
+//   L: Rotation Line    Y: LinkedIn Caution
+//   M: Blend Hook
 //
-//   3. Sheet1 → History archive PRESERVED.
-//      If Greg has placed leads on Sheet1, they get archived
-//      to History before Sheet1 is cleared each morning.
-//      This protects Greg's manual work.
-//
-// PREVIOUS (v2.4 — Session 18):
-//   - Inventory tab: append-only with dedup, 23-column format
-//   - Sheet1: pipeline wrote qualified leads here daily
-//
-// FLOW (NEW):
+// FLOW:
 //   4:15 AM → Pipeline runs → Agent 8:
-//     STEP 0: Archive Sheet1 → History (preserves Greg's work)
-//     STEP 1: Clear Sheet1 (ready for Greg's next manual moves)
-//     STEP 2: Append today's qualified leads to Inventory
-//     STEP 3: Append remaining reservoir leads to Inventory
-//     STEP 4: Sync LinkedIn Sniper tab (append, never clear)
-//     STEP 5: Sync Rejections tab (append)
+//     STEP 1: Append today's qualified leads to Inventory
+//     STEP 2: Sync LinkedIn Sniper tab (append-only)
+//     STEP 3: Sync Rejections tab (append-only)
+//     STEP 4: Guardian check on History and Manual Review headers
 //   5:45 AM → Greg reviews Inventory, moves approved to Sheet1
 //   8:00 AM → Agent 9 reads Sheet1 → Agent 10 pushes to Apollo
 // ============================================================
 
-const RESERVOIR_PATH = path.join(__dirname, 'lead_reservoir.json');
 const SNIPER_PATH = path.join(__dirname, 'linkedin_sniper_leads.json');
 
-// Helper: Get today's date as string
-function getToday() {
-    return new Date().toLocaleDateString('en-US', {
-        month: '2-digit',
-        day: '2-digit',
-        year: 'numeric',
-        timeZone: 'America/New_York'
-    });
-}
-
-// Helper: Get transit text
-function getTransitText(days) {
-    if (days === 1) return 'tomorrow';
-    if (days === 2) return 'within two days';
-    return `within ${days} days`;
-}
-
-// Helper: Get rotation line for email
-function getRotationLine(rotationDay) {
-    if (rotationDay) {
-        return rotationDay.charAt(0).toUpperCase() + rotationDay.slice(1).toLowerCase();
-    }
-    return 'weekly';
-}
-
-// Helper: Get blend hook
-function getBlendHook(signals) {
-    if (!signals || signals.length === 0) return '';
-    const priority = ['signature', 'house-made', 'proprietary', 'custom'];
-    for (const p of priority) {
-        if (signals.includes(p)) return p;
-    }
-    return signals[0];
-}
-
-// Helper: Clean company name
-function cleanCompanyName(name) {
-    if (!name) return '';
-    return name.split(' - ')[0].split(':')[0].trim();
-}
-
-// Helper: Sequence track label for Rob
-function getTrackLabel(lead) {
-    if (lead.sequence_track === 'B') return 'B — Alias 2-Step';
-    if (lead.sequence_track === 'A') return 'A — Standard 5-Email';
-    return '';
-}
-
-// Helper: Discovery source label for Rob
-function getDiscoveryLabel(source) {
-    const labels = {
-        'website_scrape': 'Website',
-        'website+linkedin': 'Website + LinkedIn',
-        'linkedin_direct': 'LinkedIn',
-        'parent_company_match': 'Parent Company',
-        'alias_fallback': 'Alias Fallback',
-        'none': 'None'
-    };
-    return labels[source] || source || '';
-}
-
-// Helper: Build LinkedIn search URL for a person at a company
-function buildLinkedInSearchURL(contactName, companyName) {
-    const query = encodeURIComponent(`${contactName} ${cleanCompanyName(companyName)}`);
-    return `https://www.linkedin.com/search/results/people/?keywords=${query}`;
-}
-
 // ============================================================
-// Helper: Contact confidence display label — Session 17
+// GREG-STANDARD HEADERS — 25 columns (A:Y) — IMMUTABLE
 // ============================================================
-function getConfidenceLabel(confidence) {
-    const labels = {
-        'high': 'HIGH',
-        'medium': 'MEDIUM',
-        'low': 'LOW',
-        'alias': 'ALIAS'
-    };
-    return labels[confidence] || confidence || '';
-}
-
-// ============================================================
-// Helper: Get URL from lead — Session 18c
-// Prefers website_url, falls back to domain-based URL
-// ============================================================
-function getLeadUrl(lead) {
-    if (lead.website_url) return lead.website_url;
-    if (lead.domain) return 'https://' + lead.domain;
-    return '';
-}
-
-// ============================================================
-// HEADERS — 25 columns (A:Y)
-//
-// Session 18c: Added X (URL) and Y (Tech Flag)
-// Session 17: Added V (Contact Confidence) and W (LinkedIn Caution)
-// Columns A-W are UNCHANGED from v2.4
-// ============================================================
-const HEADERS = [
+const GREG_STANDARD_HEADERS = [
     'Date Added',           // A
     'Company',              // B
     'City',                 // C
     'State',                // D
-    'Days to Delivery',     // E
-    'Transit Text',         // F
-    'Rotation Day',         // G
-    'Rotation Line',        // H
-    'Blend Hook',           // I
-    'Spice Keywords',       // J
-    'Tier',                 // K
-    'Score',                // L
-    'Contact',              // M
-    'Title',                // N
-    'Email',                // O
-    'Email Status',         // P
-    'Strike',               // Q
-    'Sequence Track',       // R
-    'Discovery Source',     // S
-    'Apollo Status',        // T
-    'Status',               // U  (Greg writes "Nix" here to reject)
-    'Confidence',           // V  — Session 17
-    'LinkedIn Caution',     // W  — Session 17
-    'URL',                  // X  — Session 18c NEW
-    'Tech Flag'             // Y  — Session 18c NEW
+    'URL',                  // E
+    'Tech Flag',            // F
+    'Discovery Source',     // G
+    'Score',                // H
+    'Days to Delivery',     // I
+    'Transit Text',         // J
+    'Rotation Day',         // K
+    'Rotation Line',        // L
+    'Blend Hook',           // M
+    'Spice Keywords',       // N
+    'Tier',                 // O
+    'Contact',              // P
+    'Title',                // Q
+    'Email',                // R
+    'Email Status',         // S
+    'Strike',               // T
+    'Sequence Track',       // U
+    'Apollo Status',        // V
+    'Status',               // W  (Greg writes "Nix" here to reject)
+    'Confidence',           // X
+    'LinkedIn Caution'      // Y
 ];
 
-const HISTORY_HEADERS = HEADERS;
-
 // ============================================================
-// INVENTORY TAB HEADERS — v2.5
-// Same 25 columns as Sheet1 (A:Y).
-// ============================================================
-const INVENTORY_HEADERS = HEADERS;
-
-// ============================================================
-// LINKEDIN SNIPER TAB HEADERS
+// LINKEDIN SNIPER TAB HEADERS — 13 columns
 // ============================================================
 const SNIPER_HEADERS = [
     'Date Added',       // A
@@ -203,10 +105,86 @@ const SNIPER_HEADERS = [
 ];
 
 // ============================================================
-// SHARED: Build a 25-column row from a lead object
-//
-// Used by both pushNewLeadsToInventory() and
-// syncReservoirToInventory() to ensure identical formatting.
+// HELPERS
+// ============================================================
+
+function getToday() {
+    return new Date().toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+        timeZone: 'America/New_York'
+    });
+}
+
+function getTransitText(days) {
+    if (days === 1) return 'tomorrow';
+    if (days === 2) return 'within two days';
+    return `within ${days} days`;
+}
+
+function getRotationLine(rotationDay) {
+    if (rotationDay) {
+        return rotationDay.charAt(0).toUpperCase() + rotationDay.slice(1).toLowerCase();
+    }
+    return 'weekly';
+}
+
+function getBlendHook(signals) {
+    if (!signals || signals.length === 0) return '';
+    const priority = ['signature', 'house-made', 'proprietary', 'custom'];
+    for (const p of priority) {
+        if (signals.includes(p)) return p;
+    }
+    return signals[0];
+}
+
+function cleanCompanyName(name) {
+    if (!name) return '';
+    return name.split(' - ')[0].split(':')[0].trim();
+}
+
+function getTrackLabel(lead) {
+    if (lead.sequence_track === 'B') return 'B — Alias 2-Step';
+    if (lead.sequence_track === 'A') return 'A — Standard 5-Email';
+    return '';
+}
+
+function getDiscoveryLabel(source) {
+    const labels = {
+        'website_scrape': 'Website',
+        'website+linkedin': 'Website + LinkedIn',
+        'linkedin_direct': 'LinkedIn',
+        'parent_company_match': 'Parent Company',
+        'alias_fallback': 'Alias Fallback',
+        'none': 'None'
+    };
+    return labels[source] || source || '';
+}
+
+function buildLinkedInSearchURL(contactName, companyName) {
+    const query = encodeURIComponent(`${contactName} ${cleanCompanyName(companyName)}`);
+    return `https://www.linkedin.com/search/results/people/?keywords=${query}`;
+}
+
+function getConfidenceLabel(confidence) {
+    const labels = {
+        'high': 'HIGH',
+        'medium': 'MEDIUM',
+        'low': 'LOW',
+        'alias': 'ALIAS'
+    };
+    return labels[confidence] || confidence || '';
+}
+
+function getLeadUrl(lead) {
+    if (lead.website_url) return lead.website_url;
+    if (lead.domain) return 'https://' + lead.domain;
+    return '';
+}
+
+// ============================================================
+// BUILD ROW — Greg-Standard 25-column order (A:Y)
 // ============================================================
 function buildLeadRow(lead) {
     return [
@@ -214,35 +192,34 @@ function buildLeadRow(lead) {
         cleanCompanyName(lead.company_name),                 // B — Company
         lead.city || '',                                     // C — City
         lead.state || '',                                    // D — State
-        lead.transit_days || '',                              // E — Days to Delivery
-        getTransitText(lead.transit_days),                   // F — Transit Text
-        lead.rotation_day || '',                              // G — Rotation Day
-        getRotationLine(lead.rotation_day),                  // H — Rotation Line
-        getBlendHook(lead.custom_blend_signals),             // I — Blend Hook
-        (lead.spice_keywords_found || []).join(', '),        // J — Spice Keywords
-        lead.tier ? lead.tier.toUpperCase() : '',            // K — Tier
-        lead.qualification_score || '',                       // L — Score
-        lead.contact_name || '',                              // M — Contact
-        lead.contact_title || '',                             // N — Title
-        lead.contact_email || '',                             // O — Email
-        lead.email_status || '',                              // P — Email Status
-        lead.strike_level || '',                              // Q — Strike
-        getTrackLabel(lead),                                 // R — Sequence Track
-        getDiscoveryLabel(lead.discovery_source),            // S — Discovery Source
-        '',                                                  // T — Apollo Status
-        '',                                                  // U — Status (Greg)
-        getConfidenceLabel(lead.contact_confidence),         // V — Confidence
-        lead.linkedin_caution ? '⚠️ STALE' : '',            // W — LinkedIn Caution
-        getLeadUrl(lead),                                    // X — URL (Session 18c)
-        lead.tech_flag || ''                                 // Y — Tech Flag (Session 18c)
+        getLeadUrl(lead),                                    // E — URL
+        lead.tech_flag || '',                                // F — Tech Flag
+        getDiscoveryLabel(lead.discovery_source),            // G — Discovery Source
+        lead.qualification_score || '',                      // H — Score
+        lead.transit_days || '',                             // I — Days to Delivery
+        getTransitText(lead.transit_days),                   // J — Transit Text
+        lead.rotation_day || '',                             // K — Rotation Day
+        getRotationLine(lead.rotation_day),                  // L — Rotation Line
+        getBlendHook(lead.custom_blend_signals),             // M — Blend Hook
+        (lead.spice_keywords_found || []).join(', '),        // N — Spice Keywords
+        lead.tier ? lead.tier.toUpperCase() : '',            // O — Tier
+        lead.contact_name || '',                             // P — Contact
+        lead.contact_title || '',                            // Q — Title
+        lead.contact_email || '',                            // R — Email
+        lead.email_status || '',                             // S — Email Status
+        lead.strike_level || '',                             // T — Strike
+        getTrackLabel(lead),                                 // U — Sequence Track
+        '',                                                  // V — Apollo Status
+        '',                                                  // W — Status (Greg writes "Nix")
+        getConfidenceLabel(lead.contact_confidence),         // X — Confidence
+        lead.linkedin_caution ? '⚠️ STALE' : ''            // Y — LinkedIn Caution
     ];
 }
 
 // ============================================================
-// SHARED: Read existing Inventory rows and return dedup set
-//
-// Returns { existingRows, existingCompanies }
-// Used by both Inventory-writing functions to prevent duplicates.
+// READ INVENTORY FOR DEDUP
+// Returns existing rows and a Set of company names already present.
+// Also fixes headers if wrong — never touches data rows.
 // ============================================================
 async function readInventoryForDedup() {
     let existingRows = [];
@@ -257,15 +234,11 @@ async function readInventoryForDedup() {
 
         if (allRows.length === 0) {
             needsHeaderUpdate = true;
-        } else if (allRows[0][0] === 'Date Added' && allRows[0].length >= 25) {
-            // Correct 25-column format
-            existingRows = allRows.slice(1);
-        } else if (allRows[0][0] === 'Date Added') {
-            // Old format (23 columns) — just update headers, keep data
-            needsHeaderUpdate = true;
+        } else if (allRows[0][0] === 'Date Added' && allRows[0][4] === 'URL') {
+            // Correct Greg-Standard format — header row 1 is good
             existingRows = allRows.slice(1);
         } else {
-            // Unknown format — update headers, keep data if any
+            // Headers are wrong or old format — fix row 1, keep all data rows
             needsHeaderUpdate = true;
             existingRows = allRows.slice(1);
         }
@@ -278,9 +251,9 @@ async function readInventoryForDedup() {
             spreadsheetId: SHEET_ID,
             range: 'Inventory!A1',
             valueInputOption: 'RAW',
-            resource: { values: [INVENTORY_HEADERS] }
+            resource: { values: [GREG_STANDARD_HEADERS] }
         });
-        console.log('  📝 Updated Inventory headers to 25-column format (A:Y)');
+        console.log('  📝 Updated Inventory headers to Greg-Standard (A:Y)');
     }
 
     // Build dedup set from company names (column B = index 1)
@@ -295,98 +268,48 @@ async function readInventoryForDedup() {
 }
 
 // ============================================================
-// STEP 0: ARCHIVE Sheet1 → History + CLEAR Sheet1
-//
-// Preserves any leads Greg manually placed on Sheet1.
-// After archiving, Sheet1 is cleared so it's a clean slate
-// for Greg's next round of manual moves from Inventory.
+// HEADER GUARDIAN
+// Checks History and Manual Review tabs.
+// Fixes row 1 if wrong. Never touches data rows.
 // ============================================================
-async function archiveAndClearSheet1() {
-    console.log('  📚 Archiving Sheet1 → History (preserving Greg\'s manual work)...');
+async function guardHeaders() {
+    const tabs = ['History', 'Manual Review'];
 
-    try {
-        const currentData = await sheets.spreadsheets.values.get({
-            spreadsheetId: SHEET_ID,
-            range: 'Sheet1!A2:Y1000'
-        });
+    for (const tab of tabs) {
+        try {
+            const result = await sheets.spreadsheets.values.get({
+                spreadsheetId: SHEET_ID,
+                range: `${tab}!A1:Y1`
+            });
+            const row1 = (result.data.values || [])[0] || [];
+            const isCorrect = row1[0] === 'Date Added' && row1[4] === 'URL';
 
-        const existingRows = currentData.data.values || [];
-
-        if (existingRows.length === 0) {
-            console.log('  ℹ️  Sheet1 is empty — nothing to archive.');
-        } else {
-            // Archive to History
-            let needsHeaders = false;
-            try {
-                const headerCheck = await sheets.spreadsheets.values.get({
-                    spreadsheetId: SHEET_ID,
-                    range: 'History!A1:A1'
-                });
-                const headerVal = headerCheck.data.values;
-                if (!headerVal || headerVal.length === 0 || !headerVal[0][0]) {
-                    needsHeaders = true;
-                }
-            } catch (headerErr) {
-                needsHeaders = true;
-            }
-
-            if (needsHeaders) {
-                console.log('  📝 Writing History tab headers (first time)...');
+            if (!isCorrect) {
                 await sheets.spreadsheets.values.update({
                     spreadsheetId: SHEET_ID,
-                    range: 'History!A1',
+                    range: `${tab}!A1`,
                     valueInputOption: 'RAW',
-                    resource: { values: [HISTORY_HEADERS] }
+                    resource: { values: [GREG_STANDARD_HEADERS] }
                 });
+                console.log(`  📝 Fixed headers on ${tab} tab (data rows untouched)`);
+            } else {
+                console.log(`  ✅ ${tab} tab headers are correct`);
             }
-
-            await sheets.spreadsheets.values.append({
-                spreadsheetId: SHEET_ID,
-                range: 'History!A1',
-                valueInputOption: 'RAW',
-                insertDataOption: 'INSERT_ROWS',
-                resource: { values: existingRows }
-            });
-
-            console.log(`  ✅ Archived ${existingRows.length} leads to History tab`);
-        }
-
-        // Always clear Sheet1 and write fresh headers
-        console.log('  🧹 Clearing Sheet1...');
-        await sheets.spreadsheets.values.clear({
-            spreadsheetId: SHEET_ID,
-            range: 'Sheet1!A1:Y1000'
-        });
-
-        await sheets.spreadsheets.values.update({
-            spreadsheetId: SHEET_ID,
-            range: 'Sheet1!A1',
-            valueInputOption: 'RAW',
-            resource: { values: [HEADERS] }
-        });
-        console.log('  ✅ Sheet1 cleared — headers written, ready for Greg\'s manual moves');
-
-    } catch (error) {
-        if (error.message && error.message.includes('Unable to parse range')) {
-            console.error('  ⚠️  History tab not found in Google Sheet!');
-            console.error('     → Please create a tab named exactly "History" in your Google Sheet.');
-        } else {
-            console.error(`  ⚠️  Archive/clear error: ${error.message}`);
+        } catch (err) {
+            if (err.message && err.message.includes('Unable to parse range')) {
+                console.log(`  ⚠️  ${tab} tab not found — create it in Google Sheets if needed`);
+            } else {
+                console.log(`  ⚠️  Could not check ${tab} tab: ${err.message}`);
+            }
         }
     }
 }
 
 // ============================================================
-// STEP 1: Push today's qualified leads → INVENTORY
-//
-// Reads qualified_leads.json (the leads pulled from reservoir
-// for today's run). Appends them to Inventory with dedup.
-//
-// In the old model, these went to Sheet1. Now they go straight
-// to Inventory where Greg reviews and manually promotes them.
+// STEP 1: Push today's qualified leads → INVENTORY (append-only)
 // ============================================================
 async function pushNewLeadsToInventory() {
-    console.log('\n📊 Agent 8 v2.5: Pushing qualified leads to Inventory...\n');
+    console.log('\n📊 Agent 8 v3.0: Pushing qualified leads to Inventory...\n');
 
     let leads = [];
     try {
@@ -394,7 +317,7 @@ async function pushNewLeadsToInventory() {
             leads = JSON.parse(fs.readFileSync('qualified_leads.json', 'utf8'));
         }
     } catch (e) {
-        console.log(`  ⚠️ Could not read qualified_leads.json: ${e.message}`);
+        console.log(`  ⚠️  Could not read qualified_leads.json: ${e.message}`);
     }
 
     if (leads.length === 0) {
@@ -405,10 +328,8 @@ async function pushNewLeadsToInventory() {
     console.log(`  Found ${leads.length} qualified leads\n`);
 
     try {
-        // Read existing Inventory for dedup
         const { existingRows, existingCompanies } = await readInventoryForDedup();
 
-        // Build rows, skip duplicates
         const newRows = [];
         for (const lead of leads) {
             const company = cleanCompanyName(lead.company_name);
@@ -420,7 +341,7 @@ async function pushNewLeadsToInventory() {
             }
 
             newRows.push(buildLeadRow(lead));
-            existingCompanies.add(companyKey); // prevent dupes within this batch
+            existingCompanies.add(companyKey);
         }
 
         if (newRows.length === 0) {
@@ -428,7 +349,6 @@ async function pushNewLeadsToInventory() {
             return;
         }
 
-        // Append to Inventory
         await sheets.spreadsheets.values.append({
             spreadsheetId: SHEET_ID,
             range: 'Inventory!A1',
@@ -437,10 +357,10 @@ async function pushNewLeadsToInventory() {
             resource: { values: newRows }
         });
 
-        console.log(`  ✅ Appended ${newRows.length} qualified leads to Inventory (${existingRows.length} already there)`);
+        console.log(`  ✅ Appended ${newRows.length} leads to Inventory (${existingRows.length} already there)`);
         for (const row of newRows) {
-            const track = (row[17] || '').indexOf('A') === 0 ? 'Track A' : 'Track B';
-            console.log(`     📦 ${row[1]} (${row[2]}, ${row[3]}) — ${row[11]}pts — ${track} — ${row[14] || 'NO EMAIL'} — ${row[24] || 'GOOGLE'}`);
+            const track = (row[20] || '').indexOf('A') === 0 ? 'Track A' : 'Track B';
+            console.log(`     📦 ${row[1]} (${row[2]}, ${row[3]}) — Score: ${row[7]} — ${track} — ${row[17] || 'NO EMAIL'} — ${row[5] || 'GOOGLE'}`);
         }
         console.log('');
 
@@ -455,78 +375,7 @@ async function pushNewLeadsToInventory() {
 }
 
 // ============================================================
-// STEP 2: Sync remaining reservoir leads → INVENTORY
-//
-// Appends any reservoir leads not already on Inventory.
-// Same append-only dedup logic as pushNewLeadsToInventory().
-// ============================================================
-async function syncReservoirToInventory() {
-    console.log('📦 Syncing reservoir to Inventory (append-only)...\n');
-
-    let reservoir = [];
-    try {
-        if (fs.existsSync(RESERVOIR_PATH)) {
-            reservoir = JSON.parse(fs.readFileSync(RESERVOIR_PATH, 'utf8'));
-        }
-    } catch (e) {
-        console.log(`  ⚠️ Could not load reservoir: ${e.message}`);
-    }
-
-    if (reservoir.length === 0) {
-        console.log('  📦 Reservoir is empty — nothing to append.\n');
-        return;
-    }
-
-    try {
-        // Read existing Inventory for dedup
-        const { existingRows, existingCompanies } = await readInventoryForDedup();
-
-        // Build rows, skip duplicates
-        const newRows = [];
-        for (const lead of reservoir) {
-            const company = cleanCompanyName(lead.company_name);
-            const companyKey = company.toLowerCase().trim();
-
-            if (existingCompanies.has(companyKey)) {
-                console.log(`  ⏭️  Already on Inventory: ${company}`);
-                continue;
-            }
-
-            newRows.push(buildLeadRow(lead));
-            existingCompanies.add(companyKey);
-        }
-
-        if (newRows.length === 0) {
-            console.log('  📦 All reservoir leads already on Inventory (0 new).\n');
-            return;
-        }
-
-        await sheets.spreadsheets.values.append({
-            spreadsheetId: SHEET_ID,
-            range: 'Inventory!A1',
-            valueInputOption: 'RAW',
-            insertDataOption: 'INSERT_ROWS',
-            resource: { values: newRows }
-        });
-
-        console.log(`  ✅ Appended ${newRows.length} reservoir leads to Inventory`);
-        for (const row of newRows) {
-            console.log(`     📦 ${row[1]} (${row[2]}, ${row[3]}) — ${row[11]}pts — ${row[14] || 'NO EMAIL'}`);
-        }
-        console.log('');
-
-    } catch (error) {
-        if (error.message && error.message.includes('Unable to parse range')) {
-            console.error('  ❌ Inventory tab not found in Google Sheet!');
-            console.error('     → Please create a tab named exactly "Inventory" in your Google Sheet.');
-        } else {
-            console.error(`  ❌ Reservoir sync error: ${error.message}`);
-        }
-    }
-}
-
-// ============================================================
-// LINKEDIN SNIPER TAB SYNC — Session 16
+// STEP 2: Sync LinkedIn Sniper tab (append-only)
 // ============================================================
 async function syncSniperTab() {
     console.log('🎯 Syncing LinkedIn Sniper tab...\n');
@@ -537,7 +386,7 @@ async function syncSniperTab() {
             sniperLeads = JSON.parse(fs.readFileSync(SNIPER_PATH, 'utf8'));
         }
     } catch (e) {
-        console.log(`  ⚠️ Could not load sniper leads: ${e.message}`);
+        console.log(`  ⚠️  Could not load sniper leads: ${e.message}`);
     }
 
     if (sniperLeads.length === 0) {
@@ -564,7 +413,7 @@ async function syncSniperTab() {
         }
 
         if (needsHeaders) {
-            console.log('  📝 Writing LinkedIn Sniper tab headers (first time)...');
+            console.log('  📝 Writing LinkedIn Sniper tab headers...');
             await sheets.spreadsheets.values.update({
                 spreadsheetId: SHEET_ID,
                 range: 'LinkedIn Sniper!A1',
@@ -630,8 +479,7 @@ async function syncSniperTab() {
     } catch (error) {
         if (error.message && error.message.includes('Unable to parse range')) {
             console.error('  ❌ LinkedIn Sniper tab not found in Google Sheet!');
-            console.error('     → Please create a tab named exactly "LinkedIn Sniper" in your Google Sheet.');
-            console.error('     → The sync will work automatically on the next run.');
+            console.error('     → Create a tab named exactly "LinkedIn Sniper" in your Google Sheet.');
         } else {
             console.error(`  ❌ LinkedIn Sniper sync error: ${error.message}`);
         }
@@ -640,10 +488,10 @@ async function syncSniperTab() {
 }
 
 // ============================================================
-// REJECTIONS TAB SYNC — append-only (restored Session 16)
+// STEP 3: Sync Rejections tab (append-only)
 // ============================================================
 async function syncRejectionsTab() {
-    console.log('\u274C Syncing Rejections tab...\n');
+    console.log('❌ Syncing Rejections tab...\n');
 
     let disqualified = [];
     try {
@@ -689,11 +537,12 @@ async function syncRejectionsTab() {
 // MAIN EXECUTION
 // ============================================================
 async function run() {
-    await archiveAndClearSheet1();
     await pushNewLeadsToInventory();
-    await syncReservoirToInventory();
     await syncSniperTab();
     await syncRejectionsTab();
+    console.log('\n🛡️  Running header guardian on History and Manual Review...\n');
+    await guardHeaders();
+    console.log('\n✅ Agent 8 v3.0 complete.\n');
 }
 
 if (require.main === module) {
@@ -702,5 +551,5 @@ if (require.main === module) {
         process.exit(1);
     });
 } else {
-    module.exports = { run, archiveAndClearSheet1, pushNewLeadsToInventory, syncReservoirToInventory, syncSniperTab, syncRejectionsTab };
+    module.exports = { run, pushNewLeadsToInventory, syncSniperTab, syncRejectionsTab, guardHeaders };
 }

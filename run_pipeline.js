@@ -8,32 +8,38 @@ const path = require('path');
 const LEADS_FILE = path.join(__dirname, 'leads_master.json');
 const REJECTION_LOG = path.join(__dirname, 'rejection_log.csv');
 const LOCK_FILE = path.join(__dirname, 'pipeline.lock');
-const RESERVOIR_PATH = path.join(__dirname, 'lead_reservoir.json');
 const QUALIFIED_PATH = path.join(__dirname, 'qualified_leads.json');
 const DISQUALIFIED_PATH = path.join(__dirname, 'disqualified_leads.json');
 
 // ============================================================
-// BUSINESS RULES
+// BUSINESS RULES — v3.0 "Open Warehouse" (Session 19)
 //
-// POOL_SIZE = 8:
-//   Greg sees 8 candidates on the Google Sheet each morning.
-//   He approves or nixes. Agent 10 then enrolls the first 5
-//   that Apollo accepts, and returns the unused ones to the
-//   reservoir. This "Over-Pull" strategy ensures we hit 5
-//   even if 2-3 leads are dead (job_change, email_not_found).
+// WHAT CHANGED:
+//   The reservoir is DEAD. POOL_SIZE is DEAD.
+//   DORMANT/HUNGRY modes are DEAD.
+//
+//   Every lead that survives Agents 2, 3, and 5 flows to
+//   Agent 7 (scoring only) → Agent 6 (writer) → Agent 8
+//   (Inventory push). Greg sees EVERYTHING. Greg decides.
+//
+// WHY:
+//   POOL_SIZE = 8 was pulling only the top 8 scored leads
+//   from the reservoir and hiding the rest. NJ Gourmet,
+//   Spartan, and 90+ other leads sat in lead_reservoir.json
+//   invisible to Greg. The machine was making executive
+//   decisions that belong to the human.
+//
+// THE NEW RULE:
+//   Discovery → Enrich → Score → Push ALL to Inventory.
+//   Agent 7 scores but does not kill.
+//   Agent 8 pushes everything.
+//   Greg reviews Inventory, moves winners to Sheet1.
+//   Agent 9 → Agent 10 enrolls from Sheet1.
 //
 // SEND_QUOTA = 5:
-//   The actual number of emails Rob sends per day. This is
-//   enforced by Agent 10, not by this file. We just pull 8
-//   and let Agent 10 handle the rest.
-//
-// RESERVOIR_CAP = 20:
-//   Safety stock. When reservoir >= 20, Agent 0 goes dormant
-//   (zero API spend). No expiry — good leads don't go stale.
+//   Still enforced by Agent 10, not by this file.
 // ============================================================
-const POOL_SIZE = 8;           // Pull 8 candidates for Greg's review
 const SEND_QUOTA = 5;          // Agent 10 enrolls first 5 successes
-const RESERVOIR_CAP = 20;      // Safety stock max
 
 // ============================================================
 // LOCKFILE PROTECTION
@@ -46,14 +52,14 @@ const RESERVOIR_CAP = 20;      // Safety stock max
 // ============================================================
 function checkAndCreateLock() {
     if (fs.existsSync(LOCK_FILE)) {
-        const lockData = fs.readFileSync(LOCK_FILE, 'utf8').trim();
+        var lockData = fs.readFileSync(LOCK_FILE, 'utf8').trim();
         console.log('\n\uD83D\uDED1 PIPELINE LOCKED \u2014 another instance is already running.');
         console.log('   Lock created: ' + lockData);
         console.log('   Exiting immediately to protect API rate limits.\n');
         process.exit(0);
     }
 
-    const timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
+    var timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
     fs.writeFileSync(LOCK_FILE, timestamp + ' ET');
     console.log('\uD83D\uDD12 Pipeline lock acquired: ' + timestamp + ' ET\n');
 }
@@ -99,84 +105,6 @@ function logRejection(company, domain, city, state, stage, reason, score) {
     var safeReason = reason ? '"' + reason.replace(/"/g, '""') + '"' : '""';
     var row = '"' + date + '",' + safeCompany + ',' + safeDomain + ',' + safeCity + ',' + safeState + ',' + stage + ',' + safeReason + ',' + (score || 0) + '\n';
     fs.appendFileSync(REJECTION_LOG, row);
-}
-
-// ============================================================
-// LEAD RESERVOIR (Safety Stock)
-//
-// The reservoir is an inventory of qualified leads waiting to
-// be sent. It guarantees Rob gets leads every morning even
-// when the search comes up empty.
-//
-// How it works:
-//   1. After Agent 7 qualifies leads, new ones merge into the
-//      reservoir (deduped by domain).
-//   2. The top POOL_SIZE (8) by score are pulled out and sent
-//      to Agent 6 (Writer) and Agent 8 (Sheet Pusher).
-//   3. Agent 10 enrolls first 5 successes, returns unused to
-//      the top of the reservoir.
-//   4. If the reservoir hits 20, Agent 0 goes DORMANT — zero
-//      API spend, just drip-feeds from inventory.
-//   5. No expiry. Good leads don't go stale. Cap of 20 is
-//      the only constraint.
-// ============================================================
-function loadReservoir() {
-    try {
-        if (fs.existsSync(RESERVOIR_PATH)) {
-            var data = JSON.parse(fs.readFileSync(RESERVOIR_PATH, 'utf8'));
-            if (Array.isArray(data)) return data;
-        }
-    } catch (e) {
-        console.log('  \u26A0\uFE0F  Could not load reservoir: ' + e.message + ' \u2014 starting fresh\n');
-    }
-    return [];
-}
-
-function saveReservoir(reservoir) {
-    fs.writeFileSync(RESERVOIR_PATH, JSON.stringify(reservoir, null, 2));
-}
-
-function mergeIntoReservoir(reservoir, newLeads) {
-    // Dedup by domain — don't add leads that are already in the reservoir
-    var existingDomains = new Set(reservoir.map(function(l) { return l.domain; }));
-    var added = 0;
-
-    for (var i = 0; i < newLeads.length; i++) {
-        var lead = newLeads[i];
-        if (!existingDomains.has(lead.domain)) {
-            // Tag when it entered the reservoir
-            lead.reservoir_added = new Date().toISOString();
-            reservoir.push(lead);
-            existingDomains.add(lead.domain);
-            added++;
-        }
-    }
-
-    // If over cap, sort by score and trim the lowest
-    if (reservoir.length > RESERVOIR_CAP) {
-        reservoir.sort(function(a, b) { return (b.qualification_score || 0) - (a.qualification_score || 0); });
-        var trimmed = reservoir.splice(RESERVOIR_CAP);
-        for (var t = 0; t < trimmed.length; t++) {
-            var tLead = trimmed[t];
-            console.log('     \uD83D\uDEAB RESERVOIR CAP: Trimmed "' + tLead.company_name + '" \u2014 score ' + tLead.qualification_score + ', reservoir full (' + RESERVOIR_CAP + ' max)');
-            logRejection(
-                tLead.company_name, tLead.domain, tLead.city || '', tLead.state || '',
-                'Reservoir Cap', 'Reservoir full at ' + RESERVOIR_CAP + ' (score: ' + tLead.qualification_score + ')',
-                tLead.qualification_score || 0
-            );
-        }
-    }
-
-    return added;
-}
-
-function pullTopLeads(reservoir, count) {
-    // Sort by score descending (best leads first)
-    reservoir.sort(function(a, b) { return (b.qualification_score || 0) - (a.qualification_score || 0); });
-
-    // Pull the top N out of the reservoir
-    var pulled = reservoir.splice(0, count);
-    return pulled;
 }
 
 // ============================================================
@@ -243,18 +171,12 @@ function runExitGate(gateType) {
                 var retailCount = Array.isArray(retailSignals) ? retailSignals.length : 0;
 
                 // RULE 1: Scrape blocked — benefit of the doubt
-                // Cloudflare/JS-rendered sites return empty HTML.
-                // The snippet from Google may still have signals.
-                // Agent 7 will score it properly later.
                 if (isBlocked) {
                     console.log('     \uD83D\uDEE1\uFE0F EXIT GATE: Spared "' + (lead.company_name || 'Unknown') + '" \u2014 scrape blocked, relying on snippet');
                     return true;
                 }
 
                 // RULE 2: Identity override — expanded list
-                // If the company name screams "meal prep", spare it even
-                // with 0 keywords. JS-rendered sites (React/Vue) return
-                // empty HTML to axios, so the scraper finds nothing.
                 var nameLower = (lead.company_name || '').toLowerCase();
                 var IDENTITY_NAMES = [
                     'meal prep', 'meal delivery', 'ready to eat', 'fresh meals',
@@ -269,10 +191,6 @@ function runExitGate(gateType) {
                 }
 
                 // RULE 3: Contextual gate — keywords + rotation + low retail noise
-                // This is the core filter. A lead must have:
-                //   - At least 1 spice keyword (proves food-related content exists)
-                //   - A rotation day (proves weekly production cycle)
-                //   - 1 or fewer retail signals (not a restaurant/retail store)
                 if (kwCount >= 1 && rotationDay && retailCount <= 1) {
                     console.log('     \u2705 EXIT GATE: Passed "' + lead.company_name + '" \u2014 ' + kwCount + ' keywords + rotation "' + rotationDay + '" + ' + retailCount + ' retail signals');
                     return true;
@@ -365,16 +283,27 @@ function runAgent(file, name, desc) {
 }
 
 // ============================================================
-// MAIN PIPELINE
+// MAIN PIPELINE — v3.0 "Open Warehouse"
+//
+// No reservoir. No DORMANT/HUNGRY modes. No POOL_SIZE cap.
+//
+// Flow:
+//   1. Run full discovery (Agents 0 → 2 → 2.5 → 2B → 3 → 5 → 7)
+//   2. Agent 7 writes qualified_leads.json (ALL scored leads)
+//   3. Agent 6 generates emails for all qualified leads
+//   4. Agent 8 pushes ALL leads to Inventory tab (with dedup)
+//   5. Greg reviews Inventory → moves winners to Sheet1
+//   6. Agent 9 → Agent 10 enrolls from Sheet1
 // ============================================================
 
 // STEP 0: Lockfile — kill if another instance is running
 checkAndCreateLock();
 
 console.log('========================================');
-console.log('\uD83C\uDF36\uFE0F  SPICES INC LEAD PIPELINE \u2014 v2.1 Contextual Gate');
+console.log('\uD83C\uDF36\uFE0F  SPICES INC LEAD PIPELINE \u2014 v3.0 Open Warehouse');
 console.log('   ' + new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' ET');
-console.log('   Pool Size: ' + POOL_SIZE + ' candidates \u2192 Agent 10 enrolls ' + SEND_QUOTA);
+console.log('   Mode: ALL leads \u2192 Inventory. Greg decides.');
+console.log('   Agent 10 enrolls first ' + SEND_QUOTA + ' from Sheet1');
 console.log('========================================\n');
 
 // Initialize rejection log
@@ -383,142 +312,86 @@ initRejectionLog();
 // Clear bouncer audit trail from previous run (fresh daily report)
 try { fs.unlinkSync(path.join(__dirname, 'bouncer_rejected_leads.json')); } catch(e) {}
 
-// STEP 1: Check the reservoir
-var reservoir = loadReservoir();
-var reservoirCount = reservoir.length;
-var isDormant = reservoirCount >= RESERVOIR_CAP;
+// ============================================================
+// FULL DISCOVERY PIPELINE
+// No modes. No reservoir check. Just find, enrich, score, push.
+// ============================================================
+console.log('\uD83D\uDD25 Running full discovery pipeline...\n');
 
-console.log('\uD83D\uDCE6 RESERVOIR STATUS: ' + reservoirCount + '/' + RESERVOIR_CAP + ' leads in stock');
+var pipelineFailed = false;
 
-if (isDormant) {
-    // ============================================================
-    // DORMANT MODE
-    // Reservoir is full (≥20). Skip all discovery agents.
-    // Pull top 8 from inventory. Zero API spend today.
-    // ============================================================
-    console.log('\uD83D\uDE34 MODE: DORMANT \u2014 Reservoir is full. Skipping discovery.\n');
-    console.log('   \u2192 No SerpAPI, Google Places, LinkedIn, or MillionVerifier calls today.');
-    console.log('   \u2192 Pulling top ' + POOL_SIZE + ' candidates from inventory.\n');
+// --- Agent 0: Dispatcher (calls Agent 1 Scout internally) ---
+if (!runAgent('agent0_dispatcher.js', 'Dispatcher', 'Picking regions + running Scout searches')) {
+    console.log('\uD83D\uDED1 CRITICAL: Dispatcher failed \u2014 halting discovery.\n');
+    pipelineFailed = true;
+}
 
-    // Pull top POOL_SIZE (8)
-    var todaysLeads = pullTopLeads(reservoir, POOL_SIZE);
-    saveReservoir(reservoir);
+if (!pipelineFailed) {
+    // --- Agent 2: Geographer ---
+    if (!runAgent('agent2_geographer.js', 'Geographer', 'Getting addresses via Google Places')) {
+        console.log('\uD83D\uDED1 CRITICAL: Geographer failed \u2014 halting discovery.\n');
+        pipelineFailed = true;
+    } else {
+        runExitGate('address');
 
-    console.log('\uD83D\uDCE6 Pulled ' + todaysLeads.length + ' candidates from reservoir (' + reservoir.length + ' remaining)\n');
-    for (var d = 0; d < todaysLeads.length; d++) {
-        console.log('   \u2192 ' + todaysLeads[d].company_name + ' (' + todaysLeads[d].city + ') \u2014 Score: ' + todaysLeads[d].qualification_score);
+        // --- Agent 2.5: Postal Gate ---
+        runAgent('agent2_5_postal_gate.js', 'Postal Gate', 'Killing leads outside shipping zones');
+    }
+}
+
+if (!pipelineFailed) {
+    // --- Agent 2B: Bouncer Recheck (Session 14) ---
+    runAgent('agent2b_bouncer_recheck.js', 'Bouncer Recheck', 'Re-checking company names after Google Places rename');
+
+    // --- Agent 3: Menu Miner ---
+    runAgent('agent3_menu_miner.js', 'Menu Miner', 'Scraping menus for spice keywords');
+    runExitGate('spice');
+
+    // --- Agent 5: Investigator ---
+    runAgent('agent5_investigator.js', 'Investigator', 'Finding contacts via LinkedIn');
+
+    // --- Agent 7: Qualifier ---
+    runAgent('agent7_qualifier.js', 'Qualifier', 'Scoring and filtering leads');
+    logQualifierRejections();
+}
+
+// ============================================================
+// PUSH ALL QUALIFIED LEADS TO INVENTORY
+//
+// Agent 7 wrote qualified_leads.json. Now we:
+//   1. Log how many leads survived for the terminal report
+//   2. Run Agent 6 (Writer) to generate personalized emails
+//   3. Run Agent 8 (Sheets Pusher) to push ALL to Inventory
+//
+// Agent 8 handles dedup internally — if a lead is already
+// on Inventory, it skips it. No leads are hidden from Greg.
+// ============================================================
+var qualifiedLeads = [];
+try {
+    if (fs.existsSync(QUALIFIED_PATH)) {
+        qualifiedLeads = JSON.parse(fs.readFileSync(QUALIFIED_PATH, 'utf8'));
+    }
+} catch (e) {
+    console.log('  \u26A0\uFE0F  Could not read qualified_leads.json: ' + e.message + '\n');
+}
+
+if (qualifiedLeads.length === 0 && !pipelineFailed) {
+    console.log('\u26A0\uFE0F  WARNING: No qualified leads from today\'s search.\n');
+} else if (qualifiedLeads.length > 0) {
+    console.log('\uD83D\uDCE6 QUALIFIED LEADS: ' + qualifiedLeads.length + ' leads ready for Inventory\n');
+    for (var i = 0; i < qualifiedLeads.length; i++) {
+        var lead = qualifiedLeads[i];
+        console.log('   \u2192 ' + lead.company_name + ' (' + (lead.city || '?') + ', ' + (lead.state || '?') + ') \u2014 Score: ' + (lead.qualification_score || 0));
     }
     console.log('');
 
-    // Write to qualified_leads.json so Agent 6 and Agent 8 can read them
-    fs.writeFileSync(QUALIFIED_PATH, JSON.stringify(todaysLeads, null, 2));
-
-    // Run Writer + Sheet Pusher only
+    // Run Writer + Sheet Pusher — they both read qualified_leads.json
     runAgent('agent6_writer_pro.js', 'Writer', 'Generating personalized emails');
-    runAgent('agent8_sheets_pusher.js', 'Sheets Pusher', 'Pushing leads to Google Sheet');
-
-} else {
-    // ============================================================
-    // HUNGRY MODE
-    // Reservoir is below cap. Run full discovery pipeline.
-    // Merge new qualified leads into reservoir.
-    // Pull top 8 for today.
-    // ============================================================
-    var deficit = RESERVOIR_CAP - reservoirCount;
-    console.log('\uD83D\uDD25 MODE: HUNGRY \u2014 Need ' + deficit + ' more leads to fill reservoir.\n');
-    console.log('   \u2192 Running full discovery pipeline.\n');
-
-    var pipelineFailed = false;
-
-    // --- Agent 0: Dispatcher (calls Agent 1 Scout internally) ---
-    if (!runAgent('agent0_dispatcher.js', 'Dispatcher', 'Picking regions + running Scout searches')) {
-        console.log('\uD83D\uDED1 CRITICAL: Dispatcher failed \u2014 halting discovery.\n');
-        pipelineFailed = true;
-    }
-
-    if (!pipelineFailed) {
-        // --- Agent 2: Geographer ---
-        if (!runAgent('agent2_geographer.js', 'Geographer', 'Getting addresses via Google Places')) {
-            console.log('\uD83D\uDED1 CRITICAL: Geographer failed \u2014 halting discovery.\n');
-            pipelineFailed = true;
-        } else {
-            runExitGate('address');
-
-            // --- Agent 2.5: Postal Gate ---
-            runAgent('agent2_5_postal_gate.js', 'Postal Gate', 'Killing leads outside shipping zones');
-        }
-    }
-
-    if (!pipelineFailed) {
-        // --- Agent 2B: Bouncer Recheck (Session 14) ---
-        runAgent('agent2b_bouncer_recheck.js', 'Bouncer Recheck', 'Re-checking company names after Google Places rename');
-
-        // --- Agent 3: Menu Miner ---
-        runAgent('agent3_menu_miner.js', 'Menu Miner', 'Scraping menus for spice keywords');
-        runExitGate('spice');
-
-        // --- Agent 5: Investigator ---
-        runAgent('agent5_investigator.js', 'Investigator', 'Finding contacts via LinkedIn');
-
-        // --- Agent 7: Qualifier ---
-        runAgent('agent7_qualifier.js', 'Qualifier', 'Scoring and filtering leads');
-        logQualifierRejections();
-    }
-
-    // STEP 2: Merge new qualified leads into reservoir
-    console.log('\uD83D\uDCE6 RESERVOIR: Merging new qualified leads into inventory...\n');
-
-    var newQualified = [];
-    try {
-        if (fs.existsSync(QUALIFIED_PATH)) {
-            newQualified = JSON.parse(fs.readFileSync(QUALIFIED_PATH, 'utf8'));
-        }
-    } catch (e) {
-        console.log('  \u26A0\uFE0F  Could not read qualified_leads.json: ' + e.message + '\n');
-    }
-
-    if (newQualified.length > 0) {
-        var added = mergeIntoReservoir(reservoir, newQualified);
-        console.log('     \uD83D\uDCCA Merged: ' + added + ' new leads added to reservoir (' + (newQualified.length - added) + ' duplicates skipped)');
-    } else if (!pipelineFailed) {
-        console.log('     \u26A0\uFE0F  No new qualified leads from today\'s search.');
-    }
-
-    console.log('     \uD83D\uDCE6 Reservoir now: ' + reservoir.length + '/' + RESERVOIR_CAP + '\n');
-
-    // STEP 3: Pull top POOL_SIZE (8) for today
-    var todaysLeads2 = pullTopLeads(reservoir, POOL_SIZE);
-    saveReservoir(reservoir);
-
-    if (todaysLeads2.length === 0) {
-        console.log('\u26A0\uFE0F  WARNING: No leads available \u2014 reservoir empty and search found nothing.\n');
-    } else {
-        console.log('\uD83D\uDCE6 TODAY\'S CANDIDATES: Pulled top ' + todaysLeads2.length + ' from reservoir (' + reservoir.length + ' remaining)\n');
-        for (var h = 0; h < todaysLeads2.length; h++) {
-            console.log('   \u2192 ' + todaysLeads2[h].company_name + ' (' + todaysLeads2[h].city + ') \u2014 Score: ' + todaysLeads2[h].qualification_score);
-        }
-        console.log('');
-
-        if (todaysLeads2.length < POOL_SIZE) {
-            console.log('\u26A0\uFE0F  SHORT POOL: Only ' + todaysLeads2.length + ' candidates available (target pool is ' + POOL_SIZE + '). Reservoir needs restocking.\n');
-        }
-
-        // Write to qualified_leads.json so Agent 6 and Agent 8 can read them
-        fs.writeFileSync(QUALIFIED_PATH, JSON.stringify(todaysLeads2, null, 2));
-
-        // Run Writer + Sheet Pusher
-        // NOTE: Agent 8 now handles Inventory tab sync internally.
-        // No separate inventory_pusher.js call needed.
-        runAgent('agent6_writer_pro.js', 'Writer', 'Generating personalized emails');
-        runAgent('agent8_sheets_pusher.js', 'Sheets Pusher', 'Pushing leads to Google Sheet');
-    }
+    runAgent('agent8_sheets_pusher.js', 'Sheets Pusher', 'Pushing ALL leads to Inventory');
 }
 
 // ============================================================
 // POST-PIPELINE: Push rejections to Google Sheet
-// NOTE (Session 9): inventory_pusher.js call REMOVED here.
-// Agent 8 now handles Inventory tab sync internally during
-// its own run. This eliminates the redundant double-write.
 // ============================================================
 console.log('[Post-Pipeline] Pushing rejection log to Google Sheet...');
 try {
@@ -533,18 +406,21 @@ try {
 // ============================================================
 // FINAL REPORT
 // ============================================================
-var finalReservoir = loadReservoir();
+var disqualifiedCount = 0;
+try {
+    if (fs.existsSync(DISQUALIFIED_PATH)) {
+        disqualifiedCount = JSON.parse(fs.readFileSync(DISQUALIFIED_PATH, 'utf8')).length;
+    }
+} catch (e) {}
+
 console.log('========================================');
-console.log('\uD83C\uDFC1 PIPELINE COMPLETE');
+console.log('\uD83C\uDFC1 PIPELINE COMPLETE \u2014 v3.0 Open Warehouse');
 console.log('========================================');
-console.log('   \uD83D\uDCE6 Reservoir: ' + finalReservoir.length + '/' + RESERVOIR_CAP + ' leads in stock');
-console.log('   \uD83C\uDFAF Pool Size: ' + POOL_SIZE + ' candidates \u2192 Agent 10 enrolls ' + SEND_QUOTA);
-if (finalReservoir.length >= RESERVOIR_CAP) {
-    console.log('   \uD83D\uDE34 Tomorrow: DORMANT mode (zero API spend)');
-} else {
-    console.log('   \uD83D\uDD25 Tomorrow: HUNGRY mode (need ' + (RESERVOIR_CAP - finalReservoir.length) + ' more leads)');
-}
+console.log('   \u2705 Qualified: ' + qualifiedLeads.length + ' leads pushed to Inventory');
+console.log('   \u274C Disqualified: ' + disqualifiedCount + ' leads logged to Rejections');
+console.log('   \uD83D\uDCE7 Agent 10 will enroll first ' + SEND_QUOTA + ' from Sheet1');
 console.log('========================================\n');
 
-console.log('\uD83D\uDCCB Up to ' + POOL_SIZE + ' candidates pushed to Google Sheet \u2014 ready for Greg\'s review');
-console.log('\uD83D\uDC49 Next step: Greg reviews sheet at 5:45 AM, then Agent 9 \u2192 Agent 10 enrolls top ' + SEND_QUOTA + '\n');
+console.log('\uD83D\uDCCB All qualified leads pushed to Inventory \u2014 ready for Greg\'s review');
+console.log('\uD83D\uDC49 Next step: Greg reviews Inventory, moves approved leads to Sheet1');
+console.log('   Then Agent 9 \u2192 Agent 10 enrolls top ' + SEND_QUOTA + '\n');

@@ -1,50 +1,40 @@
 const fs = require('fs');
 
 // ============================================================
-// Agent 7 (Qualifier) — v3.3 "Industry Blacklist + Bottle Bonus"
+// Agent 7 (Qualifier) — v3.4 "Score, Don't Kill"
 //
-// WHAT CHANGED FROM v3.2 (Session 17 — "Blacklist"):
+// WHAT CHANGED FROM v3.3 (Session 19 — "Open Warehouse"):
 //
-// 1. INDUSTRY BLACKLIST (HARD KILL):
-//    Non-food businesses were scoring 90+ because they had
-//    Monday rotations + spice keywords + 1-day transit.
-//    THE ARCHETYPE: A travel agency that scored 90.
+// THE PROBLEM:
+//   Agent 7 was splitting leads into qualified_leads.json and
+//   disqualified_leads.json. Only qualified_leads.json reached
+//   Agent 8 → Inventory. Greg never saw the disqualified leads.
+//   This violated Rule 1: "All leads go to Inventory. Greg decides."
 //
-//    The blacklist runs FIRST — before scoring, before Identity
-//    Bypass, before everything. If your company name or domain
-//    contains a blacklisted industry term, you're dead. Period.
+// THE FIX:
+//   Agent 7 now SCORES but does NOT KILL (with one exception).
+//   Every lead that is not blacklisted goes to qualified_leads.json.
+//   Greg sees the score on the Inventory tab and makes the call.
 //
-//    Uses WORD-BOUNDARY matching (regex \b), not substring:
-//      "Day Spa"          → "spa" matches    → KILLED (correct)
-//      "Spanish Kitchen"  → "spa" no match   → SAFE  (correct)
-//      "Lawson's Meals"   → "law" no match   → SAFE  (correct)
-//      "Law Firm LLC"     → "law" matches    → KILLED (correct)
-//
-//    34 blacklisted terms. No bypass. No rescue. No override.
-//
-// 2. BOTTLE.COM SOURCE BONUS (+15 pts):
-//    Leads sourced from Bottle.com are pre-validated meal prep
-//    infrastructure companies. They get +15 points in scoring
-//    to float them to the top of Greg's review sheet.
-//    (Bottle.com was already in Identity Bypass — this adds a
-//    separate scoring reward on top of that.)
-//
-// 3. BLACKLIST AUDIT FILE:
-//    Blacklisted leads are written to blacklisted_leads.json
-//    so Greg can audit for false positives during the first
-//    few runs after the broad search rebuild.
-//
-// UNCHANGED FROM v3.2:
-//   - Identity Bypass (19 meal-prep name patterns + bottle.com)
-//   - LinkedIn Sniper routing (real name + broken email)
-//   - Retail Brand Penalty (-25 / -50)
-//   - Kitchen Forward Bonus (+10 / +15)
-//   - Identity Anchor Bonus (+15 / +25)
-//   - Catering/Restaurant Penalty (-20 / -30)
-//   - Universal Lifeline (catch-all rescue)
-//   - Generic Name Guard
+// WHAT'S KEPT:
+//   - Industry Blacklist (hard kill) — non-food businesses are
+//     genuinely garbage. Travel agencies, gyms, law firms, etc.
+//     Greg agreed. These do NOT reach Inventory.
+//   - ALL scoring logic (geography, spice, rotation, contact,
+//     bottle bonus, retail penalty, kitchen bonus, etc.)
 //   - Strike level + Track A/B routing
-//   - All file I/O (leads_master, qualified, disqualified, linkedin_sniper)
+//   - LinkedIn Sniper flagging
+//   - Identity Bypass flagging
+//
+// WHAT'S REMOVED:
+//   - Score < 60 threshold kill → now just a flag
+//   - "No verified contact name" hard kill → now just a flag
+//   - "No address found" hard kill → now just a flag
+//   - LinkedIn Sniper leads now go to BOTH sniper tab AND
+//     qualified_leads.json (so they appear on Inventory)
+//
+// THE RULE:
+//   Blacklist kills. Everything else, Greg decides.
 //
 // SCORING MODEL (max theoretical = 130):
 //   Geography:       40 pts (1-day=40, 2-day=30, 3-day=20)
@@ -67,20 +57,7 @@ var GENERIC_EMAIL_PROVIDERS = [
 // INDUSTRY BLACKLIST — Session 17 "The Bouncer"
 //
 // 34 terms. Word-boundary matching. No exceptions.
-// If the company name or domain contains one of these terms
-// as a standalone word, the lead is killed before scoring.
-//
-// WHY THESE TERMS:
-//   - agency/travel/fitness/gym/crossfit/yoga: The original
-//     false positives that triggered this rebuild
-//   - cannabis/dispensary: Legal but not our ICP
-//   - marketing/software/consulting/coaching: Service businesses
-//   - boutique/salon/spa/studio: Personal care / retail
-//   - realty/realtor/insurance: Finance / property
-//   - church/school/university/college: Institutions
-//   - hospital/clinic/dental/veterinary: Healthcare
-//   - plumbing/electric/construction/roofing/landscaping: Trades
-//   - cleaning/daycare/accounting/tax: Other non-food services
+// This is the ONLY hard kill in Agent 7 v3.4.
 // ============================================================
 var INDUSTRY_BLACKLIST = [
   'agency', 'travel', 'fitness', 'gym', 'crossfit', 'yoga',
@@ -92,23 +69,10 @@ var INDUSTRY_BLACKLIST = [
   'landscaping', 'cleaning', 'daycare', 'accounting', 'tax'
 ];
 
-// Pre-compile regex patterns once at startup for performance
 var BLACKLIST_PATTERNS = INDUSTRY_BLACKLIST.map(function(term) {
   return { term: term, regex: new RegExp('\\b' + term + '\\b', 'i') };
 });
 
-// ============================================================
-// isBlacklisted()
-//
-// Checks company_name and domain against the industry blacklist
-// using word-boundary matching.
-//
-// Returns: { blacklisted: true/false, term: string, matched_in: string }
-//
-// IMPORTANT: This function does NOT check any bypass lists.
-// The blacklist is absolute. "Fitness Meal Prep" is killed
-// even though "meal prep" is in the Identity Bypass list.
-// ============================================================
 function isBlacklisted(lead) {
   var name = (lead.company_name || '');
   var domain = (lead.domain || '');
@@ -183,32 +147,16 @@ function hasWorkingEmail(lead) {
 
 // ============================================================
 // LINKEDIN SNIPER CHECK — Session 16
-//
-// A lead qualifies for LinkedIn Sniper if:
-//   1. We found a real person's name (not alias, not generic)
-//   2. The name came from LinkedIn
-//   3. The email is broken (not_found, dns_error, no_code, etc.)
-//   4. The lead has a valid address (transit_days exists)
-//
-// These leads are too valuable to kill but too broken to email.
-// Greg or a VA does manual LinkedIn outreach instead.
 // ============================================================
 function qualifiesForLinkedInSniper(lead) {
   var hasRealName = isRealPersonName(lead.contact_name, lead.company_name);
   if (!hasRealName) return false;
-  // Source check REMOVED — Session 16 fix.
-  // Agent 5 resets discovery_source to "none" when all emails fail,
-  // even if the name was found via LinkedIn. We care about the NAME,
-  // not how it was found.
 
-  // Email must be broken or missing
   var emailStatus = (lead.email_status || 'not_found').toLowerCase();
   var brokenStatuses = ['not_found', 'dns_error', 'no_domain', 'no_code_in_helo_response', 'invalid', 'unknown'];
   var emailIsBroken = brokenStatuses.indexOf(emailStatus) !== -1 || !lead.contact_email;
 
   if (!emailIsBroken) return false;
-
-  // Must have a valid address
   if (!lead.transit_days) return false;
 
   return true;
@@ -278,14 +226,7 @@ function qualifyLead(lead) {
 
   // ============================================================
   // INDUSTRY BLACKLIST — RUNS FIRST
-  //
-  // No bypass. No rescue. No Identity Override.
-  // If the company name or domain contains a blacklisted
-  // industry term (word-boundary matched), the lead is dead.
-  //
-  // "The Bouncer stands outside the club. If you have 'Agency'
-  //  or 'Spa' on your ID, we don't care if you're wearing a
-  //  'Meal Prep' t-shirt. You're out." — Greg, Session 17
+  // The ONLY hard kill in v3.4. Non-food businesses are dead.
   // ============================================================
   var blacklistCheck = isBlacklisted(lead);
   if (blacklistCheck.blacklisted) {
@@ -303,6 +244,7 @@ function qualifyLead(lead) {
 
   var score = 0;
   var penalties = [];
+  var flags = [];
 
   // Geography (40 points)
   if (lead.transit_days === 1) score += 40;
@@ -330,18 +272,12 @@ function qualifyLead(lead) {
     } else {
       score += 15;
     }
+  } else if (!hasRealPerson && !isAlias) {
+    flags.push('NO_CONTACT_NAME');
   }
 
   // ============================================================
   // BOTTLE.COM SOURCE BONUS — Session 17 (+15 pts)
-  //
-  // Leads discovered via Bottle.com are pre-validated meal prep
-  // infrastructure companies ("Infrastructure Whales"). They
-  // get a scoring bonus to float to the top of Greg's sheet.
-  //
-  // This is SEPARATE from the Identity Bypass (which gives a
-  // pass/fail gate). This is a scoring reward that makes
-  // Bottle.com leads rank higher among all qualified leads.
   // ============================================================
   if (lead.source_bottle === true) {
     score += 15;
@@ -411,6 +347,7 @@ function qualifyLead(lead) {
   if (emailStatus === 'not_found' || emailStatus === 'no_domain') {
     score += -100;
     penalties.push('no_email');
+    flags.push('NO_EMAIL');
   } else if (emailImpact) {
     if (qualifiesForLifeline(lead)) {
       score += -5;
@@ -456,65 +393,68 @@ function qualifyLead(lead) {
   lead.sequence_track = sequenceTrack;
 
   // ============================================================
-  // LINKEDIN SNIPER CHECK — before hard disqualifiers
+  // LINKEDIN SNIPER FLAG — v3.4
   //
-  // If the lead has a real person from LinkedIn but broken email,
-  // route to LinkedIn Sniper instead of killing it.
-  // This check runs BEFORE the "no contact name" and "no email"
-  // hard kills so the lead gets rescued.
+  // In v3.3, sniper leads were routed AWAY from Inventory.
+  // In v3.4, they go to BOTH the Sniper tab AND Inventory.
+  // Greg sees them everywhere. The flag is informational.
   // ============================================================
+  var isSniper = false;
+  var sniperScore = 0;
   if (qualifiesForLinkedInSniper(lead)) {
     penalties.push('LINKEDIN_SNIPER(name_from_linkedin_no_email)');
     lead.linkedin_sniper = true;
-    // Calculate score WITHOUT the email penalty for the sniper tab
-    // so Greg sees the lead's actual potential
-    var sniperScore = score + 100; // undo the -100 no_email penalty
+    isSniper = true;
+    sniperScore = score + 100; // undo the -100 no_email penalty
     sniperScore = Math.max(sniperScore, 0);
-    return { qualified: false, score: Math.max(score, 0), sniperScore: sniperScore, reason: "LinkedIn Sniper — no email", penalties: penalties, sniper: true };
   }
 
-  // Hard disqualifier: No verified contact name AND no alias
-  if (!hasRealPerson && !isAlias) {
-    return { qualified: false, score: Math.max(score, 0), reason: "No verified contact name", penalties: penalties };
-  }
-
-  // Hard disqualifier: No address found
-  if (!lead.transit_days) {
-    return { qualified: false, score: Math.max(score, 0), reason: "No address found", penalties: penalties };
+  // ============================================================
+  // IDENTITY BYPASS FLAG — still tracked for visibility
+  // ============================================================
+  var bypassCheck = matchesIdentityBypass(lead);
+  if (bypassCheck.matched) {
+    penalties.push('IDENTITY_BYPASS(' + bypassCheck.reason + ')');
+    lead.identity_bypass = true;
   }
 
   // Floor score at 0
   score = Math.max(score, 0);
 
   // ============================================================
-  // IDENTITY BYPASS — Session 16 "Floodgate"
+  // TIER ASSIGNMENT — for sorting, not for killing
+  //
+  // v3.3 used tiers as gates (score < 60 = killed).
+  // v3.4 uses tiers as labels only. Greg sees the tier
+  // on the Inventory tab and decides.
   // ============================================================
-  var bypassCheck = matchesIdentityBypass(lead);
-  if (bypassCheck.matched && hasWorkingEmail(lead)) {
-    penalties.push('IDENTITY_BYPASS(' + bypassCheck.reason + ')');
-    lead.identity_bypass = true;
-    return { qualified: true, score: score, tier: score >= 85 ? "gold" : score >= 60 ? "silver" : "bypass", penalties: penalties };
-  }
+  var tier = 'review';
+  if (score >= 85) tier = 'gold';
+  else if (score >= 60) tier = 'silver';
+  else if (score >= 30) tier = 'bronze';
+  // below 30 stays 'review'
 
-  // ============================================================
-  // THRESHOLD: 60
-  // ============================================================
-  if (score < 60) {
-    return { qualified: false, score: score, reason: "Score too low: " + score + "/100", penalties: penalties };
-  }
-
-  return { qualified: true, score: score, tier: score >= 85 ? "gold" : "silver", penalties: penalties };
+  return {
+    qualified: true,
+    score: score,
+    tier: tier,
+    penalties: penalties,
+    flags: flags,
+    sniper: isSniper,
+    sniperScore: isSniper ? sniperScore : undefined
+  };
 }
 
 async function run() {
-  console.log("\n🎯 Agent 7 v3.3: Qualifying leads (Blacklist + Bottle Bonus + LinkedIn Sniper + Identity Bypass + Retail Trap active)...");
+  console.log("\n🎯 Agent 7 v3.4: Scoring leads (Blacklist + Bottle Bonus + LinkedIn Sniper + Identity Bypass + Retail Trap active)...");
+  console.log("   ℹ️  v3.4 Rule: Blacklist kills. Everything else → Inventory. Greg decides.\n");
 
   var leads = JSON.parse(fs.readFileSync('leads_master.json', 'utf8'));
   var qualified = [];
-  var disqualified = [];
   var sniperLeads = [];
   var blacklistedLeads = [];
   var bypassed = 0;
+  var flaggedCount = 0;
 
   leads.forEach(function(lead, i) {
     var result = qualifyLead(lead);
@@ -529,6 +469,7 @@ async function run() {
     var trackLabel = lead.sequence_track ? ' [Track ' + lead.sequence_track + ']' : '';
     var strikeLabel = lead.strike_level ? ' (Strike ' + lead.strike_level + ')' : '';
     var penaltyLabel = result.penalties && result.penalties.length > 0 ? ' ⚠️ ' + result.penalties.join(', ') : '';
+    var flagLabel = result.flags && result.flags.length > 0 ? ' 🏴 ' + result.flags.join(', ') : '';
 
     var retailCount = (lead.retail_brand_signals || []).length;
     var kitchenCount = (lead.kitchen_forward_signals || []).length;
@@ -537,40 +478,48 @@ async function run() {
     if (kitchenCount > 0) signalLabel += ' 🟢 ' + kitchenCount + ' kitchen';
 
     if (lead.identity_bypass) bypassed++;
+    if (result.flags && result.flags.length > 0) flaggedCount++;
 
     // ============================================================
-    // BLACKLISTED — Session 17
-    // Hard-killed by industry blacklist. Logged for audit.
+    // BLACKLISTED — Hard kill. Does NOT reach Inventory.
     // ============================================================
     if (result.blacklisted) {
       blacklistedLeads.push(lead);
       console.log('  🚫 #' + (i+1) + ': ' + lead.company_name + ' - BLACKLISTED ("' + lead.blacklist_term + '" in ' + lead.blacklist_matched_in + ')');
       console.log('         ' + (lead.domain || 'no domain') + ' | ' + (lead.city || '?') + ', ' + (lead.state || '?'));
+
+    // ============================================================
+    // SNIPER — Goes to BOTH Inventory AND Sniper tab
+    // ============================================================
     } else if (result.sniper) {
       sniperLeads.push(lead);
-      console.log('  🎯 #' + (i+1) + ': ' + lead.company_name + ' - LINKEDIN SNIPER (potential: ' + result.sniperScore + '/100)' + strikeLabel + signalLabel + penaltyLabel);
-      console.log('         ' + lead.contact_name + ' [' + (lead.contact_title || 'no title') + '] — ' + (lead.domain || 'no domain') + ' [' + (lead.discovery_source || 'unknown') + ']');
-    } else if (result.qualified) {
       qualified.push(lead);
       var bypassTag = lead.identity_bypass ? ' 🔓 BYPASS' : '';
-      console.log('  ✅ #' + (i+1) + ': ' + lead.company_name + ' - QUALIFIED (' + result.score + '/100, ' + result.tier + ')' + trackLabel + strikeLabel + bypassTag + signalLabel + penaltyLabel);
-      console.log('         ' + lead.contact_name + ' <' + (lead.contact_email || 'no email') + '> [' + (lead.discovery_source || 'unknown') + ']');
+      console.log('  🎯 #' + (i+1) + ': ' + lead.company_name + ' - SNIPER+INVENTORY (' + result.score + '/100, ' + result.tier + ', sniper potential: ' + result.sniperScore + ')' + trackLabel + strikeLabel + bypassTag + signalLabel + flagLabel + penaltyLabel);
+      console.log('         ' + lead.contact_name + ' [' + (lead.contact_title || 'no title') + '] — ' + (lead.domain || 'no domain') + ' [' + (lead.discovery_source || 'unknown') + ']');
+
+    // ============================================================
+    // EVERYTHING ELSE — Goes to Inventory. Greg decides.
+    // ============================================================
     } else {
-      disqualified.push(lead);
-      console.log('  ❌ #' + (i+1) + ': ' + lead.company_name + ' - ' + result.reason + strikeLabel + signalLabel + penaltyLabel);
-      console.log('         ' + (lead.contact_name || 'no name') + ' <' + (lead.contact_email || 'no email') + '> [' + (lead.discovery_source || 'unknown') + ']');
+      qualified.push(lead);
+      var bypassTag2 = lead.identity_bypass ? ' 🔓 BYPASS' : '';
+      console.log('  ✅ #' + (i+1) + ': ' + lead.company_name + ' - SCORED (' + result.score + '/100, ' + result.tier + ')' + trackLabel + strikeLabel + bypassTag2 + signalLabel + flagLabel + penaltyLabel);
+      console.log('         ' + (lead.contact_name || 'NO NAME') + ' <' + (lead.contact_email || 'no email') + '> [' + (lead.discovery_source || 'unknown') + ']');
     }
   });
 
+  // Write files
   fs.writeFileSync('leads_master.json', JSON.stringify(leads, null, 2));
   fs.writeFileSync('qualified_leads.json', JSON.stringify(qualified, null, 2));
-  fs.writeFileSync('disqualified_leads.json', JSON.stringify(disqualified, null, 2));
+  fs.writeFileSync('disqualified_leads.json', JSON.stringify(blacklistedLeads, null, 2));
   fs.writeFileSync('linkedin_sniper_leads.json', JSON.stringify(sniperLeads, null, 2));
   fs.writeFileSync('blacklisted_leads.json', JSON.stringify(blacklistedLeads, null, 2));
 
-  console.log('\n📊 SUMMARY: ✅ ' + qualified.length + ' qualified | 🎯 ' + sniperLeads.length + ' sniper | 🚫 ' + blacklistedLeads.length + ' blacklisted | ❌ ' + disqualified.length + ' disqualified');
+  console.log('\n📊 SUMMARY: ✅ ' + qualified.length + ' → Inventory | 🎯 ' + sniperLeads.length + ' sniper (also on Inventory) | 🚫 ' + blacklistedLeads.length + ' blacklisted (killed)');
   if (bypassed > 0) console.log('   🔓 Identity Bypass: ' + bypassed + ' (machine deferred to Greg)');
-  if (sniperLeads.length > 0) console.log('   🎯 LinkedIn Sniper: ' + sniperLeads.length + ' (manual LinkedIn outreach)');
+  if (flaggedCount > 0) console.log('   🏴 Flagged: ' + flaggedCount + ' (no email or no contact — Greg reviews)');
+  if (sniperLeads.length > 0) console.log('   🎯 LinkedIn Sniper: ' + sniperLeads.length + ' (manual LinkedIn outreach + on Inventory)');
   if (blacklistedLeads.length > 0) console.log('   🚫 Blacklisted: ' + blacklistedLeads.length + ' (audit file: blacklisted_leads.json)');
   console.log('   Track A (Direct): ' + qualified.filter(function(l) { return l.sequence_track === 'A'; }).length);
   console.log('   Track B (Alias):  ' + qualified.filter(function(l) { return l.sequence_track === 'B'; }).length + '\n');
