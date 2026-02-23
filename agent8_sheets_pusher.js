@@ -13,80 +13,79 @@ const sheets = google.sheets({ version: 'v4', auth });
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
 
 // ============================================================
-// AGENT 8 — v3.0 "Greg-Standard Rebuild"
+// AGENT 8 — v4.0 "Bottle Flag Migration"
 //
-// WHAT THIS VERSION DOES:
-//   - Appends qualified leads to Inventory (append-only, never clear)
-//   - Appends sniper leads to LinkedIn Sniper tab (append-only)
-//   - Appends rejections to Rejections tab (append-only)
-//   - Checks and fixes headers on History and Manual Review tabs
-//   - NEVER touches Sheet1 (Greg's manual staging area)
+// WHAT CHANGED FROM v3.0 (Session 25):
 //
-// WHAT WAS REMOVED:
-//   - archiveAndClearSheet1() — deleted entirely
-//   - syncReservoirToInventory() — dead concept, deleted
-//   - Any clear() calls on Inventory, History, or Manual Review
+//   BOTTLE FLAG added as column G (index 6).
+//   All columns from old G onward shift right by one.
+//   Greg-Standard is now 26 columns (A:Z), not 25 (A:Y).
 //
-// GREG-STANDARD COLUMN ORDER (25 columns, A:Y — IMMUTABLE):
-//   A: Date Added       N: Spice Keywords
-//   B: Company          O: Tier
-//   C: City             P: Contact
-//   D: State            Q: Title
-//   E: URL              R: Email
-//   F: Tech Flag        S: Email Status
-//   G: Discovery Source T: Strike
-//   H: Score            U: Sequence Track
-//   I: Days to Delivery V: Apollo Status
-//   J: Transit Text     W: Status (Greg writes "Nix")
-//   K: Rotation Day     X: Confidence
-//   L: Rotation Line    Y: LinkedIn Caution
-//   M: Blend Hook
+//   This is a SCHEMA MIGRATION. Every index from [6] onward
+//   is +1 compared to v3.0. All range references changed
+//   from A:Y to A:Z.
 //
-// FLOW:
-//   4:15 AM → Pipeline runs → Agent 8:
-//     STEP 1: Append today's qualified leads to Inventory
-//     STEP 2: Sync LinkedIn Sniper tab (append-only)
-//     STEP 3: Sync Rejections tab (append-only)
-//     STEP 4: Guardian check on History and Manual Review headers
-//   5:45 AM → Greg reviews Inventory, moves approved to Sheet1
-//   8:00 AM → Agent 9 reads Sheet1 → Agent 10 pushes to Apollo
+// GREG-STANDARD COLUMN ORDER (26 columns, A:Z):
+//   A[0]:  Date Added       O[14]: Spice Keywords
+//   B[1]:  Company          P[15]: Tier
+//   C[2]:  City             Q[16]: Contact
+//   D[3]:  State            R[17]: Title
+//   E[4]:  URL              S[18]: Email
+//   F[5]:  Tech Flag        T[19]: Email Status
+//   G[6]:  Bottle Flag      U[20]: Strike
+//   H[7]:  Discovery Source V[21]: Sequence Track
+//   I[8]:  Score            W[22]: Apollo Status
+//   J[9]:  Days to Delivery X[23]: Status (Greg: Nix)
+//   K[10]: Transit Text     Y[24]: Confidence
+//   L[11]: Rotation Day     Z[25]: LinkedIn Caution
+//   M[12]: Rotation Line
+//   N[13]: Blend Hook
+//
+// UNCHANGED:
+//   - Append-only logic (never clears sheets)
+//   - Dedup by company name
+//   - LinkedIn Sniper tab (own 13-column format, untouched)
+//   - Rejections tab
+//   - Header guardian on History and Manual Review
+//   - NEVER touches Sheet1
 // ============================================================
 
 const SNIPER_PATH = path.join(__dirname, 'linkedin_sniper_leads.json');
 
 // ============================================================
-// GREG-STANDARD HEADERS — 25 columns (A:Y) — IMMUTABLE
+// GREG-STANDARD HEADERS — 26 columns (A:Z)
 // ============================================================
 const GREG_STANDARD_HEADERS = [
-    'Date Added',           // A
-    'Company',              // B
-    'City',                 // C
-    'State',                // D
-    'URL',                  // E
-    'Tech Flag',            // F
-    'Discovery Source',     // G
-    'Score',                // H
-    'Days to Delivery',     // I
-    'Transit Text',         // J
-    'Rotation Day',         // K
-    'Rotation Line',        // L
-    'Blend Hook',           // M
-    'Spice Keywords',       // N
-    'Tier',                 // O
-    'Contact',              // P
-    'Title',                // Q
-    'Email',                // R
-    'Email Status',         // S
-    'Strike',               // T
-    'Sequence Track',       // U
-    'Apollo Status',        // V
-    'Status',               // W  (Greg writes "Nix" here to reject)
-    'Confidence',           // X
-    'LinkedIn Caution'      // Y
+    'Date Added',           // A  [0]
+    'Company',              // B  [1]
+    'City',                 // C  [2]
+    'State',                // D  [3]
+    'URL',                  // E  [4]
+    'Tech Flag',            // F  [5]
+    'Bottle Flag',          // G  [6]  ← NEW
+    'Discovery Source',     // H  [7]
+    'Score',                // I  [8]
+    'Days to Delivery',     // J  [9]
+    'Transit Text',         // K  [10]
+    'Rotation Day',         // L  [11]
+    'Rotation Line',        // M  [12]
+    'Blend Hook',           // N  [13]
+    'Spice Keywords',       // O  [14]
+    'Tier',                 // P  [15]
+    'Contact',              // Q  [16]
+    'Title',                // R  [17]
+    'Email',                // S  [18]
+    'Email Status',         // T  [19]
+    'Strike',               // U  [20]
+    'Sequence Track',       // V  [21]
+    'Apollo Status',        // W  [22]
+    'Status',               // X  [23]  (Greg writes "Nix" here)
+    'Confidence',           // Y  [24]
+    'LinkedIn Caution'      // Z  [25]
 ];
 
 // ============================================================
-// LINKEDIN SNIPER TAB HEADERS — 13 columns
+// LINKEDIN SNIPER TAB HEADERS — 13 columns (unchanged)
 // ============================================================
 const SNIPER_HEADERS = [
     'Date Added',       // A
@@ -184,42 +183,41 @@ function getLeadUrl(lead) {
 }
 
 // ============================================================
-// BUILD ROW — Greg-Standard 25-column order (A:Y)
+// BUILD ROW — Greg-Standard 26-column order (A:Z)
 // ============================================================
 function buildLeadRow(lead) {
     return [
-        getToday(),                                          // A — Date Added
-        cleanCompanyName(lead.company_name),                 // B — Company
-        lead.city || '',                                     // C — City
-        lead.state || '',                                    // D — State
-        getLeadUrl(lead),                                    // E — URL
-        lead.tech_flag || '',                                // F — Tech Flag
-        getDiscoveryLabel(lead.discovery_source),            // G — Discovery Source
-        lead.qualification_score || '',                      // H — Score
-        lead.transit_days || '',                             // I — Days to Delivery
-        getTransitText(lead.transit_days),                   // J — Transit Text
-        lead.rotation_day || '',                             // K — Rotation Day
-        getRotationLine(lead.rotation_day),                  // L — Rotation Line
-        getBlendHook(lead.custom_blend_signals),             // M — Blend Hook
-        (lead.spice_keywords_found || []).join(', '),        // N — Spice Keywords
-        lead.tier ? lead.tier.toUpperCase() : '',            // O — Tier
-        lead.contact_name || '',                             // P — Contact
-        lead.contact_title || '',                            // Q — Title
-        lead.contact_email || '',                            // R — Email
-        lead.email_status || '',                             // S — Email Status
-        lead.strike_level || '',                             // T — Strike
-        getTrackLabel(lead),                                 // U — Sequence Track
-        '',                                                  // V — Apollo Status
-        '',                                                  // W — Status (Greg writes "Nix")
-        getConfidenceLabel(lead.contact_confidence),         // X — Confidence
-        lead.linkedin_caution ? '⚠️ STALE' : ''            // Y — LinkedIn Caution
+        getToday(),                                          // A  [0]  — Date Added
+        cleanCompanyName(lead.company_name),                 // B  [1]  — Company
+        lead.city || '',                                     // C  [2]  — City
+        lead.state || '',                                    // D  [3]  — State
+        getLeadUrl(lead),                                    // E  [4]  — URL
+        lead.tech_flag || '',                                // F  [5]  — Tech Flag
+        lead.source_bottle ? 'YES' : '',                     // G  [6]  — Bottle Flag ← NEW
+        getDiscoveryLabel(lead.discovery_source),            // H  [7]  — Discovery Source
+        lead.qualification_score || '',                      // I  [8]  — Score
+        lead.transit_days || '',                             // J  [9]  — Days to Delivery
+        getTransitText(lead.transit_days),                   // K  [10] — Transit Text
+        lead.rotation_day || '',                             // L  [11] — Rotation Day
+        getRotationLine(lead.rotation_day),                  // M  [12] — Rotation Line
+        getBlendHook(lead.custom_blend_signals),             // N  [13] — Blend Hook
+        (lead.spice_keywords_found || []).join(', '),        // O  [14] — Spice Keywords
+        lead.tier ? lead.tier.toUpperCase() : '',            // P  [15] — Tier
+        lead.contact_name || '',                             // Q  [16] — Contact
+        lead.contact_title || '',                            // R  [17] — Title
+        lead.contact_email || '',                            // S  [18] — Email
+        lead.email_status || '',                             // T  [19] — Email Status
+        lead.strike_level || '',                             // U  [20] — Strike
+        getTrackLabel(lead),                                 // V  [21] — Sequence Track
+        '',                                                  // W  [22] — Apollo Status
+        '',                                                  // X  [23] — Status (Greg writes "Nix")
+        getConfidenceLabel(lead.contact_confidence),         // Y  [24] — Confidence
+        lead.linkedin_caution ? '⚠️ STALE' : ''            // Z  [25] — LinkedIn Caution
     ];
 }
 
 // ============================================================
 // READ INVENTORY FOR DEDUP
-// Returns existing rows and a Set of company names already present.
-// Also fixes headers if wrong — never touches data rows.
 // ============================================================
 async function readInventoryForDedup() {
     let existingRows = [];
@@ -228,14 +226,14 @@ async function readInventoryForDedup() {
     try {
         const existing = await sheets.spreadsheets.values.get({
             spreadsheetId: SHEET_ID,
-            range: 'Inventory!A1:Y5000'
+            range: 'Inventory!A1:Z5000'
         });
         const allRows = existing.data.values || [];
 
         if (allRows.length === 0) {
             needsHeaderUpdate = true;
-        } else if (allRows[0][0] === 'Date Added' && allRows[0][4] === 'URL') {
-            // Correct Greg-Standard format — header row 1 is good
+        } else if (allRows[0][0] === 'Date Added' && allRows[0][6] === 'Bottle Flag') {
+            // Correct v4.0 Greg-Standard format
             existingRows = allRows.slice(1);
         } else {
             // Headers are wrong or old format — fix row 1, keep all data rows
@@ -253,7 +251,7 @@ async function readInventoryForDedup() {
             valueInputOption: 'RAW',
             resource: { values: [GREG_STANDARD_HEADERS] }
         });
-        console.log('  📝 Updated Inventory headers to Greg-Standard (A:Y)');
+        console.log('  📝 Updated Inventory headers to Greg-Standard v4.0 (A:Z, 26 columns)');
     }
 
     // Build dedup set from company names (column B = index 1)
@@ -268,9 +266,7 @@ async function readInventoryForDedup() {
 }
 
 // ============================================================
-// HEADER GUARDIAN
-// Checks History and Manual Review tabs.
-// Fixes row 1 if wrong. Never touches data rows.
+// HEADER GUARDIAN — checks History and Manual Review
 // ============================================================
 async function guardHeaders() {
     const tabs = ['History', 'Manual Review'];
@@ -279,10 +275,10 @@ async function guardHeaders() {
         try {
             const result = await sheets.spreadsheets.values.get({
                 spreadsheetId: SHEET_ID,
-                range: `${tab}!A1:Y1`
+                range: `${tab}!A1:Z1`
             });
             const row1 = (result.data.values || [])[0] || [];
-            const isCorrect = row1[0] === 'Date Added' && row1[4] === 'URL';
+            const isCorrect = row1[0] === 'Date Added' && row1[6] === 'Bottle Flag';
 
             if (!isCorrect) {
                 await sheets.spreadsheets.values.update({
@@ -291,9 +287,9 @@ async function guardHeaders() {
                     valueInputOption: 'RAW',
                     resource: { values: [GREG_STANDARD_HEADERS] }
                 });
-                console.log(`  📝 Fixed headers on ${tab} tab (data rows untouched)`);
+                console.log(`  📝 Fixed headers on ${tab} tab to v4.0 (data rows untouched)`);
             } else {
-                console.log(`  ✅ ${tab} tab headers are correct`);
+                console.log(`  ✅ ${tab} tab headers are correct (v4.0)`);
             }
         } catch (err) {
             if (err.message && err.message.includes('Unable to parse range')) {
@@ -309,7 +305,7 @@ async function guardHeaders() {
 // STEP 1: Push today's qualified leads → INVENTORY (append-only)
 // ============================================================
 async function pushNewLeadsToInventory() {
-    console.log('\n📊 Agent 8 v3.0: Pushing qualified leads to Inventory...\n');
+    console.log('\n📊 Agent 8 v4.0: Pushing qualified leads to Inventory...\n');
 
     let leads = [];
     try {
@@ -359,8 +355,9 @@ async function pushNewLeadsToInventory() {
 
         console.log(`  ✅ Appended ${newRows.length} leads to Inventory (${existingRows.length} already there)`);
         for (const row of newRows) {
-            const track = (row[20] || '').indexOf('A') === 0 ? 'Track A' : 'Track B';
-            console.log(`     📦 ${row[1]} (${row[2]}, ${row[3]}) — Score: ${row[7]} — ${track} — ${row[17] || 'NO EMAIL'} — ${row[5] || 'GOOGLE'}`);
+            const track = (row[21] || '').indexOf('A') === 0 ? 'Track A' : 'Track B';
+            const bottle = row[6] ? ' 🍾 BOTTLE' : '';
+            console.log(`     📦 ${row[1]} (${row[2]}, ${row[3]}) — Score: ${row[8]} — ${track} — ${row[18] || 'NO EMAIL'} — ${row[5] || 'GOOGLE'}${bottle}`);
         }
         console.log('');
 
@@ -375,7 +372,7 @@ async function pushNewLeadsToInventory() {
 }
 
 // ============================================================
-// STEP 2: Sync LinkedIn Sniper tab (append-only)
+// STEP 2: Sync LinkedIn Sniper tab (append-only, own format)
 // ============================================================
 async function syncSniperTab() {
     console.log('🎯 Syncing LinkedIn Sniper tab...\n');
@@ -542,7 +539,7 @@ async function run() {
     await syncRejectionsTab();
     console.log('\n🛡️  Running header guardian on History and Manual Review...\n');
     await guardHeaders();
-    console.log('\n✅ Agent 8 v3.0 complete.\n');
+    console.log('\n✅ Agent 8 v4.0 complete.\n');
 }
 
 if (require.main === module) {

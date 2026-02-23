@@ -3,29 +3,34 @@ const { google } = require('googleapis');
 require('dotenv').config();
 
 // ============================================================
-// Agent 10 (Apollo Pusher) — v2.0 "Smart Snippets + Sheet Write-Back"
+// Agent 10 (Apollo Pusher) — v3.0 "Greg-Standard Clean"
 //
-// WHAT CHANGED FROM v1.0 (Session 16):
+// WHAT CHANGED FROM v2.0 (Session 25):
 //
-// 1. SMART SNIPPET FIELD IDs: Replaced placeholders with real
-//    Apollo custom field IDs. All three snippet fields now push:
-//      - Delivery_Estimate:  "tomorrow" / "within two days"
-//      - Rotation_Sentence:  Full Version A or B paragraph
-//      - Signal_Word_Display: "signature" / "house-made" etc.
+// 1. REMOVED ENRICHMENT LOOKUP: Agent 10 no longer side-loads
+//    data from final_leads_for_pipedrive.json. All lead data
+//    now comes exclusively from Agent 9 (which reads the
+//    Greg-Standard sheet). If a field is blank, it stays blank
+//    — that's a signal to fix upstream, not paper over.
 //
-// 2. COLUMN T WRITE-BACK: After successful Apollo enrollment,
-//    Agent 10 writes "Enrolled" to column T (Apollo Status) on
-//    the source Google Sheet tab. This prevents Agent 9 from
-//    re-processing the same lead on the next run.
+// 2. REMOVED RESERVOIR LOGIC: The returnToReservoir() function,
+//    lead_reservoir.json path, and post-loop call are deleted.
+//    Greg controls the pipeline manually — leads he doesn't
+//    move from Inventory simply stay in Inventory.
 //
-//    Each approved lead carries _source_tab and _source_row
-//    from Agent 9 so we know exactly which cell to update.
+// 3. FIXED COLUMN COMMENTS: All references to "column T" are
+//    corrected to "column W" (index 22 = Apollo Status in
+//    Greg-Standard). The code always wrote to V — only the
+//    comments were wrong.
 //
 // UNCHANGED:
 //   - Quota-driven loop (5 per run)
 //   - Track A/B routing
-//   - Research Required logging
-//   - Reservoir return for unused leads
+//   - Research Required logging + sheet push
+//   - Smart Snippet generators
+//   - Apollo API calls (create → update fields → enroll)
+//   - 500ms rate limit between leads
+//   - writeBackEnrolled() targets column W (was always correct)
 // ============================================================
 
 // ============================================================
@@ -55,8 +60,6 @@ const APOLLO_FIELDS = {
 
 // File paths
 const APPROVED_PATH     = 'approved_leads_for_apollo.json';
-const ENRICHED_PATH     = 'final_leads_for_pipedrive.json';
-const RESERVOIR_PATH    = 'lead_reservoir.json';
 const RESULTS_PATH      = 'apollo_push_results.json';
 const RESEARCH_REQ_PATH = 'research_required.json';
 
@@ -176,53 +179,9 @@ async function getEmailAccountId() {
 }
 
 // ============================================================
-// ENRICHED DATA LOOKUP
-// ============================================================
-function loadEnrichedLookup() {
-    try {
-        if (fs.existsSync(ENRICHED_PATH)) {
-            const data = JSON.parse(fs.readFileSync(ENRICHED_PATH, 'utf8'));
-            const lookup = {};
-            for (const lead of data) {
-                if (lead.domain) {
-                    lookup[lead.domain] = lead;
-                }
-            }
-            console.log(`📚 Loaded enriched data for ${Object.keys(lookup).length} leads\n`);
-            return lookup;
-        }
-    } catch (e) {
-        console.log(`⚠️  Could not load enriched data: ${e.message}\n`);
-    }
-    return {};
-}
-
-function enrichLead(approvedLead, enrichedLookup) {
-    const enriched = enrichedLookup[approvedLead.domain] || {};
-
-    return {
-        ...enriched,
-        ...approvedLead,
-        city:                  approvedLead.city || enriched.city || '',
-        state:                 approvedLead.state || enriched.state || '',
-        company_name:          approvedLead.company_name || enriched.company_name || '',
-        contact_name:          approvedLead.contact_name || enriched.contact_name || '',
-        contact_email:         approvedLead.contact_email || enriched.contact_email || '',
-        contact_title:         approvedLead.contact_title || enriched.contact_title || '',
-        transit_days:          approvedLead.transit_days || enriched.transit_days || 2,
-        rotation_day:          approvedLead.rotation_day || enriched.rotation_day || '',
-        custom_blend_signals:  approvedLead.custom_blend_signals || enriched.custom_blend_signals || [],
-        spice_keywords_found:  approvedLead.spice_keywords_found || enriched.spice_keywords_found || [],
-        discovery_source:      approvedLead.discovery_source || enriched.discovery_source || '',
-        email_is_alias:        approvedLead.email_is_alias || enriched.email_is_alias || false,
-        tier:                  approvedLead.tier || enriched.tier || ''
-    };
-}
-
-// ============================================================
-// COLUMN T WRITE-BACK
+// COLUMN V WRITE-BACK (Apollo Status — Greg-Standard index 21)
 //
-// After successful enrollment, writes "Enrolled" to column T
+// After successful enrollment, writes "Enrolled" to column W
 // on the source tab (Sheet1 or Manual Review). This prevents
 // Agent 9 from re-processing the same lead.
 //
@@ -241,11 +200,11 @@ async function writeBackEnrolled(lead) {
     try {
         await sheets.spreadsheets.values.update({
             spreadsheetId: SHEET_ID,
-            range: `'${tab}'!V${row}`,
+            range: `'${tab}'!W${row}`,
             valueInputOption: 'RAW',
             resource: { values: [['Enrolled']] }
         });
-        console.log(`      ✏️  Wrote "Enrolled" to ${tab}!V${row}`);
+        console.log(`      ✏️  Wrote "Enrolled" to ${tab}!W${row}`);
     } catch (error) {
         console.log(`      ⚠️  Write-back failed: ${error.message}`);
     }
@@ -323,43 +282,10 @@ async function pushResearchRequiredToSheet() {
 }
 
 // ============================================================
-// RESERVOIR
-// ============================================================
-function returnToReservoir(unusedLeads) {
-    if (unusedLeads.length === 0) return;
-
-    let reservoir = [];
-    try {
-        if (fs.existsSync(RESERVOIR_PATH)) {
-            reservoir = JSON.parse(fs.readFileSync(RESERVOIR_PATH, 'utf8'));
-        }
-    } catch (e) {
-        reservoir = [];
-    }
-
-    const existingDomains = new Set(reservoir.map(l => l.domain));
-    let returned = 0;
-
-    for (const lead of unusedLeads) {
-        if (lead.domain && !existingDomains.has(lead.domain)) {
-            lead.reservoir_returned = new Date().toISOString();
-            lead.reservoir_source = 'unused_from_agent10';
-            reservoir.unshift(lead);
-            existingDomains.add(lead.domain);
-            returned++;
-        }
-    }
-
-    fs.writeFileSync(RESERVOIR_PATH, JSON.stringify(reservoir, null, 2));
-    console.log(`\n📦 RESERVOIR RETURN: ${returned} unused leads returned to top of reservoir`);
-    console.log(`   📦 Reservoir now: ${reservoir.length} leads in stock\n`);
-}
-
-// ============================================================
 // MAIN: THE QUOTA-DRIVEN ENROLLMENT LOOP
 // ============================================================
 async function pushToApollo() {
-    console.log('\n🚀 Agent 10 v2.0: Quota-Driven Apollo Enrollment (Smart Snippets + Write-Back)');
+    console.log('\n🚀 Agent 10 v3.0: Quota-Driven Apollo Enrollment (Greg-Standard Clean)');
     console.log(`   🎯 Target: ${SEND_QUOTA} successful enrollments\n`);
 
     // Load approved leads
@@ -377,9 +303,6 @@ async function pushToApollo() {
 
     console.log(`📋 Candidate Pool: ${approvedLeads.length} approved leads\n`);
 
-    // Load enriched data lookup
-    const enrichedLookup = loadEnrichedLookup();
-
     // Get Rob's email account ID
     const emailAccountId = await getEmailAccountId();
 
@@ -391,20 +314,17 @@ async function pushToApollo() {
     // The Quota Loop
     const results = { success: [], failed: [], skipped_research: [] };
     let successCount = 0;
-    const unusedLeads = [];
 
     for (let i = 0; i < approvedLeads.length; i++) {
 
         if (successCount >= SEND_QUOTA) {
-            for (let j = i; j < approvedLeads.length; j++) {
-                unusedLeads.push(enrichLead(approvedLeads[j], enrichedLookup));
-            }
+            const remaining = approvedLeads.length - i;
             console.log(`\n🎯 QUOTA REACHED: ${successCount}/${SEND_QUOTA} successful enrollments.`);
-            console.log(`   ${unusedLeads.length} unused candidates will be returned to reservoir.`);
+            console.log(`   ${remaining} unused candidates remain in sheet for next run.`);
             break;
         }
 
-        const lead = enrichLead(approvedLeads[i], enrichedLookup);
+        const lead = approvedLeads[i];
 
         const company = cleanCompanyName(lead.company_name);
         const firstName = lead.contact_name ? lead.contact_name.split(' ')[0] : '';
@@ -420,7 +340,7 @@ async function pushToApollo() {
             continue;
         }
 
-        // Build field values
+        // Build field values from lead data (straight from Agent 9 / sheet)
         const transitDays       = lead.transit_days || 2;
         const transitText       = getTransitText(transitDays);
         const rotationDay       = getRotationLine(lead.rotation_day);
@@ -543,7 +463,7 @@ async function pushToApollo() {
                 console.log(`      Email: ${email} | Transit: ${transitText} | Rotation: ${rotationDay}`);
                 console.log(`      Smart Snippets: delivery="${deliveryEstimate}" | signal="${signalWordDisplay}"`);
 
-                // WRITE-BACK to Google Sheet column T
+                // WRITE-BACK to Google Sheet column W (Apollo Status)
                 await writeBackEnrolled(lead);
 
                 results.success.push({
@@ -573,7 +493,7 @@ async function pushToApollo() {
                 successCount++;
                 console.log(`   ✅ [${successCount}/${SEND_QUOTA}] ${firstName} ${lastName} (${company}) → ${sequence.name} (inferred success)`);
 
-                // WRITE-BACK to Google Sheet column T
+                // WRITE-BACK to Google Sheet column W (Apollo Status)
                 await writeBackEnrolled(lead);
 
                 results.success.push({
@@ -597,18 +517,16 @@ async function pushToApollo() {
     }
 
     // Post-loop
-    returnToReservoir(unusedLeads);
     await pushResearchRequiredToSheet();
 
     // Final report
     console.log('========================================');
-    console.log('🏁 AGENT 10 v2.0: ENROLLMENT COMPLETE');
+    console.log('🏁 AGENT 10 v3.0: ENROLLMENT COMPLETE');
     console.log('========================================');
     console.log(`   🎯 Quota:              ${SEND_QUOTA}`);
     console.log(`   ✅ Enrolled:            ${results.success.length}`);
     console.log(`   📋 Research Required:   ${results.skipped_research.length}`);
     console.log(`   ❌ Failed:              ${results.failed.length}`);
-    console.log(`   📦 Returned to stock:   ${unusedLeads.length}`);
 
     if (results.success.length < SEND_QUOTA) {
         const shortfall = SEND_QUOTA - results.success.length;

@@ -1,3 +1,4 @@
+'use strict';
 const fs = require('fs');
 const { google } = require('googleapis');
 require('dotenv').config();
@@ -10,119 +11,140 @@ const auth = new google.auth.GoogleAuth({
 const sheets = google.sheets({ version: 'v4', auth });
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
 
-// ============================================================
-// Agent 9 (Sheet Reader) — v2.1 "Reordered 25-Column Schema"
+// =====================================================================
+// Agent 9 (Sheet Reader) — v4.0 "Bottle Flag Migration"
 //
-// WHAT CHANGED FROM v2.0 (Session 18b):
+// WHAT CHANGED FROM v3.0 (Session 25):
 //
-//   All column index references updated to match Agent 8 v2.5
-//   reordered schema. Range expanded from A:U to A:Y.
+//   Bottle Flag added as column G (index 6).
+//   All columns from old G onward shift right by one.
+//   Greg-Standard is now 26 columns (A:Z), not 25 (A:Y).
 //
-// NEW COLUMN MAP (25 columns, A:Y):
-//   A[0]:  Date Added       N[13]: Spice Keywords
-//   B[1]:  Company          O[14]: Tier
-//   C[2]:  City             P[15]: Contact
-//   D[3]:  State            Q[16]: Title
-//   E[4]:  URL              R[17]: Email
-//   F[5]:  Tech Flag        S[18]: Email Status
-//   G[6]:  Discovery Source T[19]: Strike
-//   H[7]:  Score            U[20]: Sequence Track
-//   I[8]:  Days to Delivery V[21]: Apollo Status
-//   J[9]:  Transit Text     W[22]: Status (Greg: Nix)
-//   K[10]: Rotation Day     X[23]: Confidence
-//   L[11]: Rotation Line    Y[24]: LinkedIn Caution
-//   M[12]: Blend Hook
+//   KEY INDEX CHANGES:
+//     Discovery Source:  G[6]  → H[7]
+//     Score:             H[7]  → I[8]
+//     Days to Delivery:  I[8]  → J[9]
+//     Rotation Day:      K[10] → L[11]
+//     Blend Hook:        M[12] → N[13]
+//     Spice Keywords:    N[13] → O[14]
+//     Tier:              O[14] → P[15]
+//     Contact:           P[15] → Q[16]
+//     Title:             Q[16] → R[17]
+//     Email:             R[17] → S[18]
+//     Email Status:      S[18] → T[19]
+//     Strike:            T[19] → U[20]
+//     Sequence Track:    U[20] → V[21]
+//     Apollo Status:     V[21] → W[22]
+//     Status (Nix):      W[22] → X[23]
+//
+//   All A:Y ranges → A:Z
+//   Manual Review mark: W → X
+//
+// GREG-STANDARD COLUMN MAP (26 columns, A:Z):
+//   A[0]:  Date Added       O[14]: Spice Keywords
+//   B[1]:  Company          P[15]: Tier
+//   C[2]:  City             Q[16]: Contact
+//   D[3]:  State            R[17]: Title
+//   E[4]:  URL              S[18]: Email
+//   F[5]:  Tech Flag        T[19]: Email Status
+//   G[6]:  Bottle Flag      U[20]: Strike
+//   H[7]:  Discovery Source V[21]: Sequence Track
+//   I[8]:  Score            W[22]: Apollo Status
+//   J[9]:  Days to Delivery X[23]: Status (Greg: Nix)
+//   K[10]: Transit Text     Y[24]: Confidence
+//   L[11]: Rotation Day     Z[25]: LinkedIn Caution
+//   M[12]: Rotation Line
+//   N[13]: Blend Hook
 //
 // FLOW (unchanged):
 //   6:15 AM cron → Agent 9:
-//     1. Read Sheet1!A:Y → pick up blank-status rows
-//     2. Read Manual Review!A:Y → pick up "Approved" rows
+//     1. Read Sheet1!A:Z → pick up blank-status rows
+//     2. Read Manual Review!A:Z → pick up "Approved" rows
 //     3. Build lead objects from both
 //     4. Mark Manual Review rows as "Sent to Apollo"
 //     5. Write approved_leads_for_apollo.json
 //     6. Agent 10 picks up the file → pushes to Apollo
-// ============================================================
+// =====================================================================
 
-// ============================================================
+// =====================================================================
 // SHEET ROW → LEAD OBJECT BUILDER
-//
-// Columns match Agent 8 v2.5 HEADERS array (A:Y)
-// ============================================================
+// =====================================================================
 function buildLeadFromRow(row) {
-    // Parse sequence track back to code (col U = index 20)
-    var trackRaw = (row[20] || '').trim();
+    // Sequence track (V = index 21)
+    var trackRaw = (row[21] || '').trim();
     var sequenceTrack = null;
     if (trackRaw.indexOf('A') === 0) sequenceTrack = 'A';
     if (trackRaw.indexOf('B') === 0) sequenceTrack = 'B';
 
-    // Parse spice keywords back to array (col N = index 13)
-    var keywordsRaw = (row[13] || '').trim();
+    // Spice keywords (O = index 14)
+    var keywordsRaw = (row[14] || '').trim();
     var spiceKeywords = keywordsRaw ? keywordsRaw.split(',').map(function(k) { return k.trim(); }) : [];
 
-    // Parse strike level (col T = index 19)
-    var strikeLevel = parseInt(row[19]) || 0;
+    // Strike level (U = index 20)
+    var strikeLevel = parseInt(row[20]) || 0;
 
-    // Parse score (col H = index 7)
-    var score = parseInt(row[7]) || 0;
+    // Score (I = index 8)
+    var score = parseInt(row[8]) || 0;
 
-    // Parse transit days (col I = index 8)
-    var transitDays = parseInt(row[8]) || null;
+    // Transit days (J = index 9)
+    var transitDays = parseInt(row[9]) || null;
 
-    // Determine if alias based on strike level
-    var isAlias = strikeLevel === 3;
+    // Bottle flag (G = index 6)
+    var sourceBottle = (row[6] || '').trim().toUpperCase() === 'YES';
 
     return {
-        company_name: (row[1] || '').trim(),             // B — Company
-        city: (row[2] || '').trim(),                     // C — City
-        state: (row[3] || '').trim(),                    // D — State
-        website_url: (row[4] || '').trim(),              // E — URL
-        tech_flag: (row[5] || '').trim(),                // F — Tech Flag
-        transit_days: transitDays,                        // I — Days to Delivery
-        rotation_day: (row[10] || '').trim() || null,    // K — Rotation Day
-        custom_blend_signals: (row[12] || '').trim() ? [(row[12] || '').trim()] : [],  // M — Blend Hook
-        spice_keywords_found: spiceKeywords,             // N — Spice Keywords
-        tier: (row[14] || '').trim().toLowerCase() || null,  // O — Tier
-        qualification_score: score,                       // H — Score
-        contact_name: (row[15] || '').trim(),            // P — Contact
-        contact_title: (row[16] || '').trim(),           // Q — Title
-        contact_email: (row[17] || '').trim(),           // R — Email
-        email_status: (row[18] || '').trim(),            // S — Email Status
-        strike_level: strikeLevel,                        // T — Strike
-        sequence_track: sequenceTrack,                    // U — Sequence Track
-        discovery_source: (row[6] || '').trim(),         // G — Discovery Source
-        email_is_alias: isAlias,
-        qualified: true
+        company_name:         (row[1]  || '').trim(),             // B
+        city:                 (row[2]  || '').trim(),             // C
+        state:                (row[3]  || '').trim(),             // D
+        website_url:          (row[4]  || '').trim(),             // E
+        tech_flag:            (row[5]  || '').trim(),             // F
+        source_bottle:        sourceBottle,                        // G
+        discovery_source:     (row[7]  || '').trim(),             // H
+        qualification_score:  score,                               // I
+        transit_days:         transitDays,                         // J
+        rotation_day:         (row[11] || '').trim() || null,     // L
+        custom_blend_signals: (row[13] || '').trim() ? [(row[13] || '').trim()] : [],  // N
+        spice_keywords_found: spiceKeywords,                      // O
+        tier:                 (row[15] || '').trim().toLowerCase() || null,  // P
+        contact_name:         (row[16] || '').trim(),             // Q
+        contact_title:        (row[17] || '').trim(),             // R
+        contact_email:        (row[18] || '').trim(),             // S
+        email_status:         (row[19] || '').trim(),             // T
+        strike_level:         strikeLevel,                         // U
+        sequence_track:       sequenceTrack,                       // V
+        email_is_alias:       strikeLevel === 3,
+        qualified:            true
     };
 }
 
-// ============================================================
-// READ SHEET1 — blank status = approved
-// ============================================================
+// =====================================================================
+// READ SHEET1 -- blank status = approved
+// =====================================================================
 async function readSheet1() {
-    console.log('  📋 Reading Sheet1...');
+    console.log('  Reading Sheet1...');
 
     try {
         var response = await sheets.spreadsheets.values.get({
             spreadsheetId: SHEET_ID,
-            range: 'Sheet1!A:Y'
+            range: 'Sheet1!A:Z'
         });
 
         var rows = response.data.values;
         if (!rows || rows.length <= 1) {
-            console.log('     ℹ️  Sheet1 is empty.');
+            console.log('     Sheet1 is empty.');
             return { approved: [], nixed: [] };
         }
 
-        var dataRows = rows.slice(1); // skip header
+        var dataRows = rows.slice(1);
         var approved = [];
         var nixed = [];
 
         dataRows.forEach(function(row, index) {
-            var company = (row[1] || '').trim();                        // B — Company
-            var status = (row[22] || '').toLowerCase().trim();          // W — Status (Greg: Nix)
-            var apolloStatus = (row[21] || '').toLowerCase().trim();    // V — Apollo Status
+            var company      = (row[1]  || '').trim();               // B
+            var status       = (row[23] || '').toLowerCase().trim();  // X (was W[22])
+            var apolloStatus = (row[22] || '').toLowerCase().trim();  // W (was V[21])
 
-            if (!company) return; // skip empty rows
+            if (!company) return;
 
             // Skip already-processed rows
             if (apolloStatus === 'sent to apollo' || apolloStatus === 'enrolled') return;
@@ -130,99 +152,95 @@ async function readSheet1() {
             if (status === 'nix') {
                 nixed.push({ company: company, source: 'Sheet1' });
             } else {
-                // Blank status = approved
                 var lead = buildLeadFromRow(row);
                 if (lead.contact_email) {
-                    lead._source_tab = "Sheet1";
+                    lead._source_tab = 'Sheet1';
                     lead._source_row = index + 2;
                     approved.push(lead);
                 } else {
-                    console.log('     ⚠️  Skipping ' + company + ' (no email on sheet)');
+                    console.log('     Skipping ' + company + ' (No email on sheet)');
                 }
             }
         });
 
-        console.log('     ✅ Sheet1: ' + approved.length + ' approved, ' + nixed.length + ' nixed');
+        console.log('     Sheet1: ' + approved.length + ' approved, ' + nixed.length + ' nixed');
         return { approved: approved, nixed: nixed };
 
     } catch (error) {
-        console.error('     ❌ Error reading Sheet1: ' + error.message);
+        console.error('     Error reading Sheet1: ' + error.message);
         return { approved: [], nixed: [] };
     }
 }
 
-// ============================================================
-// READ MANUAL REVIEW — "Approved" in status = pick up
-// ============================================================
+// =====================================================================
+// READ MANUAL REVIEW -- "Approved" in status = pick up
+// =====================================================================
 async function readManualReview() {
-    console.log('  📋 Reading Manual Review tab...');
+    console.log('  Reading Manual Review tab...');
 
     try {
         var response = await sheets.spreadsheets.values.get({
             spreadsheetId: SHEET_ID,
-            range: 'Manual Review!A:Y'
+            range: 'Manual Review!A:Z'
         });
 
         var rows = response.data.values;
         if (!rows || rows.length <= 1) {
-            console.log('     ℹ️  Manual Review is empty.');
+            console.log('     Manual Review is empty.');
             return { approved: [], rowIndices: [] };
         }
 
-        var dataRows = rows.slice(1); // skip header
+        var dataRows = rows.slice(1);
         var approved = [];
-        var rowIndices = []; // track which rows to mark as processed
+        var rowIndices = [];
 
         dataRows.forEach(function(row, index) {
-            var company = (row[1] || '').trim();                    // B — Company
-            var status = (row[22] || '').toLowerCase().trim();      // W — Status
+            var company = (row[1]  || '').trim();               // B
+            var status  = (row[23] || '').toLowerCase().trim();  // X (was W[22])
 
             if (!company) return;
 
             if (status === 'approved') {
                 var lead = buildLeadFromRow(row);
                 if (lead.contact_email) {
-                    lead._source_tab = "Manual Review";
+                    lead._source_tab = 'Manual Review';
                     lead._source_row = index + 2;
                     approved.push(lead);
-                    rowIndices.push(index + 2); // +2: 1 for header, 1 for 0-index
+                    rowIndices.push(index + 2);
                 } else {
-                    console.log('     ⚠️  Skipping ' + company + ' (no email on sheet)');
+                    console.log('     Skipping ' + company + ' (No email on sheet)');
                 }
             }
         });
 
-        console.log('     ✅ Manual Review: ' + approved.length + ' approved');
+        console.log('     Manual Review: ' + approved.length + ' approved');
         return { approved: approved, rowIndices: rowIndices };
 
     } catch (error) {
         if (error.message && error.message.includes('Unable to parse range')) {
-            console.log('     ℹ️  Manual Review tab not found — skipping.');
+            console.log('     Manual Review tab not found -- skipping.');
         } else {
-            console.error('     ❌ Error reading Manual Review: ' + error.message);
+            console.error('     Error reading Manual Review: ' + error.message);
         }
         return { approved: [], rowIndices: [] };
     }
 }
 
-// ============================================================
+// =====================================================================
 // MARK MANUAL REVIEW ROWS AS PROCESSED
 //
-// Writes "Sent to Apollo" in column W (index 22) for each
-// processed row. This prevents the same lead from being
-// picked up twice.
-//
-// NOTE: In old schema this was column U. Now column W.
-// ============================================================
+// Writes "Sent to Apollo" in column X (index 23) for each processed
+// row. Prevents the same lead from being picked up twice.
+// =====================================================================
 async function markManualReviewProcessed(rowIndices) {
     if (rowIndices.length === 0) return;
 
-    console.log('  ✏️  Marking ' + rowIndices.length + ' Manual Review rows as processed...');
+    console.log('  Marking ' + rowIndices.length + ' Manual Review rows as processed...');
 
     try {
         var data = rowIndices.map(function(rowNum) {
             return {
-                range: 'Manual Review!W' + rowNum,
+                range: 'Manual Review!X' + rowNum,
                 values: [['Sent to Apollo']]
             };
         });
@@ -235,29 +253,26 @@ async function markManualReviewProcessed(rowIndices) {
             }
         });
 
-        console.log('     ✅ Marked ' + rowIndices.length + ' rows as "Sent to Apollo"');
+        console.log('     Marked ' + rowIndices.length + ' rows as "Sent to Apollo"');
     } catch (error) {
-        console.error('     ⚠️  Could not mark rows: ' + error.message);
-        console.error('        → Leads were still saved to JSON. Mark manually to prevent duplicates.');
+        console.error('     Could not mark rows: ' + error.message);
+        console.error('     -> Leads were still saved to JSON. Mark manually to prevent duplicates.');
     }
 }
 
-// ============================================================
+// =====================================================================
 // MAIN
-// ============================================================
+// =====================================================================
 async function readApprovedLeads() {
-    console.log('\n📋 Agent 9 v2.1: Reading approved leads (Sheet1 + Manual Review)...\n');
+    console.log('\nAgent 9 v4.0: Reading approved leads (Sheet1 + Manual Review)...\n');
 
-    // Read both tabs
-    var sheet1Results = await readSheet1();
-    var manualResults = await readManualReview();
+    var sheet1Results  = await readSheet1();
+    var manualResults  = await readManualReview();
+    var allApproved    = sheet1Results.approved.concat(manualResults.approved);
+    var allNixed       = sheet1Results.nixed;
 
-    // Combine approved leads from both sources
-    var allApproved = sheet1Results.approved.concat(manualResults.approved);
-    var allNixed = sheet1Results.nixed;
-
-    // Deduplicate by email (same lead might appear on both tabs)
-    var seen = {};
+    // Deduplicate by email
+    var seen   = {};
     var deduped = [];
     allApproved.forEach(function(lead) {
         var key = (lead.contact_email || '').toLowerCase();
@@ -268,38 +283,35 @@ async function readApprovedLeads() {
     });
 
     if (deduped.length !== allApproved.length) {
-        console.log('\n  ⏭️  Removed ' + (allApproved.length - deduped.length) + ' duplicate(s) across tabs');
+        console.log('\n  Removed ' + (allApproved.length - deduped.length) + ' duplicate(s) across tabs');
     }
 
-    // Save approved leads for Agent 10
     fs.writeFileSync('approved_leads_for_apollo.json', JSON.stringify(deduped, null, 2));
 
-    // Mark Manual Review rows as processed
     await markManualReviewProcessed(manualResults.rowIndices);
 
-    // Summary
-    console.log('\n📊 Agent 9 SUMMARY:');
-    console.log('   ✅ Approved: ' + deduped.length + ' leads');
+    console.log('\nAgent 9 SUMMARY ' + new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    console.log('   Approved: ' + deduped.length + ' leads');
     deduped.forEach(function(lead) {
         var company = (lead.company_name || '').split(' - ')[0].split(':')[0].trim();
-        var track = lead.sequence_track === 'B' ? 'Track B (Alias)' : 'Track A (Direct)';
-        console.log('      ✅ ' + company + ' (' + lead.city + ') — ' + track + ' — ' + lead.contact_email);
+        var track   = lead.sequence_track === 'B' ? 'Track B (Alias)' : 'Track A (Direct)';
+        var bottle  = lead.source_bottle ? ' 🍾' : '';
+        console.log('      ' + company + ' (' + lead.city + ') -- ' + track + ' -- ' + lead.contact_email + bottle);
     });
 
     if (allNixed.length > 0) {
-        console.log('   ❌ Nixed: ' + allNixed.length + ' leads');
+        console.log('   Nixed: ' + allNixed.length + ' leads');
         allNixed.forEach(function(n) {
-            console.log('      ❌ ' + n.company + ' [' + n.source + ']');
+            console.log('      ' + n.company + ' [' + n.source + ']');
         });
     }
 
-    console.log('\n📁 Saved to: approved_leads_for_apollo.json\n');
+    console.log('\n  Saved to: approved_leads_for_apollo.json\n');
 }
 
-// Entry point
 if (require.main === module) {
     readApprovedLeads().catch(function(err) {
-        console.error('❌ Agent 9 error:', err.message);
+        console.error('Agent 9 error:', err.message);
         process.exit(1);
     });
 } else {

@@ -1,1 +1,58 @@
-[]
+[
+  {
+    "domain": "jackedfitnessny.com",
+    "website_url": "https://jacked-nutrition.com",
+    "raw_name": "jacked nutrition",
+    "company_name": "Jacked Fitness",
+    "recovery_stub": true,
+    "verified_name": "Jacked Fitness",
+    "city": "Valhalla",
+    "state": "NY",
+    "zip": "10595",
+    "formatted_address": "12 Broadway Suite 12, Valhalla, NY 10595, USA",
+    "google_website": "http://jackedfitnessny.com/",
+    "transit_days": 1,
+    "transit_days_text": "tomorrow",
+    "spice_keywords_found": [
+      "ancho"
+    ],
+    "rotation_day": "monday",
+    "has_weekly_rotation": "monday",
+    "custom_blend_signals": [
+      "signature",
+      "custom"
+    ],
+    "spice_forward": true,
+    "retail_brand_signals": [
+      "reservations"
+    ],
+    "kitchen_forward_signals": [],
+    "scrape_blocked": false,
+    "menu_url": "http://jackedfitnessny.com/",
+    "rotation_phrases": [],
+    "contact_name": "Owner/Operator",
+    "contact_title": "orders",
+    "contact_source": "alias",
+    "contact_email": "orders@jacked-nutrition.com",
+    "email_status": "deliverable",
+    "email_score_impact": 0,
+    "email_is_alias": true,
+    "email_verification": {
+      "email": "orders@jacked-nutrition.com",
+      "status": "deliverable",
+      "score_impact": 0,
+      "result": "ok",
+      "subresult": "ok",
+      "is_alias": true,
+      "alias_type": "orders"
+    },
+    "discovery_source": "alias_fallback",
+    "first_name_only": true,
+    "blacklisted": true,
+    "blacklist_term": "fitness",
+    "blacklist_matched_in": "company_name",
+    "qualification_score": 0,
+    "qualified": false,
+    "tier": null
+  }
+]

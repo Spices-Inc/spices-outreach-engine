@@ -3,6 +3,60 @@ const axios = require('axios');
 const { scrapeWebsite } = require('./utils/website_scraper');
 require('dotenv').config();
 
+// ============================================================
+// Agent 5 (Investigator) — v4.0 "Contact Page Truth"
+//
+// WHAT CHANGED FROM v3.x (Session 25):
+//
+// 1. PRIORITY INVERSION FIX:
+//    Old: Gmail/generic-provider emails from the contact page
+//         were saved as "fallback" while Agent 5 burned API
+//         credits searching for a "better" business domain email.
+//    New: A deliverable email found on the contact page is
+//         GROUND TRUTH. The owner published it. Use it. Stop.
+//         Only functional aliases (info@, ops@, contact@) are
+//         saved as fallback.
+//
+//    New Phase 1A priority:
+//      a) Functional alias (info@, ops@) → save as backup, keep searching
+//      b) Generic provider (Gmail, Yahoo) → USE IT. Owner published it.
+//         Flag generic_provider=true for Track B routing. Stop.
+//      c) Business domain + plausible first name → try LinkedIn
+//         enrichment for full name. Stop.
+//      d) Business domain + NOT a plausible name (e.g. plnpolaris@)
+//         → USE the email. Contact = Owner/Operator. Stop.
+//
+// 2. NEW: looksLikePlausibleFirstName() GATE:
+//    Before treating an email prefix as a person's first name,
+//    validates: 2-10 chars, all alphabetic, has a vowel, doesn't
+//    start with 3+ consonants. Catches "plnpolaris", "csmppgh",
+//    "pghfresh" etc. that pass isLikelyAlias() but are not names.
+//
+// 3. GENERIC PROVIDER FLAG:
+//    Leads with Gmail/Yahoo/etc emails now carry
+//    generic_provider=true so Agent 7 can score them and
+//    Agent 10 can route them to Track B.
+//
+// UNCHANGED:
+//   - All API functions (MillionVerifier, SerpAPI, LinkedIn)
+//   - scrapeWebsite integration (scraper is clean)
+//   - Phases 2, 3, 4, 5 logic
+//   - generateEmailCandidates() (7 patterns)
+//   - verifyEmail(), findValidEmailForPerson()
+//   - searchLinkedIn(), searchParentCompany()
+//   - detectParentCompany()
+//   - findFunctionalAlias()
+//   - enrichFirstNameViaLinkedIn()
+//   - isLikelyAlias() (unchanged)
+//   - looksLikePersonName()
+//   - All constants (departments, seniorities, aliases)
+//   - End-of-run summary reporting
+//
+// THE RULE:
+//   Contact page email = ground truth. Owner published it. Use it.
+//   Functional aliases = fallback. Keep searching for a real person.
+// ============================================================
+
 const DEPARTMENTS = ['Operations', 'Production', 'Purchasing', 'Supply Chain', 'Procurement', 'Culinary', 'Kitchen'];
 const SENIORITIES = ['Director', 'Head', 'VP', 'Manager', 'Lead'];
 
@@ -62,6 +116,34 @@ function isLikelyAlias(localPart) {
   }
 
   return false;
+}
+
+// ============================================================
+// NEW in v4.0: PLAUSIBLE FIRST NAME VALIDATION
+//
+// isLikelyAlias() asks "is this a functional alias?"
+// This function asks "could this be a human first name?"
+//
+// Catches junk like "plnpolaris", "csmppgh", "pghfresh"
+// that pass the alias check but are clearly not names.
+// ============================================================
+function looksLikePlausibleFirstName(localPart) {
+  if (!localPart) return false;
+  const lp = localPart.toLowerCase();
+
+  // Must be 2-10 characters (real first names: "Al" to "Maximilian" range)
+  if (lp.length < 2 || lp.length > 10) return false;
+
+  // Must be all alphabetic (no numbers, underscores, dots)
+  if (!/^[a-z]+$/.test(lp)) return false;
+
+  // Must contain at least one vowel (catches "pgh", "csm", "btn")
+  if (!/[aeiou]/.test(lp)) return false;
+
+  // Must not start with 3+ consecutive consonants (catches "plnpolaris", "csmppgh")
+  if (/^[^aeiou]{3,}/.test(lp)) return false;
+
+  return true;
 }
 
 const GENERIC_EMAIL_PROVIDERS = [
@@ -414,7 +496,7 @@ async function run() {
   if (!fs.existsSync(filePath)) return console.error("❌ File not found");
   
   const leads = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-  console.log(`\n🔍 Agent 5 (INVESTIGATOR): Footprint-First Discovery...\n`);
+  console.log(`\n🔍 Agent 5 v4.0 (INVESTIGATOR): Contact Page Truth + Footprint Discovery...\n`);
   
   for (let lead of leads) {
     console.log(`  📋 ${lead.company_name}`);
@@ -423,17 +505,6 @@ async function run() {
 
     // ============================================================
     // DOMAIN CORRECTION (Session 15 — Claude fix)
-    //
-    // THE BUG:
-    //   Top Chef Meals had website_url = sendbottles.com (a marketing
-    //   tracker). Agent 5 tested all emails against sendbottles.com.
-    //   Every email bounced. Meanwhile, google_website had the real
-    //   domain: topchefmeals.com.
-    //
-    // THE FIX:
-    //   If google_website exists and has a DIFFERENT domain than
-    //   website_url, trust Google. Swap the primary domain.
-    //   Keep the old domain as a fallback in case Google is wrong.
     // ============================================================
     let originalDomain = websiteDomain;
     if (lead.google_website) {
@@ -488,21 +559,30 @@ async function run() {
     let discoverySource = 'none';
     const triedNames = [];
     
-    // This holds alias/generic-provider emails found on site as a fallback.
-    // We DON'T stop on these — we keep searching for a real person first.
+    // This holds alias emails found on site as a fallback.
+    // ONLY functional aliases (info@, ops@) go here now.
+    // Gmail/generic-provider emails are used immediately in v4.0.
     let websiteAliasBackup = null;
     
     // This holds first-name-only email hits from Phase 1A.
     // We try LinkedIn enrichment before committing.
     let firstNameHit = null;
     
+    // ============================================================
     // PHASE 1A: Test emails found directly on the website
+    //
+    // v4.0 PRIORITY ORDER:
+    //   a) Functional alias → save as backup, keep searching
+    //   b) Generic provider (Gmail) → USE IT. Owner published it.
+    //   c) Business domain + plausible name → try LinkedIn enrich
+    //   d) Business domain + junk prefix → USE email, Owner/Operator
+    // ============================================================
     if (siteEmails.length > 0) {
       console.log(`       📧 Testing emails found on website...`);
       for (const email of siteEmails) {
         const localPart = email.split('@')[0];
         const emailDomain = email.split('@')[1];
-        const isGenericProvider = GENERIC_EMAIL_PROVIDERS.includes(emailDomain);
+        const isGenericProvider = GENERIC_EMAIL_PROVIDERS.includes(emailDomain.toLowerCase());
         const isAlias = isLikelyAlias(localPart);
         
         process.stdout.write(`         ${email}... `);
@@ -511,28 +591,46 @@ async function run() {
         if (result.status === 'deliverable' || result.status === 'catch_all') {
           console.log(`✅ ${result.status.toUpperCase()}`);
           
-          if (!isAlias && !isGenericProvider) {
-            // Personal email on business domain — save it
-            const displayName = localPart.charAt(0).toUpperCase() + localPart.slice(1);
+          // ---- (a) FUNCTIONAL ALIAS: save as backup, keep searching ----
+          if (isAlias) {
+            if (!websiteAliasBackup) {
+              websiteAliasBackup = {
+                email: { ...result, is_alias: true, alias_type: localPart },
+                contact: { name: 'Owner/Operator', title: localPart, source: 'alias' },
+                source: 'website_scrape'
+              };
+              console.log(`       ⚠️ Functional alias — saved as fallback, searching for real person`);
+            }
+            // Keep looping through site emails
             
-            // Save for LinkedIn enrichment attempt
+          // ---- (b) GENERIC PROVIDER: Owner published it. USE IT. ----
+          } else if (isGenericProvider) {
+            foundEmail = result;
+            foundContact = { name: 'Owner/Operator', title: 'contact page (generic provider)', source: 'website' };
+            discoverySource = 'website_scrape';
+            lead.generic_provider = true;
+            console.log(`       ✅ Owner-published email (${emailDomain}) — using as primary contact`);
+            break;
+            
+          // ---- (c) BUSINESS DOMAIN + PLAUSIBLE FIRST NAME ----
+          } else if (looksLikePlausibleFirstName(localPart)) {
+            const displayName = localPart.charAt(0).toUpperCase() + localPart.slice(1);
             firstNameHit = {
               email: result,
               firstName: displayName,
               localPart: localPart
             };
-            console.log(`       ✓ Personal email on business domain — will enrich name via LinkedIn`);
+            console.log(`       ✓ Business email with plausible name "${displayName}" — will enrich via LinkedIn`);
             break;
+            
+          // ---- (d) BUSINESS DOMAIN + NOT A NAME (e.g. plnpolaris@) ----
           } else {
-            // Alias or generic provider — save as fallback, keep searching for real person
-            if (!websiteAliasBackup) {
-              websiteAliasBackup = {
-                email: { ...result, is_alias: true, alias_type: localPart },
-                contact: { name: 'Owner/Operator', title: isGenericProvider ? 'generic email' : localPart, source: 'alias' },
-                source: 'website_scrape'
-              };
-              console.log(`       ⚠️ Alias/generic — saved as fallback, continuing search for real person`);
-            }
+            foundEmail = result;
+            foundContact = { name: 'Owner/Operator', title: 'website contact', source: 'website' };
+            discoverySource = 'website_scrape';
+            lead.email_prefix_not_name = true;
+            console.log(`       ✅ Business email found but prefix "${localPart}" is not a name — using email, contact = Owner/Operator`);
+            break;
           }
         } else {
           console.log(`❌ ${result.subresult || result.status}`);
@@ -688,7 +786,9 @@ async function run() {
       lead.discovery_source = discoverySource;
       lead.first_name_only = isFirstNameOnly(foundContact.name);
       
-      console.log(`     ✅ RESULT: ${foundContact.name} <${foundEmail.email}> (${foundEmail.status}) [${discoverySource}]${lead.first_name_only ? ' ⚠️ first name only' : ''}`);
+      const genericTag = lead.generic_provider ? ' 📱 GENERIC PROVIDER' : '';
+      const prefixTag = lead.email_prefix_not_name ? ' ⚠️ prefix not a name' : '';
+      console.log(`     ✅ RESULT: ${foundContact.name} <${foundEmail.email}> (${foundEmail.status}) [${discoverySource}]${lead.first_name_only ? ' ⚠️ first name only' : ''}${genericTag}${prefixTag}`);
     } else {
       lead.contact_name = triedNames[0] || "Owner/Operator";
       lead.contact_title = null;
@@ -713,6 +813,8 @@ async function run() {
   const catchAll = leads.filter(l => l.email_status === 'catch_all').length;
   const unknown = leads.filter(l => l.email_status === 'unknown').length;
   const alias = leads.filter(l => l.email_is_alias).length;
+  const genericProvider = leads.filter(l => l.generic_provider).length;
+  const prefixNotName = leads.filter(l => l.email_prefix_not_name).length;
   const invalid = leads.filter(l => l.email_status === 'invalid' || l.email_status === 'not_found').length;
   
   const bySrc = {};
@@ -723,6 +825,8 @@ async function run() {
   console.log(`   ⚠️  Catch-all: ${catchAll}`);
   console.log(`   ⚠️  Unknown: ${unknown}`);
   console.log(`   🏢 Alias: ${alias}`);
+  console.log(`   📱 Generic Provider (Gmail etc): ${genericProvider}`);
+  console.log(`   ⚠️  Prefix Not A Name: ${prefixNotName}`);
   console.log(`   ❌ Invalid/Not found: ${invalid}`);
   console.log('');
   console.log('📡 DISCOVERY SOURCES:');

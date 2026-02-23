@@ -159,10 +159,8 @@ Wishing you a strong 2026.
 });
 
 // Save to final output file
-fs.writeFileSync('final_leads_for_pipedrive.json', JSON.stringify(finalLeads, null, 2));
 
 console.log(`\n✅ Generated emails for ${finalLeads.length} leads`);
-console.log(`📁 Saved to: final_leads_for_pipedrive.json\n`);
 
 // Summary
 finalLeads.forEach(lead => {

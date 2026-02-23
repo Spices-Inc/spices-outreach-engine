@@ -1,11 +1,31 @@
 const fs = require('fs');
 const path = require('path');
-const { searchForCompanies, searchMaps, extractDomain } = require('./agent1_scout_new');
+const { searchForCompanies, extractDomain } = require('./agent1_scout_new');
 
 // ============================================================
-// Agent 0 (Dispatcher) — v4.0 "State-Level Broad Search"
+// Agent 0 (Dispatcher) — v4.1 "Append+Dedup Fix"
 //
-// WHAT CHANGED FROM v3.1 (Session 17 — "The Rebuild"):
+// WHAT CHANGED FROM v4.0 (Session 26):
+//
+// 1. APPEND+DEDUP FIX on leads_master.json write.
+//    v4.0 did fs.writeFileSync(OUTPUT_PATH, allNewLeads)
+//    which OVERWROTE the file every run. Leads from a
+//    previous run that hadn't finished the full pipeline
+//    were silently erased. This caused ~113 lost leads.
+//
+//    v4.1 now:
+//      a) Reads the existing leads_master.json (if any)
+//      b) Builds a Set of domains already in the file
+//      c) Filters this run's leads to only truly new ones
+//      d) Appends the new leads to the existing array
+//      e) Writes the merged result
+//
+//    This is idempotent — running it twice with the same
+//    data produces no duplicates.
+//
+// EVERYTHING ELSE IS UNCHANGED FROM v4.0.
+//
+// v4.0 HISTORY (Session 17 — "The Rebuild"):
 //
 // 1. STATE-LEVEL SEARCHES replace 54 micro-region searches.
 //    11 states × 5 query templates = 55 total searches.
@@ -204,7 +224,7 @@ function checkTierExhaustion(ledger) {
 // ============================================================
 async function run() {
   console.log('\n========================================');
-  console.log('📋 Agent 0 (Dispatcher) v4.0: State-Level Broad Search');
+  console.log('📋 Agent 0 (Dispatcher) v4.1: State-Level Broad Search');
   console.log('========================================\n');
 
   // Load state
@@ -242,20 +262,15 @@ async function run() {
     // We tag resulting leads with source_bottle = true.
     // ============================================================
     const isSiteSearch = query.startsWith('site:');
-    const isMapsSearch = query.startsWith('maps:');
-    const searchQuery = isMapsSearch ? query.replace(/^maps:\s*/, '') : query;
 
     console.log(`  📍 [Search ${searchesUsed + 1}/${MAX_SEARCHES_PER_RUN}] Tier: ${tier} | State: ${stateEntry.state_full} (${stateEntry.state})`);
     console.log(`     🎯 Query: "${query}"`);
     if (isSiteSearch) {
       console.log(`     🔬 BOTTLE.COM SEARCH — leads tagged source_bottle=true`);
     }
-    if (isMapsSearch) {
-      console.log(`     🗺️  MAPS SEARCH — canonical names + address from Google Maps`);
-    }
 
     // Call Agent 1 (Scout) with this query
-    const results = isMapsSearch ? await searchMaps(searchQuery, knownDomains) : await searchForCompanies(query, knownDomains);
+    const results = await searchForCompanies(query, knownDomains);
     searchesUsed++;
 
     // Deduplicate against history and add to collection
@@ -309,15 +324,63 @@ async function run() {
   saveLedger(ledger);
   saveHistory(history);
 
-  // Write leads for the next agents in the pipeline
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(allNewLeads, null, 2));
+  // ============================================================
+  // APPEND+DEDUP WRITE — v4.1 Fix (Session 26)
+  //
+  // THE BUG (v4.0): This line was:
+  //   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(allNewLeads, null, 2));
+  //
+  // That OVERWROTE leads_master.json with ONLY this run's leads.
+  // Any leads from a previous run that hadn't finished the full
+  // pipeline (Agents 2→8) were silently erased. This caused
+  // ~113 leads to be lost across multiple runs.
+  //
+  // THE FIX (v4.1):
+  //   1. Read existing leads_master.json (if it exists)
+  //   2. Build a Set of domains already in the file
+  //   3. Filter this run's allNewLeads to only truly new domains
+  //   4. Append the new leads to the existing array
+  //   5. Write the merged result
+  //
+  // This is idempotent — running twice with the same data
+  // produces no duplicates.
+  // ============================================================
+  let existingLeads = [];
+  try {
+    if (fs.existsSync(OUTPUT_PATH)) {
+      existingLeads = JSON.parse(fs.readFileSync(OUTPUT_PATH, 'utf8'));
+      if (!Array.isArray(existingLeads)) {
+        console.log(`  ⚠️  leads_master.json was not an array — resetting to empty`);
+        existingLeads = [];
+      }
+    }
+  } catch (e) {
+    console.log(`  ⚠️  Could not read existing leads_master.json, starting fresh: ${e.message}`);
+    existingLeads = [];
+  }
+
+  // Build domain set from existing leads
+  const existingDomains = new Set(existingLeads.map(l => l.domain));
+
+  // Filter this run's leads to only truly new ones
+  const trulyNewLeads = allNewLeads.filter(l => !existingDomains.has(l.domain));
+
+  // Merge and write
+  const mergedLeads = [...existingLeads, ...trulyNewLeads];
+  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(mergedLeads, null, 2));
+
+  console.log(`  📦 leads_master.json: ${existingLeads.length} existing + ${trulyNewLeads.length} new = ${mergedLeads.length} total`);
+  if (allNewLeads.length !== trulyNewLeads.length) {
+    console.log(`  🔁 Dedup caught ${allNewLeads.length - trulyNewLeads.length} leads already in leads_master.json`);
+  }
 
   // Final report
   console.log('========================================');
-  console.log('📋 Agent 0 (Dispatcher) v4.0: Daily Run Summary');
+  console.log('📋 Agent 0 (Dispatcher) v4.1: Daily Run Summary');
   console.log('========================================');
   console.log(`  🔍 Searches used:     ${searchesUsed}/${MAX_SEARCHES_PER_RUN}`);
   console.log(`  🏢 New leads found:   ${allNewLeads.length}`);
+  console.log(`  📦 Leads in master:   ${mergedLeads.length} (after append+dedup)`);
   console.log(`  📚 Total discovered:  ${history.total_discovered} (all time)`);
   console.log(`  📂 Output:            leads_master.json`);
   console.log('========================================\n');

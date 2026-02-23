@@ -428,11 +428,10 @@ function qualifyLead(lead) {
   // v3.4 uses tiers as labels only. Greg sees the tier
   // on the Inventory tab and decides.
   // ============================================================
-  var tier = 'review';
+  var tier = 'bronze';
   if (score >= 85) tier = 'gold';
   else if (score >= 60) tier = 'silver';
-  else if (score >= 30) tier = 'bronze';
-  // below 30 stays 'review'
+  // everything below 60 stays 'bronze'
 
   return {
     qualified: true,
